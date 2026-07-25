@@ -350,11 +350,11 @@ The WildMIDI library is not available as MSYS2 pacman package, install manually:
 
 ```
 pacman -S unzip
-wget https://github.com/Mindwerks/wildmidi/releases/download/wildmidi-0.4.5/wildmidi-0.4.5-win32.zip
-unzip wildmidi-0.4.5-win32.zip
-cp wildmidi-0.4.5-win32/*.h /mingw32/include/
-cp wildmidi-0.4.5-win32/*.a /mingw32/lib/
-cp wildmidi-0.4.5-win32/*.dll /mingw32/bin/
+wget https://github.com/Mindwerks/wildmidi/releases/download/wildmidi-0.5.0/wildmidi-0.5.0-windows.zip
+unzip wildmidi-0.5.0-windows.zip
+cp wildmidi-0.5.0-windows/include/*.h /mingw32/include/
+cp wildmidi-0.5.0-windows/x86/*.a /mingw32/lib/
+cp wildmidi-0.5.0-windows/x86/*.dll /mingw32/bin/
 ```
 
 The Python interpeter needs to have an additional module installed:
