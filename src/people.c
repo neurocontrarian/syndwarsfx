@@ -1414,6 +1414,15 @@ void set_person_persuaded(struct Thing *p_person, struct Thing *p_attacker, usho
     }
 }
 
+void stop_being_persuaded(struct Thing *p_person)
+{
+#if 1
+    asm volatile ("call ASM_stop_being_persuaded\n"
+        :  : "a" (p_person));
+    return;
+#endif
+}
+
 void unpersuade_my_peeps(struct Thing *p_owntng)
 {
     ThingIdx person;

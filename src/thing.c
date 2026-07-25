@@ -1985,6 +1985,21 @@ struct SimpleThing *create_time_pod(MapCoord x, MapCoord y, MapCoord z,
     return p_podtng;
 }
 
+struct SimpleThing *create_electric_strand(MapCoord x, MapCoord y, MapCoord z,
+  MapCoord x2, MapCoord y2, MapCoord z2, int sound)
+{
+#if 1
+    struct SimpleThing *ret;
+    asm volatile (
+      "push %7\n"
+      "push %6\n"
+      "push %5\n"
+      "call ASM_create_electric_strand\n"
+        : "=r" (ret) : "a" (x), "d" (y), "b" (z), "c" (x2), "g" (y2), "g" (z2), "g" (sound));
+    return ret;
+#endif
+}
+
 void mine_detonate(struct Thing *p_thing)
 {
     play_dist_sample(p_thing, 37, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 3);

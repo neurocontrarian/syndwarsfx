@@ -1866,12 +1866,114 @@ void init_laser_6shot(struct Thing *p_person, ushort timer)
     p_person->PTarget = p_target;
 }
 
+void create_taser_strand_circle(struct Thing *p_person)
+{
+    MapCoord cor_x, cor_y, cor_z;
+    ushort angl;
+    ushort deviat_m;
+    short deviat_sx, deviat_sz;
+    short deviat_ex, deviat_ez;
+
+    cor_x = PRCCOORD_TO_MAPCOORD(p_person->X);
+    cor_y = PRCCOORD_TO_YCOORD(p_person->Y);
+    cor_z = PRCCOORD_TO_MAPCOORD(p_person->Z);
+
+    deviat_m = ((32 * gameturn) & 0xFF) + 50;
+    angl = 0;
+    deviat_sx = (deviat_m * lbSinTable[(angl & LbFPMath_AngleMask) + LbFPMath_PI/2]) >> 16;
+    deviat_sz = (deviat_m * lbSinTable[(angl & LbFPMath_AngleMask)]) >> 16;
+    for (angl += LbFPMath_PI/4; angl <= 2*LbFPMath_PI; angl += LbFPMath_PI/4)
+    {
+        struct SimpleThing *p_strand;
+
+        deviat_ex = (deviat_m * lbSinTable[(angl & LbFPMath_AngleMask) + LbFPMath_PI/2]) >> 16;
+        deviat_ez = (deviat_m * lbSinTable[(angl & LbFPMath_AngleMask)]) >> 16;
+        p_strand = create_electric_strand(cor_x + deviat_sx, cor_y, cor_z + deviat_sz,
+                          cor_x + deviat_ex, cor_y, cor_z + deviat_ez, 0);
+        if (p_strand != NULL)
+        {
+            p_strand->Timer1 = (p_person->State != PerSt_WAIT) + 1;
+            p_strand->Flag |= 0x2000;
+        }
+        deviat_sz = deviat_ez;
+        deviat_sx = deviat_ex;
+    }
+}
+
+void persons_taser_affecting_things(struct Thing *p_person)
+{
+    MapCoord cor_x, cor_y, cor_z;
+    short dt_x, dt_z;
+
+    cor_x = PRCCOORD_TO_MAPCOORD(p_person->X);
+    cor_y = PRCCOORD_TO_YCOORD(p_person->Y);
+    cor_z = PRCCOORD_TO_MAPCOORD(p_person->Z);
+  
+    // TODO switch to some generic function for affecting things within range
+    for (dt_x = -1; dt_x < 1; dt_x++)
+    {
+        for (dt_z = -1; dt_z < 1; dt_z++)
+        {
+            ulong k;
+            ThingIdx thing;
+            short tile_x, tile_z;
+
+            tile_x = MAPCOORD_TO_TILE(cor_x) + dt_x;
+            if (tile_x <= 0 && tile_x >= 128)
+                continue;
+            tile_z = MAPCOORD_TO_TILE(cor_z) + dt_z;
+            if (tile_z <= 0 && tile_z >= 128)
+                continue;
+            thing = get_mapwho_thing_index(tile_x, tile_z);
+            k = 0;
+            while (thing != 0)
+            {
+                if (thing <= 0)
+                {
+                    struct SimpleThing *p_sthing;
+                    p_sthing = &sthings[thing];
+                    thing = p_sthing->Next;
+                }
+                else
+                {
+                    struct Thing *p_thing;
+                    p_thing = &things[thing];
+                    if ((p_thing->Type == TT_PERSON) && (p_thing->Flag & TngF_Destroyed) == 0 && (p_thing != p_person))
+                    {
+                        int dist_x, dist_y, dist_z;
+                        dist_x = PRCCOORD_TO_MAPCOORD(p_thing->X) - cor_x;
+                        dist_y = PRCCOORD_TO_YCOORD(p_thing->Y) - cor_y;
+                        dist_z = PRCCOORD_TO_MAPCOORD(p_thing->Z) - cor_z;
+                        if ((dist_y < 55) && (dist_y > -55) && (dist_x * dist_x + dist_z * dist_z < 0x100*0x100))
+                        {
+                            if ((p_thing->Flag & TngF_Persuaded) != 0)
+                                stop_being_persuaded(p_thing);
+                            if (p_person->U.UPerson.PersuadePower > 0)
+                                unpersuade_my_peeps(p_person);
+                        }
+                    }
+                    thing = p_thing->Next;
+                }
+                if (k >= 400) //TODO replace with MAX_THINGS_ON_TILE
+                    break;
+                k++;
+            }
+        }
+    }
+}
+
 short init_taser(struct Thing *p_person)
 {
+#if 0
     short ret;
     asm volatile ("call ASM_init_taser\n"
         : "=r" (ret) : "a" (p_person));
     return ret;
+#else
+    create_taser_strand_circle(p_person);
+    persons_taser_affecting_things(p_person);
+    return 0;
+#endif
 }
 
 void init_rocket(struct Thing *p_owner)

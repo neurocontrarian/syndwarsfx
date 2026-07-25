@@ -16299,7 +16299,7 @@ GLOBAL_FUNC(ASM_set_person_dead)	/* 0x0480DC */
 		test   $0x8,%bl
 		je     jump_483b4
 		mov    %esi,%eax
-		call   stop_being_persuaded
+		call   ac_stop_being_persuaded
 	jump_483b4:
 		xor    %edx,%edx
 		mov    0x8(%esi),%dl
@@ -25196,7 +25196,7 @@ GLOBAL_FUNC(ASM_person_dieing)	/* 0x04E894 */
 		testb  $0x8,0xe(%edx)
 		je     jump_4e917
 		mov    %edx,%eax
-		call   stop_being_persuaded
+		call   ac_stop_being_persuaded
 	jump_4e917:
 		mov    0xe(%edx),%bl
 		movw   $0x32,0x68(%edx)
@@ -34310,7 +34310,7 @@ GLOBAL_FUNC(ASM_process_persuaded)	/* 0x0554B8 */
 		testb  $0x2,0xc(%ebx)
 		je     jump_5555f
 		mov    %esi,%eax
-		call   stop_being_persuaded
+		call   ac_stop_being_persuaded
 		pop    %esi
 		pop    %edx
 		pop    %ecx
@@ -61160,7 +61160,7 @@ vtable_6d3a0:
 
 
 /*----------------------------------------------------------------*/
-stop_being_persuaded:	/* 0x06D3D8 */
+GLOBAL_FUNC(ASM_stop_being_persuaded)	/* 0x06D3D8 */
 /*----------------------------------------------------------------*/
 		push   %ebx
 		push   %ecx
@@ -128601,7 +128601,7 @@ GLOBAL_FUNC(ASM_init_flamer)	/* 0x0C303C */
 
 
 /*----------------------------------------------------------------*/
-create_electric_strand:	/* 0x0C3324 */
+GLOBAL_FUNC(ASM_create_electric_strand)	/* 0x0C3324 */
 /*----------------------------------------------------------------*/
 		push   %esi
 		push   %edi
@@ -128831,7 +128831,7 @@ create_growing_e_strand:	/* 0x0C33DC */
 		testb  $0x8,0xe(%edi)
 		je     jump_c35e8
 		mov    %edi,%eax
-		call   stop_being_persuaded
+		call   ac_stop_being_persuaded
 	jump_c35e8:
 		mov    %esi,%eax
 	jump_c35ea:
@@ -129079,7 +129079,7 @@ create_another_strand:	/* 0x0C35F4 */
 		mov    0x2c(%edx),%edx
 		sar    $0x10,%eax
 		sar    $0x10,%edx
-		call   create_electric_strand
+		call   ac_create_electric_strand
 		test   %eax,%eax
 		je     jump_c3a30
 		jmp    jump_c3a06
@@ -129134,7 +129134,7 @@ create_another_strand:	/* 0x0C35F4 */
 		mov    0x2c(%edx),%edx
 		sar    $0x10,%ebx
 		sar    $0x10,%edx
-		call   create_electric_strand
+		call   ac_create_electric_strand
 		test   %eax,%eax
 		je     jump_c3a30
 	jump_c3a06:
@@ -129405,7 +129405,7 @@ GLOBAL_FUNC(ASM_elec_hit_building)	/* 0x0C3B98 */
 		mov    %ebp,%edx
 		add    %eax,%ecx
 		mov    %esi,%eax
-		call   create_electric_strand
+		call   ac_create_electric_strand
 		test   %eax,%eax
 		je     jump_c3c84
 		mov    0x1e(%esp),%edx
@@ -129478,7 +129478,7 @@ GLOBAL_FUNC(ASM_elec_hit_building)	/* 0x0C3B98 */
 		mov    %ebp,%edx
 		add    %eax,%ecx
 		mov    %esi,%eax
-		call   create_electric_strand
+		call   ac_create_electric_strand
 		test   %eax,%eax
 		je     jump_c3d70
 		mov    0x1e(%esp),%ecx
@@ -129695,7 +129695,7 @@ GLOBAL_FUNC(ASM_init_taser)	/* 0x0C3FA4 */
 		push   %edi
 		add    %edx,%eax
 		mov    %edi,%edx
-		call   create_electric_strand
+		call   ac_create_electric_strand
 		test   %eax,%eax
 		je     jump_c4018
 		xor    %edx,%edx
@@ -129809,7 +129809,7 @@ GLOBAL_FUNC(ASM_init_taser)	/* 0x0C3FA4 */
 		test   $0x8,%al
 		je     jump_c4205
 		mov    %edx,%eax
-		call   stop_being_persuaded
+		call   ac_stop_being_persuaded
 	jump_c4205:
 		cmpw   $0x0,0x92(%ebx)
 		je     jump_c4216
@@ -133819,7 +133819,7 @@ napalm_person:	/* 0x0C6FB0 */
 		testb  $0x8,0xe(%esi)
 		je     jump_c707b
 		mov    %esi,%eax
-		call   stop_being_persuaded
+		call   ac_stop_being_persuaded
 	jump_c707b:
 		push   $0x2
 		mov    $0x40,%ecx
