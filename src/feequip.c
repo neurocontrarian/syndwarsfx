@@ -1067,12 +1067,6 @@ ubyte display_weapon_info(struct ScreenTextBox *box)
 
 ubyte show_weapon_name(struct ScreenTextBox *box)
 {
-#if 0
-    ubyte ret;
-    asm volatile ("call ASM_show_weapon_name\n"
-        : "=r" (ret) : "a" (box));
-    return ret;
-#endif
     short scr_x, scr_y;
     short text_w, text_h;
 

@@ -68,24 +68,12 @@ ubyte controls_edited_gkey = 0;
 
 ubyte do_controls_defaults(ubyte click)
 {
-#if 0
-    ubyte ret;
-    asm volatile ("call ASM_do_controls_defaults\n"
-        : "=r" (ret) : "a" (click));
-    return ret;
-#endif
     set_default_user_settings();
     return 1;
 }
 
 ubyte do_controls_save(ubyte click)
 {
-#if 0
-    ubyte ret;
-    asm volatile ("call ASM_do_controls_save\n"
-        : "=r" (ret) : "a" (click));
-    return ret;
-#endif
     const char *msg_str;
     if (save_user_settings())
         msg_str = gui_strings[GSTR_CONTROLS_SAVED_FAIL];
@@ -97,12 +85,6 @@ ubyte do_controls_save(ubyte click)
 
 ubyte do_controls_calibrate(ubyte click)
 {
-#if 0
-    ubyte ret;
-    asm volatile ("call ASM_do_controls_calibrate\n"
-        : "=r" (ret) : "a" (click));
-    return ret;
-#endif
     net_unkn_pos_02 = 1;
     alert_box_text_fmt("%s", gui_strings[GSTR_JOY_CAL_TOP_LEFT]);
     return 1;
@@ -115,12 +97,6 @@ TbBool is_defining_control_key(void)
 
 ubyte show_controls_joystick_box(struct ScreenBox *p_box)
 {
-#if 0
-    ubyte ret;
-    asm volatile ("call ASM_show_controls_joystick_box\n"
-        : "=r" (ret) : "a" (p_box));
-    return ret;
-#endif
     char locstr[52];
     struct ScreenRect active_rect;
     PlayerInfo *p_locplayer;

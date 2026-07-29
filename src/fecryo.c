@@ -1279,12 +1279,6 @@ void switch_local_player_agents(ushort plagent1, ushort plagent2)
 
 ubyte show_cryo_agent_list(struct ScreenTextBox *p_box)
 {
-#if 0
-    ubyte ret;
-    asm volatile ("call ASM_show_cryo_agent_list\n"
-        : "=r" (ret) : "a" (p_box));
-    return ret;
-#endif
     int tx_width, ln_height;
     int lines_y1, lines_y2, shift_x;
     ushort plagent1;

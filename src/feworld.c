@@ -114,12 +114,6 @@ ubyte do_unkn2_ACCEPT(ubyte click)
 
 ubyte show_world_city_info_box(struct ScreenTextBox *p_box)
 {
-#if 0
-    ubyte ret;
-    asm volatile ("call ASM_show_world_city_info_box\n"
-        : "=r" (ret) : "a" (p_box));
-    return ret;
-#endif
     ushort i;
     int n_lines;
     int tx_height, ln_height, scr_y;

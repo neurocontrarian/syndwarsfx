@@ -174,12 +174,6 @@ TbBool mouse_over_text_window_item(short tx_height, short margin, short start_sh
 
 ubyte show_brief_netscan_box(struct ScreenTextBox *p_box)
 {
-#if 0
-    ubyte ret;
-    asm volatile ("call ASM_show_brief_netscan_box\n"
-        : "=r" (ret) : "a" (p_box));
-    return ret;
-#endif
     int nlines;
     short start_shift;
     short nsobv;
@@ -645,10 +639,6 @@ void skip_flashy_draw_mission_screen_boxes(void)
 
 ubyte show_mission_screen(void)
 {
-#if 0
-    asm volatile ("call ASM_show_mission_screen\n"
-        :  :  : "eax" );
-#endif
     ubyte drawn = true;
 
     if (((game_projector_speed) && is_heading_flag01()) ||

@@ -496,11 +496,6 @@ ubyte show_unkn21_box(struct ScreenTextBox *p_box)
 
 void draw_unkn20_subfunc_01(int x, int y, char *text, ubyte a4)
 {
-#if 0
-    asm volatile (
-      "call ASM_draw_unkn20_subfunc_01\n"
-        : : "a" (x), "d" (y), "b" (text), "c" (a4));
-#endif
     int i;
     short scr_x, scr_y;
 
@@ -563,10 +558,6 @@ void draw_unkn20_subfunc_01(int x, int y, char *text, ubyte a4)
 
 void show_research_screen(void)
 {
-#if 0
-    asm volatile ("call ASM_show_research_screen\n"
-        :  :  : "eax" );
-#endif
     int i;
     ubyte drawn;
 

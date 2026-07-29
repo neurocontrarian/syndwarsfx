@@ -286,11 +286,6 @@ TbResult cover_screen_rect_with_raw_file(short x, short y, ushort w, ushort h, c
 
 void my_set_text_window(ushort x1, ushort y1, ushort w, ushort h)
 {
-#if 0
-    asm volatile (
-      "call ASM_my_set_text_window\n"
-        : : "a" (x1), "d" (y1), "b" (w), "c" (h));
-#endif
     text_window_x1 = x1;
     text_window_y1 = y1;
     text_window_x2 = x1 + w - 1;

@@ -551,12 +551,6 @@ ubyte show_audio_volume_box(struct ScreenBox *p_box)
 
 ubyte show_audio_tracks_box(struct ScreenBox *p_box)
 {
-#if 0
-    ubyte ret;
-    asm volatile ("call ASM_show_audio_tracks_box\n"
-        : "=r" (ret) : "a" (p_box));
-    return ret;
-#endif
     int i;
     ubyte drawn1 = true;
     ubyte drawn2 = true;
@@ -712,12 +706,6 @@ short horiz_proslider_prepare_right_arrow_pts(short *pts_x, short *pts_y, short 
 
 ubyte change_panel_permutation(ubyte click)
 {
-#if 0
-    ubyte ret;
-    asm volatile ("call ASM_change_panel_permutation\n"
-        : "=r" (ret) : "a" (click));
-    return ret;
-#endif
     if (click)
     {
         game_option_dec(GOpt_PanelPermutation);
@@ -732,12 +720,6 @@ ubyte change_panel_permutation(ubyte click)
 
 ubyte change_trenchcoat_preference(ubyte click)
 {
-#if 0
-    ubyte ret;
-    asm volatile ("call ASM_change_trenchcoat_preference\n"
-        : "=r" (ret) : "a" (click));
-    return ret;
-#endif
     if (click)
     {
         game_option_dec(GOpt_TrenchcoatPreference);

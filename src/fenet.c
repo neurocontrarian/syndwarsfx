@@ -275,12 +275,6 @@ TbBool net_sessions_init(void)
 
 ubyte do_net_protocol_option(ubyte click)
 {
-#if 0
-    ubyte ret;
-    asm volatile ("call ASM_do_net_protocol_option\n"
-        : "=r" (ret) : "a" (click));
-    return ret;
-#endif
     short param, dt;
 
     net_service_stop();
@@ -319,12 +313,6 @@ ubyte do_net_protocol_option(ubyte click)
 
 ubyte do_net_unkn40(ubyte click)
 {
-#if 0
-    ubyte ret;
-    asm volatile ("call ASM_do_net_unkn40\n"
-        : "=r" (ret) : "a" (click));
-    return ret;
-#endif
     byte_1C4994 = (byte_1C4994 == 0);
     return 1;
 }
@@ -345,12 +333,6 @@ short serial_speeds_idx(int boud_rate)
 
 ubyte do_serial_speed_switch(ubyte click)
 {
-#if 0
-    ubyte ret;
-    asm volatile ("call ASM_do_serial_speed_switch\n"
-        : "=r" (ret) : "a" (click));
-    return ret;
-#endif
     short cur_idx, nxt_idx;
 
     cur_idx = serial_speeds_idx(unkn_rate);
@@ -374,12 +356,6 @@ ubyte do_serial_speed_switch(ubyte click)
 
 ubyte do_net_SET2(ubyte click)
 {
-#if 0
-    ubyte ret;
-    asm volatile ("call ASM_do_net_SET2\n"
-        : "=r" (ret) : "a" (click));
-    return ret;
-#endif
     if (!net_local_player_hosts_the_game() || login_control__State != LognCt_Unkn5)
         return 0;
 
@@ -390,12 +366,6 @@ ubyte do_net_SET2(ubyte click)
 
 ubyte do_net_SET(ubyte click)
 {
-#if 0
-    ubyte ret;
-    asm volatile ("call ASM_do_net_SET\n"
-        : "=r" (ret) : "a" (click));
-    return ret;
-#endif
     if (!net_local_player_hosts_the_game() || login_control__State != LognCt_Unkn5)
         return 0;
 
@@ -603,12 +573,6 @@ void netgame_state_enter_5(void)
 
 ubyte do_net_INITIATE(ubyte click)
 {
-#if 0
-    ubyte ret;
-    asm volatile ("call ASM_do_net_INITIATE\n"
-        : "=r" (ret) : "a" (click));
-    return ret;
-#endif
     if (nsvc.I.Type == NetSvc_IPX && !net_service_started) {
         LOGWARN("Cannot init protocol %d - not ready", (int)nsvc.I.Type);
         return 0;
@@ -640,12 +604,6 @@ ubyte do_net_INITIATE(ubyte click)
 
 ubyte do_net_groups_LOGON(ubyte click)
 {
-#if 0
-    ubyte ret;
-    asm volatile ("call ASM_do_net_groups_LOGON\n"
-        : "=r" (ret) : "a" (click));
-    return ret;
-#endif
     if ((nsvc.I.Type == NetSvc_IPX) && !net_service_started) {
         LOGWARN("Cannot abort protocol %d - not ready", (int)nsvc.I.Type);
         return 0;
@@ -1231,12 +1189,6 @@ ubyte show_net_comms_box(struct ScreenBox *p_box)
 
 ubyte do_net_protocol_select(ubyte click)
 {
-#if 0
-    ubyte ret;
-    asm volatile ("call ASM_do_net_protocol_select\n"
-        : "=r" (ret) : "a" (click));
-    return ret;
-#endif
     short proto;
     short pos_x;
 
@@ -1319,12 +1271,6 @@ ubyte do_net_protocol_select(ubyte click)
 
 ubyte show_net_protocol_box(struct ScreenBox *p_box)
 {
-#if 0
-    ubyte ret;
-    asm volatile ("call ASM_show_net_protocol_box\n"
-        : "=r" (ret) : "a" (p_box));
-    return ret;
-#endif
     const char *text;
     short tx_height, tx_width;
     short scr_x, scr_y;
@@ -1595,12 +1541,6 @@ ubyte show_net_protocol_box(struct ScreenBox *p_box)
 
 ubyte show_net_faction_box(struct ScreenBox *p_box)
 {
-#if 0
-    ubyte ret;
-    asm volatile ("call ASM_show_net_faction_box\n"
-        : "=r" (ret) : "a" (p_box));
-    return ret;
-#endif
     short tx_height;
     short scr_y;
     int i;
@@ -1669,12 +1609,6 @@ ubyte show_net_faction_box(struct ScreenBox *p_box)
 
 ubyte show_net_team_box(struct ScreenBox *p_box)
 {
-#if 0
-    ubyte ret;
-    asm volatile ("call ASM_show_net_team_box\n"
-        : "=r" (ret) : "a" (p_box));
-    return ret;
-#endif
     short scr_y;
     short tx_height;
     int i;
@@ -1759,12 +1693,6 @@ static const char *net_group_name_to_gtext(const char *name)
 
 ubyte show_net_groups_box(struct ScreenBox *p_box)
 {
-#if 0
-    ubyte ret;
-    asm volatile ("call ASM_show_net_groups_box\n"
-        : "=r" (ret) : "a" (p_box));
-    return ret;
-#endif
     const char *text;
     int i;
     short tx_height;
@@ -1894,12 +1822,6 @@ int refresh_users_in_net_game(void)
 
 ubyte show_net_users_box(struct ScreenBox *p_box)
 {
-#if 0
-    ubyte ret;
-    asm volatile ("call ASM_show_net_users_box\n"
-        : "=r" (ret) : "a" (p_box));
-    return ret;
-#endif
     const char *text;
     short plyr;
     short scr_x, scr_y;
@@ -2053,12 +1975,6 @@ int net_unkn_func_30(void)
 
 ubyte do_unkn8_EJECT(ubyte click)
 {
-#if 0
-    ubyte ret;
-    asm volatile ("call ASM_do_unkn8_EJECT\n"
-        : "=r" (ret) : "a" (click));
-    return ret;
-#endif
     int plyr;
 
     plyr = LbNetworkPlayerNumber();
@@ -2070,12 +1986,6 @@ ubyte do_unkn8_EJECT(ubyte click)
 
 void show_netgame_unkn_case1(void)
 {
-#if 0
-    asm volatile (
-      "call ASM_show_netgame_unkn_case1\n"
-        :  :  : "eax" );
-    return;
-#endif
     if (!net_autostart_done)
     {
         net_autostart_done = 1;

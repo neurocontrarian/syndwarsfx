@@ -332,12 +332,6 @@ void set_flag01_main_screen_boxes(void)
 
 ubyte alert_OK(ubyte click)
 {
-#if 0
-    ubyte ret;
-    asm volatile ("call ASM_alert_OK\n"
-        : "=r" (ret) : "a" (click));
-    return ret;
-#endif
     screentype = old_screentype;
     redraw_screen_flag = 1;
     if (old_screentype == SCRT_SYSMENU)
@@ -442,12 +436,6 @@ void alert_box_text_fmt(const char *fmt, ...)
 
 ubyte show_title_box(struct ScreenTextBox *p_box)
 {
-#if 0
-    ubyte ret;
-    asm volatile ("call ASM_show_title_box\n"
-        : "=r" (ret) : "a" (p_box));
-    return ret;
-#endif
     short scr_x, scr_y;
     short tx_width, tx_height;
     ubyte cyan;

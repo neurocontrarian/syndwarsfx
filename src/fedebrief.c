@@ -60,10 +60,6 @@ extern ushort word_1C4856[8];
 
 void show_debrief_screen(void)
 {
-#if 0
-    asm volatile ("call ASM_show_debrief_screen\n"
-        :  :  : "eax" );
-#endif
     ubyte drawn;
 
     if ((game_projector_speed && is_heading_flag01()) ||
