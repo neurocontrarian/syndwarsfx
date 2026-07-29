@@ -192,6 +192,7 @@ syndwarsfx_SOURCES = \
 	thing_search.h \
 	thing_fire.c \
 	thing_fire.h \
+	thing_fire_s.sx \
 	thing_debug.c \
 	thing_debug_s.sx \
 	thing_onface.h \
