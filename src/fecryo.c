@@ -228,12 +228,6 @@ void cryo_update_for_selected_cybmod(void)
 
 ubyte do_cryo_offer_cancel(ubyte click)
 {
-#if 0
-    ubyte ret;
-    asm volatile ("call ASM_do_cryo_offer_cancel\n"
-        : "=r" (ret) : "a" (click));
-    return ret;
-#endif
     selected_mod = -1;
     cryo_update_for_selected_cybmod();
     refresh_equip_list = 1;

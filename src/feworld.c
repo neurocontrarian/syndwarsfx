@@ -85,12 +85,6 @@ ubyte ac_do_unkn2_ACCEPT(ubyte click);
 
 ubyte do_unkn2_CANCEL(ubyte click)
 {
-#if 0
-    ubyte ret;
-    asm volatile ("call ASM_do_unkn2_CANCEL\n"
-        : "=r" (ret) : "a" (click));
-    return ret;
-#endif
     if (map_from_mission)
     {
         change_screen = ChSCRT_MISBRIEF;
@@ -105,12 +99,6 @@ ubyte do_unkn2_CANCEL(ubyte click)
 
 ubyte do_unkn2_ACCEPT(ubyte click)
 {
-#if 0
-    ubyte ret;
-    asm volatile ("call ASM_do_unkn2_ACCEPT\n"
-        : "=r" (ret) : "a" (click));
-    return ret;
-#endif
     if (unkn_city_no == -1)
         return 0;
 

@@ -248,12 +248,6 @@ void reload_background(void)
 
 ubyte main_do_my_quit(ubyte click)
 {
-#if 0
-    ubyte ret;
-    asm volatile ("call ASM_main_do_my_quit\n"
-        : "=r" (ret) : "a" (click));
-    return ret;
-#endif
     stop_sample_using_heap(0, 122);
     exit_game = 1;
     return 1;
@@ -261,24 +255,12 @@ ubyte main_do_my_quit(ubyte click)
 
 ubyte main_do_map_editor(ubyte click)
 {
-#if 0
-    ubyte ret;
-    asm volatile ("call ASM_main_do_map_editor\n"
-        : "=r" (ret) : "a" (click));
-    return ret;
-#endif
     map_editor = 1;
     return 1;
 }
 
 ubyte main_do_login_1(ubyte click)
 {
-#if 0
-    ubyte ret;
-    asm volatile ("call ASM_main_do_login_1\n"
-        : "=r" (ret) : "a" (click));
-    return ret;
-#endif
     screentype = SCRT_LOGIN;
     edit_flag = 1;
     reload_background_flag = 1;
@@ -631,12 +613,6 @@ void show_sysmenu_screen(void)
 
 ubyte do_sysmnu_button(ubyte click)
 {
-#if 0
-    ubyte ret;
-    asm volatile ("call ASM_do_sysmnu_button\n"
-        : "=r" (ret) : "a" (click));
-    return ret;
-#endif
     enter_game = 1;
     return 1;
 }

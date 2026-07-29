@@ -4679,12 +4679,6 @@ void campaign_new_game_prepare(void)
 
 ubyte goto_savegame(ubyte click)
 {
-#if 0
-    ubyte ret;
-    asm volatile ("call ASM_goto_savegame\n"
-        : "=r" (ret) : "a" (click));
-    return ret;
-#endif
     restore_savegame = 1;
     game_system_screen = SySc_STORAGE;
     screentype = SCRT_SYSMENU;

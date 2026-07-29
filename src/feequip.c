@@ -295,12 +295,6 @@ ubyte do_equip_offer_buy_weapon(ubyte click)
 
 ubyte do_equip_offer_buy(ubyte click)
 {
-#if 0
-    ubyte ret;
-    asm volatile ("call ASM_do_equip_offer_buy\n"
-        : "=r" (ret) : "a" (click));
-    return ret;
-#endif
     ubyte done;
 
     if (selected_agent == -1) {
@@ -330,12 +324,6 @@ ubyte do_equip_offer_buy(ubyte click)
 
 ubyte sell_equipment(ubyte click)
 {
-#if 0
-    ubyte ret;
-    asm volatile ("call ASM_sell_equipment\n"
-        : "=r" (ret) : "a" (click));
-    return ret;
-#endif
     TbBool sold;
 
     if ((login_control__State == LognCt_Unkn5) && ((net_game_play_flags & NGPF_Unkn08) != 0))

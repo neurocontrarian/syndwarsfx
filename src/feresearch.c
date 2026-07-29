@@ -165,12 +165,6 @@ void switch_research_screen_boxes_weapons_mods(void)
 
 ubyte do_research_submit(ubyte click)
 {
-#if 0
-    ubyte ret;
-    asm volatile ("call ASM_do_research_submit\n"
-        : "=r" (ret) : "a" (click));
-    return ret;
-#endif
     if (research_on_weapons)
     {
         if (research_selected_wep != -1)
@@ -201,12 +195,6 @@ ubyte do_research_submit(ubyte click)
 
 ubyte do_research_suspend(ubyte click)
 {
-#if 0
-    ubyte ret;
-    asm volatile ("call ASM_do_research_suspend\n"
-        : "=r" (ret) : "a" (click));
-    return ret;
-#endif
     if (research_on_weapons)
     {
         research.CurrentWeapon = -1;
@@ -222,12 +210,6 @@ ubyte do_research_suspend(ubyte click)
 
 ubyte do_unkn12_WEAPONS_MODS(ubyte click)
 {
-#if 0
-    ubyte ret;
-    asm volatile ("call ASM_do_unkn12_WEAPONS_MODS\n"
-        : "=r" (ret) : "a" (click));
-    return ret;
-#endif
     research_on_weapons = (research_on_weapons == 0);
     research_selected_mod = -1;
     research_selected_wep = -1;
