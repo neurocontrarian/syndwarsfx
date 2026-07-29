@@ -178,6 +178,7 @@ syndwarsfx_SOURCES = \
 	scandraw.h \
 	sound.c \
 	sound.h \
+	sound_heap_s.sx \
 	specblit.c \
 	specblit.h \
 	swars.sx \
