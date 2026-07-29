@@ -107,11 +107,6 @@ ubyte ac_do_sysmnu_button(ubyte click);
 
 long time_difference(struct SynTime *tm1, struct SynTime *tm2)
 {
-#if 0
-    asm volatile ("call ASM_time_difference\n"
-        : : "a" (tm1), "d" (tm2));
-    return;
-#endif
     return 60 * (tm1->Hour - (long)tm2->Hour) + tm1->Minute - (long)tm2->Minute;
 }
 
@@ -341,10 +336,6 @@ ubyte alert_OK(ubyte click)
 
 void show_alert_box(void)
 {
-#if 0
-    asm volatile ("call ASM_show_alert_box\n"
-        :  :  : "eax" );
-#endif
     ubyte drawn = 0;
 
     if ((alert_box.Flags & 0x01) != 0)

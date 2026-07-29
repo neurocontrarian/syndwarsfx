@@ -245,11 +245,6 @@ void research_cymod_complete(ushort mtype)
 
 void research_unkn_func_003(void)
 {
-#if 0
-    asm volatile ("call ASM_research_unkn_func_003\n"
-        :  :  : "eax" );
-    return;
-#endif
     struct WeaponDef *wdef;
     WeaponType wtype;
 

@@ -42,12 +42,6 @@ extern struct NetworkPlayer network_players[8];
 
 TbBool net_local_player_hosts_the_game(void)
 {
-#if 0
-    TbBool ret;
-    asm volatile ("call ASM_net_local_player_hosts_the_game\n"
-        : "=r" (ret) : );
-    return ret;
-#endif
     int plyr;
 
     plyr = LbNetworkPlayerNumber();

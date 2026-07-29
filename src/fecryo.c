@@ -974,10 +974,6 @@ ubyte cryo_blokey_mod_level(ubyte ordpart)
 
 void update_flic_mods(ubyte *mods)
 {
-#if 0
-    asm volatile ("call ASM_update_flic_mods\n"
-        : : "a" (mods));
-#endif
     short plagent, i;
     ubyte lv;
 

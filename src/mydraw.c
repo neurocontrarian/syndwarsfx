@@ -148,12 +148,6 @@ ubyte my_char_padding_bottom(uchar c)
 
 ubyte my_char_height(uchar c)
 {
-#if 0
-    int ret;
-    asm volatile ("call ASM_font_height\n"
-        : "=r" (ret) : "a" (c));
-    return ret;
-#endif
     return LbSprFontCharHeight(lbFontPtr, c)
       - my_char_padding_top(c)
       - my_char_padding_bottom(c);

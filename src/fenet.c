@@ -376,12 +376,6 @@ ubyte do_net_SET(ubyte click)
 
 ubyte net_unkn_func_32(void)
 {
-#if 0
-    ubyte ret;
-    asm volatile ("call ASM_net_unkn_func_32\n"
-        : "=r" (ret) : );
-    return ret;
-#else
     int ret;
     TbBool modem_on_line;
 
@@ -462,17 +456,10 @@ out_fail:
         net_service_stop();
     }
     return 0;
-#endif
 }
 
 ubyte net_unkn_func_31(struct TbNetworkSession *p_nsession)
 {
-#if 0
-    ubyte ret;
-    asm volatile ("call ASM_net_unkn_func_31\n"
-        : "=r" (ret) : "a" (p_nsession));
-    return ret;
-#else
     TbBool modem_on_line;
     int ret;
 
@@ -553,7 +540,6 @@ out_fail:
         net_service_stop();
     }
     return 0;
-#endif
 }
 
 void netgame_state_enter_5(void)
@@ -813,12 +799,6 @@ ubyte get_current_starting_cash_level(void)
 
 uint reinit_starting_credits(sbyte change)
 {
-#if 0
-    ulong ret;
-    asm volatile ("call ASM_reinit_starting_credits\n"
-        : "=r" (ret) : "a" (change));
-    return ret;
-#endif
   int lv, lv_curr;
   uint creds;
 
@@ -1952,12 +1932,6 @@ void net_sessionlist_remove_old(void)
 
 int net_unkn_func_30(void)
 {
-#if 0
-    int ret;
-    asm volatile ("call ASM_net_unkn_func_30\n"
-        : "=r" (ret) : );
-    return ret;
-#endif
     int preval;
 
     if (byte_1C6D48 < 20)

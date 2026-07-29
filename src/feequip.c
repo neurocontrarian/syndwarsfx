@@ -442,10 +442,6 @@ ubyte get_buy_sell_button_mode(void)
 
 void check_buy_sell_button(void)
 {
-#if 0
-    asm volatile ("call ASM_check_buy_sell_button\n"
-        :  :  : "eax" );
-#endif
     ubyte mode;
 
     mode = get_buy_sell_button_mode();

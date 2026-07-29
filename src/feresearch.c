@@ -93,10 +93,6 @@ TbBool research_cybmod_daily_progress(void)
  */
 void research_allow_weapons_in_cryo(void)
 {
-#if 0
-    asm volatile ("call ASM_research_allow_weapons_in_cryo\n"
-        :  :  : "eax" );
-#endif
     short plagent;
     WeaponType wtype;
 

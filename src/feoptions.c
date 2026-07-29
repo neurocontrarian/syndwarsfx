@@ -70,12 +70,6 @@ ubyte ac_flashy_draw_purple_label(struct ScreenButton *p_button);
 
 void show_audio_volume_box_func_02(short scr_x, short scr_y, short a3, short a4, TbPixel colour)
 {
-#if 0
-    asm volatile (
-      "push %4\n"
-      "call ASM_show_audio_volume_box_func_02\n"
-        : : "a" (scr_x), "d" (scr_y), "b" (a3), "c" (a4), "g" (colour));
-#endif
     short i;
     int cx, cy;
 
