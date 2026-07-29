@@ -141,6 +141,7 @@ syndwarsfx_SOURCES = \
 	mydraw.h \
 	netipx1.sx \
 	netser1.sx \
+	netdos.sx \
 	network.c \
 	network.h \
 	pathtrig.c \
