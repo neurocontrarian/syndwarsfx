@@ -186,6 +186,7 @@ syndwarsfx_SOURCES = \
 	thing.h \
 	thing_expld.c \
 	thing_expld.h \
+	thing_expld_s.sx \
 	thing_search.c \
 	thing_search.h \
 	thing_fire.c \
