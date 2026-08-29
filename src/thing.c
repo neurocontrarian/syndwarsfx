@@ -1449,6 +1449,7 @@ short add_static(int x, int y, int z, ushort frame, int timer)
     p_sthing->Y = y;
     p_sthing->Parent = 0;
     p_sthing->StartFrame = frame - 1;
+    //TODO verify and/or unify to allow use of reset_sthing_frame(p_sthing);
     p_sthing->Frame = nstart_ani[p_sthing->StartFrame + 1];
     add_node_sthing(thing);
     p_sthing->Type = SmTT_STATIC;

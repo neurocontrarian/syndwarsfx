@@ -3093,7 +3093,7 @@ void init_air_strike(struct Thing *p_owner)
     p_thing->Owner = p_owner->ThingOffset;
     p_thing->Timer1 = 400;
     p_thing->StartFrame = 1004;
-    p_thing->Frame = nstart_ani[p_thing->StartFrame];
+    reset_thing_frame(p_thing);
     p_thing->U.UEffect.Object = 0;
     p_thing->Flag = TngF_Unkn0004;
     p_thing->Radius = 50;
@@ -3320,7 +3320,7 @@ void init_grenade(struct Thing *p_owner, ushort gtype)
     p_shot->StartFrame = 1068;
     p_shot->U.UEffect.Object = 0;
     p_shot->Parent = 0;
-    p_shot->Frame = nstart_ani[p_shot->StartFrame];
+    reset_thing_frame(p_shot);
     p_shot->Flag |= 0x0004;
     add_node_thing(p_shot->ThingOffset);
     p_shot->Type = TT_GRENADE;

@@ -296,6 +296,7 @@ ulong load_level_pc_handle(TbFileHandle lev_fh)
             if (p_thing->Type == SmTT_DROPPED_ITEM)
             {
                 // SimpleThings should not be on this list. But many level do have them.
+                //TODO verify and/or unify to allow use of reset_thing_frame(p_thing);
                 p_thing->Frame = nstart_ani[p_thing->StartFrame + 1];
             }
 
@@ -466,13 +467,14 @@ ulong load_level_pc_handle(TbFileHandle lev_fh)
             }
             else
             {
-              if (p_thing->Type == SmTT_DROPPED_ITEM) {
-                  p_thing->Frame = nstart_ani[p_thing->StartFrame + 1];
-              }
-              p_thing->LinkParent = loc_thing.LinkParent;
-              p_thing->LinkChild = loc_thing.LinkChild;
-              if (thing != 0)
-                  add_node_sthing(thing);
+                if (p_thing->Type == SmTT_DROPPED_ITEM) {
+                     //TODO verify and/or unify to allow use of reset_sthing_frame(p_thing);
+                     p_thing->Frame = nstart_ani[p_thing->StartFrame + 1];
+                }
+                p_thing->LinkParent = loc_thing.LinkParent;
+                p_thing->LinkChild = loc_thing.LinkChild;
+                if (thing != 0)
+                    add_node_sthing(thing);
             }
         }
     }
