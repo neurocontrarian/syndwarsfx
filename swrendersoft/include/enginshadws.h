@@ -27,6 +27,8 @@ extern "C" {
 /******************************************************************************/
 #pragma pack(1)
 
+#define SHADOW_BITMAP_DIM 256
+
 struct SortMapPoint;
 
 struct ShadowTexture {
