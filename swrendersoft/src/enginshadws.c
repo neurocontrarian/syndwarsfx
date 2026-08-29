@@ -108,7 +108,7 @@ void draw_multicolor_sprite_shadow(short scr_x, short scr_y, ushort sbfrm,
 
     assert(shpak < MUCOL_SHADOW_ANIMS_COUNT);
     assert(angl < MUCOL_SHADOW_ANGLES_COUNT);
-    //assert(sbfrm < MUCOL_SHADOW_FRAMES_COUNT); //TODO enable when adding to drawlist is fixed
+    assert(sbfrm < MUCOL_SHADOW_FRAMES_COUNT);
 
     frgrp =  MUCOL_SHADOW_ANGLES_COUNT * shpak + (((shangl >> 5) - angl + 8) & 7);
     ep3.pp.U = mucol_shadow_p3_Ua[6 * frgrp + sbfrm] << 16;
