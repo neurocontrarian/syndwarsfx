@@ -49,6 +49,7 @@
 #include "people.h"
 #include "swlog.h"
 #include "thing.h"
+#include "tngobjdrw.h"
 #include "vehicle.h"
 /******************************************************************************/
 #pragma pack(1)
@@ -111,8 +112,6 @@ extern long dword_176CAC;
 extern long dword_176CB0;
 extern long dword_152E4C;
 
-extern const ubyte byte_154F2C[32];
-
 extern struct BulStart bul_starts[4000];
 
 extern struct unkn_mech_struc3 *unkn_mech_arr3;
@@ -168,9 +167,9 @@ static void draw_pers_shadow(struct Thing *p_thing,
     else if ((anmode == ANIM_PERS_WEPLIGHT_IDLE) ||
       (anmode == ANIM_PERS_Unkn14) ||
       (anmode == ANIM_PERS_Unkn06))
-        shpak = byte_154F2C[2 * p_thing->SubType + 1];
+        shpak = pers_subtype_to_shpak[2 * p_thing->SubType + 1];
     else
-        shpak = byte_154F2C[2 * p_thing->SubType + 0];
+        shpak = pers_subtype_to_shpak[2 * p_thing->SubType + 0];
 
     shangl = p_thing->U.UPerson.Shadows[0];
     strng = p_thing->U.UPerson.Shadows[1];
