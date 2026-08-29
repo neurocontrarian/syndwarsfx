@@ -92,7 +92,7 @@ ushort shadow_tmap_page = 0;
 
 /******************************************************************************/
 
-void draw_person_shadow(short scr_x, short scr_y, ushort frm,
+void draw_multicolor_sprite_shadow(short scr_x, short scr_y, ushort sbfrm,
   ushort shpak, ubyte shangl, ubyte angl, short strng)
 {
     int ssh_y, ssh_x;
@@ -112,15 +112,15 @@ void draw_person_shadow(short scr_x, short scr_y, ushort frm,
 
     assert(shpak < MUCOL_SHADOW_ANIMS_COUNT);
     assert(angl < MUCOL_SHADOW_ANGLES_COUNT);
-    //assert(frm < MUCOL_SHADOW_FRAMES_COUNT); //TODO enable when adding to drawlist is fixed
+    //assert(sbfrm < MUCOL_SHADOW_FRAMES_COUNT); //TODO enable when adding to drawlist is fixed
 
     frgrp =  MUCOL_SHADOW_ANGLES_COUNT * shpak + (((shangl >> 5) - angl + 8) & 7);
-    ep3.pp.U = mucol_shadow_p3_Ua[6 * frgrp + frm] << 16;
-    ep3.pp.V = mucol_shadow_p3_Vb[6 * frgrp + frm] << 16;
-    ep4.pp.U = mucol_shadow_p4_Ua[6 * frgrp + frm] << 16;
+    ep3.pp.U = mucol_shadow_p3_Ua[6 * frgrp + sbfrm] << 16;
+    ep3.pp.V = mucol_shadow_p3_Vb[6 * frgrp + sbfrm] << 16;
+    ep4.pp.U = mucol_shadow_p4_Ua[6 * frgrp + sbfrm] << 16;
     ep4.pp.V = ep3.pp.V;
     ep1.pp.U = ep4.pp.U;
-    ep1.pp.V = mucol_shadow_p1_Vb[6 * frgrp + frm] << 16;
+    ep1.pp.V = mucol_shadow_p1_Vb[6 * frgrp + sbfrm] << 16;
     ep2.pp.U = ep3.pp.U;
     ep2.pp.V = ep1.pp.V;
 
@@ -176,7 +176,7 @@ void draw_sort_sprite_person_shadow(ushort sspr)
     shpak = p_sspr->Z;
     shangl = p_sspr->Brightness;
     strng = p_sspr->Scale;
-    draw_person_shadow(p_sspr->X, p_sspr->Y, p_sspr->Frame,
+    draw_multicolor_sprite_shadow(p_sspr->X, p_sspr->Y, p_sspr->Frame,
       shpak, shangl, p_sspr->Angle, strng);
 }
 
@@ -337,16 +337,16 @@ void draw_shadows_for_multicolor_sprites(void)
     for (shpak = 12; shpak >= 0; shpak--)
     {
         int base_idx;
-        ushort spr;
+        ushort angl;
 
-        base_idx = shpak * 8 * 6;
-        for (spr = 0; spr < 4; spr++)
+        base_idx = shpak * MUCOL_SHADOW_ANGLES_COUNT;
+        for (angl = 0; angl < MUCOL_SHADOW_ANGLES_COUNT/2; angl++)
         {
-            ushort fr;
-            ushort kk;
+            ushort frm;
+            ushort sbfrm;
 
-            fr = nstart_ani[spr + anims_wth_shadows[shpak]];
-            for (kk = 0; kk < 6; kk += 2)
+            frm = nstart_ani[anims_wth_shadows[shpak] + angl];
+            for (sbfrm = 0; sbfrm < MUCOL_SHADOW_FRAMES_COUNT; sbfrm += 2)
             {
                 int idx;
                 TbScreenCoord fr_beg_x, fr_end_x, fr_beg_y, fr_end_y;
@@ -355,7 +355,7 @@ void draw_shadows_for_multicolor_sprites(void)
                 // MUCOL_SHADOW_BITMAP_DIM, so coords within can be 8-bit
                 ubyte fr_scr_beg_x, fr_scr_beg_y, fr_scr_end_x, fr_scr_end_y;
 
-                get_frame_bounds_05(fr, &fr_beg_x, &fr_end_x, &fr_beg_y, &fr_end_y);
+                get_frame_bounds_05(frm, &fr_beg_x, &fr_end_x, &fr_beg_y, &fr_end_y);
 
                 // if cannot fit the sprite in this line, move to next line
                 if (stand_x + fr_end_x - fr_beg_x + 1 >= MUCOL_SHADOW_BITMAP_DIM)
@@ -370,7 +370,7 @@ void draw_shadows_for_multicolor_sprites(void)
 
                 stand_x = cur_scr_x - fr_beg_x;
                 stand_y = cur_scr_y - fr_beg_y;
-                draw_sorted_sprite1a(fr, stand_x, stand_y, 10);
+                draw_sorted_sprite1a(frm, stand_x, stand_y, 10);
 
                 fr_scr_beg_x = stand_x + fr_beg_x;
                 fr_scr_beg_y = stand_y + fr_beg_y;
@@ -378,40 +378,40 @@ void draw_shadows_for_multicolor_sprites(void)
                 fr_scr_end_y = stand_y + fr_end_y;
 
                 // Prepare UV coordinates for drawing the shadow as texture
-                idx = base_idx + 6 * spr;
-                mucol_shadow_p3_Ua[kk + idx + 0] = fr_scr_beg_x;
-                mucol_shadow_p1_Vb[kk + idx + 0] = fr_scr_beg_y;
-                mucol_shadow_p4_Ua[kk + idx + 0] = fr_scr_end_x;
-                mucol_shadow_p1_Vb[kk + idx + 1] = fr_scr_beg_y;
-                mucol_shadow_p4_Ua[kk + idx + 1] = fr_scr_end_x;
-                mucol_shadow_p3_Vb[kk + idx + 0] = fr_scr_end_y;
-                mucol_shadow_p3_Ua[kk + idx + 1] = fr_scr_beg_x;
-                mucol_shadow_p3_Vb[kk + idx + 1] = fr_scr_end_y;
-                if (spr != 0)
+                idx = (base_idx + angl) * MUCOL_SHADOW_FRAMES_COUNT;
+                mucol_shadow_p3_Ua[idx + sbfrm + 0] = fr_scr_beg_x;
+                mucol_shadow_p1_Vb[idx + sbfrm + 0] = fr_scr_beg_y;
+                mucol_shadow_p4_Ua[idx + sbfrm + 0] = fr_scr_end_x;
+                mucol_shadow_p1_Vb[idx + sbfrm + 1] = fr_scr_beg_y;
+                mucol_shadow_p4_Ua[idx + sbfrm + 1] = fr_scr_end_x;
+                mucol_shadow_p3_Vb[idx + sbfrm + 0] = fr_scr_end_y;
+                mucol_shadow_p3_Ua[idx + sbfrm + 1] = fr_scr_beg_x;
+                mucol_shadow_p3_Vb[idx + sbfrm + 1] = fr_scr_end_y;
+                if (angl != 0)
                 {
-                    idx = base_idx + 6 * (8 - spr);
-                    mucol_shadow_p4_Ua[kk + idx + 0] = fr_scr_beg_x;
-                    mucol_shadow_p1_Vb[kk + idx + 0] = fr_scr_beg_y;
-                    mucol_shadow_p3_Ua[kk + idx + 0] = fr_scr_end_x;
-                    mucol_shadow_p3_Vb[kk + idx + 0] = fr_scr_end_y;
-                    mucol_shadow_p4_Ua[kk + idx + 1] = fr_scr_beg_x;
-                    mucol_shadow_p1_Vb[kk + idx + 1] = fr_scr_beg_y;
-                    mucol_shadow_p3_Ua[kk + idx + 1] = fr_scr_end_x;
-                    mucol_shadow_p3_Vb[kk + idx + 1] = fr_scr_end_y;
+                    idx = (base_idx + (MUCOL_SHADOW_ANGLES_COUNT - angl)) * MUCOL_SHADOW_FRAMES_COUNT;
+                    mucol_shadow_p4_Ua[idx + sbfrm + 0] = fr_scr_beg_x;
+                    mucol_shadow_p1_Vb[idx + sbfrm + 0] = fr_scr_beg_y;
+                    mucol_shadow_p3_Ua[idx + sbfrm + 0] = fr_scr_end_x;
+                    mucol_shadow_p3_Vb[idx + sbfrm + 0] = fr_scr_end_y;
+                    mucol_shadow_p4_Ua[idx + sbfrm + 1] = fr_scr_beg_x;
+                    mucol_shadow_p1_Vb[idx + sbfrm + 1] = fr_scr_beg_y;
+                    mucol_shadow_p3_Ua[idx + sbfrm + 1] = fr_scr_end_x;
+                    mucol_shadow_p3_Vb[idx + sbfrm + 1] = fr_scr_end_y;
                 }
                 else
                 {
-                    idx = base_idx + 6 * 4;
-                    mucol_shadow_p4_Ua[kk + idx + 0] = fr_scr_beg_x;
-                    mucol_shadow_p1_Vb[kk + idx + 0] = fr_scr_beg_y;
-                    mucol_shadow_p3_Ua[kk + idx + 0] = fr_scr_end_x;
-                    mucol_shadow_p3_Vb[kk + idx + 0] = fr_scr_end_y;
-                    mucol_shadow_p4_Ua[kk + idx + 1] = fr_scr_beg_x;
-                    mucol_shadow_p1_Vb[kk + idx + 1] = fr_scr_beg_y;
-                    mucol_shadow_p3_Ua[kk + idx + 1] = fr_scr_end_x;
-                    mucol_shadow_p3_Vb[kk + idx + 1] = fr_scr_end_y;
+                    idx = (base_idx + MUCOL_SHADOW_ANGLES_COUNT/2) * MUCOL_SHADOW_FRAMES_COUNT;
+                    mucol_shadow_p4_Ua[idx + sbfrm + 0] = fr_scr_beg_x;
+                    mucol_shadow_p1_Vb[idx + sbfrm + 0] = fr_scr_beg_y;
+                    mucol_shadow_p3_Ua[idx + sbfrm + 0] = fr_scr_end_x;
+                    mucol_shadow_p3_Vb[idx + sbfrm + 0] = fr_scr_end_y;
+                    mucol_shadow_p4_Ua[idx + sbfrm + 1] = fr_scr_beg_x;
+                    mucol_shadow_p1_Vb[idx + sbfrm + 1] = fr_scr_beg_y;
+                    mucol_shadow_p3_Ua[idx + sbfrm + 1] = fr_scr_end_x;
+                    mucol_shadow_p3_Vb[idx + sbfrm + 1] = fr_scr_end_y;
                 }
-                fr = frame[frame[fr].Next].Next;
+                frm = frame[frame[frm].Next].Next;
                 cur_scr_x += fr_end_x - fr_beg_x + 1;
             }
         }
