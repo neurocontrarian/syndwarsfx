@@ -156,8 +156,8 @@ static void draw_pers_shadow(struct Thing *p_thing,
     short strng;
     ubyte shangl, angl;
 
-    angl = p_thing->U.UObject.Angle;
-    sbfrm = p_thing->Frame - nstart_ani[p_thing->StartFrame + 1 + angl];
+    angl = p_thing->U.UPerson.Angle;
+    sbfrm = get_person_anim_subframe(p_thing);
 
     anmode = p_thing->U.UPerson.AnimMode;
     if ((anmode == ANIM_PERS_WEPHEAVY_IDLE) ||

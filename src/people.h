@@ -209,6 +209,14 @@ enum PersonSex {
  */
 #define PERSON_ENERGY_TO_SHIELD_MUL 4
 
+/** Max amount of frames a standard person animation can have.
+ *
+ * Named that way as the limit is for standard walking/firing anims,
+ * not special ones like disintegration. Within this limit,
+ * subframe can be restored during AnimMode change.
+ */
+#define PERSON_STD_ANIM_MAX_FRAMES 6
+
 enum ThingWeaponSelectFlags {
     WepSel_TOGGLE = 0,
     WepSel_HIDE,
@@ -408,9 +416,17 @@ void person_set_energy_to_max_limit(struct Thing *p_person);
 void person_set_persuade_power__to_allow_all(struct Thing *p_person);
 
 
-/** Switches AnimMode of a person without removing any shifts to current frame.
+/** Switches AnimMode of a person without removing any shifts to current frame (subframe).
  */
 void switch_person_anim_mode(struct Thing *p_person, ubyte animode);
+
+/** Returns subframe of the paersons animation.
+ *
+ * Subframe is a shift between first frame and currently drawn frame of an anim.
+ * Using this function makes sure than temporary switches of animation will not
+ * lead to outranged value.
+ */
+ushort get_person_anim_subframe(struct Thing *p_person);
 
 /** Sets new AnimMode of a person, replacing the old frame number.
  */

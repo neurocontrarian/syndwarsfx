@@ -1174,6 +1174,22 @@ void reset_person_frame(struct Thing *p_person)
     p_person->Frame = nstart_ani[p_person->StartFrame + 1 + p_person->U.UPerson.Angle];
 }
 
+ushort get_person_anim_subframe(struct Thing *p_person)
+{
+    short sbfrm;
+
+    sbfrm = p_person->Frame - nstart_ani[p_person->StartFrame + 1 + p_person->U.UPerson.Angle];
+
+    // Person animations have limited frames, as some arrays are indexing on them
+    // though if some special effect frames exceed that, no problem - we will limit the value
+    // We may also encounter outranged value here if frame was modified to an animation
+    // which is not stored in StartFrame, this happens for some effects
+    if ((sbfrm < 0) || (sbfrm >= PERSON_STD_ANIM_MAX_FRAMES))
+        sbfrm = 0;
+
+    return sbfrm;
+}
+
 void switch_person_anim_mode(struct Thing *p_person, ubyte animode)
 {
     ushort person_anim;

@@ -308,11 +308,12 @@ void build_person(struct Thing *p_thing)
     }
     else if (p_thing->U.UPerson.AnimMode == ANIM_PERS_DEAD_BODY)
     {
-        ushort stframe_old, stframe_new;
+        ushort sbfrm;
+        ushort angl;
 
-        stframe_old = p_thing->StartFrame + 1 + p_thing->U.UPerson.Angle;
-        stframe_new = p_thing->StartFrame + 1 + ((3 * p_thing->U.UPerson.Angle >> 1) + 12 - byte_176D4A) % 12;
-        frame = p_thing->Frame + nstart_ani[stframe_new] - nstart_ani[stframe_old];
+        sbfrm = get_person_anim_subframe(p_thing);
+        angl = ((3 * p_thing->U.UPerson.Angle >> 1) + 12 - byte_176D4A) % 12;
+        frame = nstart_ani[p_thing->StartFrame + 1 + angl] + sbfrm;
         bri = p_thing->U.UPerson.Brightness;
     }
     else if ((p_thing->Flag & TngF_Unkn02000000) != 0)
@@ -326,16 +327,12 @@ void build_person(struct Thing *p_thing)
     }
     else
     {
-        ushort stframe_old, stframe_new;
+        ushort sbfrm;
+        ushort angl;
 
-        stframe_old = p_thing->StartFrame + 1 + p_thing->U.UPerson.Angle;
-        stframe_new = p_thing->StartFrame + 1 + ((p_thing->U.UObject.Angle + 8 - byte_176D49) & 7);
-        // Allow increment the frame by the currently set frame, but do not allow decrement
-        // Use abs instead of max, to make animation visible even if the difference is negative
-        //TODO would be better if a negative frame difference was fixed by states properly updating the Frame
-        // The issue workarounded by this is reproducible on stress test level 0,109 - police can
-        // look like exploding while still alive; may be related to multiple pushes by explosions
-        frame = abs(p_thing->Frame - (int)nstart_ani[stframe_old]) + nstart_ani[stframe_new];
+        sbfrm = get_person_anim_subframe(p_thing);
+        angl = (p_thing->U.UObject.Angle + 8 - byte_176D49) & 7;
+        frame = nstart_ani[p_thing->StartFrame + 1 + angl] + sbfrm;
         bri = p_thing->U.UPerson.Brightness;
     }
 
