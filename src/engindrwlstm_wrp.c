@@ -151,13 +151,13 @@ void draw_thing_e_graphic(struct Thing *p_thing, int x, int y, int z,
 static void draw_pers_shadow(struct Thing *p_thing,
   int scr_x, int scr_y, int scr_depth)
 {
-    ushort frm, anmode;
+    ushort sbfrm, anmode;
     ushort shpak;
     short strng;
     ubyte shangl, angl;
 
     angl = p_thing->U.UObject.Angle;
-    frm = p_thing->Frame - nstart_ani[p_thing->StartFrame + 1 + angl];
+    sbfrm = p_thing->Frame - nstart_ani[p_thing->StartFrame + 1 + angl];
 
     anmode = p_thing->U.UPerson.AnimMode;
     if ((anmode == ANIM_PERS_WEPHEAVY_IDLE) ||
@@ -174,7 +174,7 @@ static void draw_pers_shadow(struct Thing *p_thing,
     shangl = p_thing->U.UPerson.Shadows[0];
     strng = p_thing->U.UPerson.Shadows[1];
 
-    enlist_draw_tall_spr_shadow(scr_x, scr_y, scr_depth, frm,
+    enlist_draw_tall_spr_shadow(scr_x, scr_y, scr_depth, sbfrm,
       angl, shangl, shpak, strng, (intptr_t)p_thing);
 }
 

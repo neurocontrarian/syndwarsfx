@@ -251,7 +251,7 @@ void draw_unkn1_standard_sprite(ushort fr, int scr_x, int scr_y)
     lbDisplay.DrawFlags = 0;
 }
 
-void draw_hud_target_old_frame(struct Thing *p_target, int fr)
+void draw_hud_target_old_frame(struct Thing *p_target, int frm)
 {
     struct EnginePoint ep;
 
@@ -265,15 +265,15 @@ void draw_hud_target_old_frame(struct Thing *p_target, int fr)
     {
         int sh_x;
         sh_x = (12 * overall_scale) >> 9;
-        draw_unkn1_standard_sprite(fr +  0, ep.pp.X - sh_x, ep.pp.Y);
-        draw_unkn1_standard_sprite(fr + 10, ep.pp.X + sh_x, ep.pp.Y);
+        draw_unkn1_standard_sprite(frm +  0, ep.pp.X - sh_x, ep.pp.Y);
+        draw_unkn1_standard_sprite(frm + 10, ep.pp.X + sh_x, ep.pp.Y);
     }
     else
     {
         int sh_x;
         sh_x = (12 * overall_scale) >> 9;
-        draw_frame_scaled_alpha(ep.pp.X - sh_x, ep.pp.Y, fr +  0, overall_scale, PALETTE_FADE_LEVELS / 2);
-        draw_frame_scaled_alpha(ep.pp.X + sh_x, ep.pp.Y, fr + 10, overall_scale, PALETTE_FADE_LEVELS / 2);
+        draw_frame_scaled_alpha(ep.pp.X - sh_x, ep.pp.Y, frm +  0, overall_scale, PALETTE_FADE_LEVELS / 2);
+        draw_frame_scaled_alpha(ep.pp.X + sh_x, ep.pp.Y, frm + 10, overall_scale, PALETTE_FADE_LEVELS / 2);
     }
 
     draw_hud_health_bar(ep.pp.X, ep.pp.Y, p_target);
