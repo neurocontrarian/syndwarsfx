@@ -50,6 +50,10 @@
 #include "thing.h"
 #include "vehicle.h"
 /******************************************************************************/
+const ushort pers_anims_wth_shadows[] = {
+  1, 33, 113, 241, 273, 161, 193, 721, 753, 321, 401, 433, 33,
+};
+
 extern ubyte byte_1C83E4;
 
 /** Callback for setting height of shadow corners.
@@ -113,7 +117,8 @@ void generate_shadows_for_multicolor_sprites(void)
       lbDisplay.GraphicsScreenWidth, 256);
     LbScreenClear(0);
 
-    draw_shadows_for_multicolor_sprites();
+    draw_shadows_for_multicolor_sprites(pers_anims_wth_shadows,
+      sizeof(pers_anims_wth_shadows)/sizeof(pers_anims_wth_shadows[0]));
 
     copy_from_screen_ani(vec_tmap[shadow_tmap_page]);
 

@@ -75,10 +75,6 @@ struct ShadowTexture shadowtexture[] = {
   {  0,   0,   0,   0,   0,   0},
 };
 
-const ushort anims_wth_shadows[] = {
-  1, 33, 113, 241, 273, 161, 193, 721, 753, 321, 401, 433, 33,
-};
-
 #define MUCOL_SHADOW_UV_ARRAY_SIZE MUCOL_SHADOW_ANIMS_COUNT * MUCOL_SHADOW_ANGLES_COUNT * MUCOL_SHADOW_FRAMES_COUNT
 
 ubyte mucol_shadow_p3_Ua[MUCOL_SHADOW_UV_ARRAY_SIZE];
@@ -323,18 +319,20 @@ void get_frame_bounds_05(ushort frm, short *x1, short *x2, short *y1, short *y2)
     }
 }
 
-void draw_shadows_for_multicolor_sprites(void)
+void draw_shadows_for_multicolor_sprites(const ushort *anims, ushort anims_len)
 {
     int shpak;
     short fr_max_height;
     TbScreenCoord cur_scr_x, cur_scr_y;
+
+    assert(anims_len <= MUCOL_SHADOW_ANIMS_COUNT);
 
     overall_scale = 256;
 
     cur_scr_x = 0;
     cur_scr_y = 0;
     fr_max_height = 0;
-    for (shpak = 12; shpak >= 0; shpak--)
+    for (shpak = anims_len - 1; shpak >= 0; shpak--)
     {
         int base_idx;
         ushort angl;
@@ -345,7 +343,7 @@ void draw_shadows_for_multicolor_sprites(void)
             ushort frm;
             ushort sbfrm;
 
-            frm = nstart_ani[anims_wth_shadows[shpak] + angl];
+            frm = nstart_ani[anims[shpak] + angl];
             for (sbfrm = 0; sbfrm < MUCOL_SHADOW_FRAMES_COUNT; sbfrm += 2)
             {
                 int idx;

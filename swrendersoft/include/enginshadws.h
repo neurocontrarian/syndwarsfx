@@ -59,7 +59,7 @@ extern ushort shadow_tmap_page;
 extern struct ShadowTexture shadowtexture[];
 /******************************************************************************/
 
-void draw_shadows_for_multicolor_sprites(void);
+void draw_shadows_for_multicolor_sprites(const ushort *anims, ushort anims_len);
 void generate_shadows_angle_shifts(void);
 void copy_from_screen_ani(ubyte *buf);
 
