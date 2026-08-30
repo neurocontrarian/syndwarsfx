@@ -294,7 +294,6 @@ extern long dword_1AA5C8;
 extern ushort next_mission;
 extern ushort replay_intro_timer;
 extern ubyte show_alert;
-extern sbyte mo_weapon;
 
 extern sbyte selected_agent;
 

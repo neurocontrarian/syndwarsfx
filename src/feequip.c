@@ -99,6 +99,7 @@ short agent_name_shape_points_y[] = {
 };
 
 ubyte selected_weapon = 0;
+ubyte mo_weapon = 0;
 
 /******************************************************************************/
 
@@ -115,7 +116,7 @@ ubyte do_equip_offer_buy_cybmod(ubyte click);
 
 TbBool dragged_weapon_can_drop_on_research(void)
 {
-    return (mo_weapon != -1 && mo_weapon == research.CurrentWeapon);
+    return (mo_weapon != 0 && mo_weapon == research.CurrentWeapon + 1);
 }
 
 void dragged_weapon_drop_on_research(void)
@@ -123,10 +124,10 @@ void dragged_weapon_drop_on_research(void)
     assert(dragged_weapon_can_drop_on_research());
 
     LOGSYNC("Transferred weapon %s from agent %d to research",
-      weapon_codename(mo_weapon+1), mo_from_agent);
-    player_cryo_remove_weapon_one(mo_from_agent, mo_weapon + 1);
+      weapon_codename(mo_weapon), mo_from_agent);
+    player_cryo_remove_weapon_one(mo_from_agent, mo_weapon);
     research_unkn_func_003();
-    mo_weapon = -1;
+    mo_weapon = 0;
 }
 
 TbBool weapon_has_display_anim(ubyte weapon)
@@ -598,7 +599,7 @@ ubyte input_equip_agent_panel_shape(struct ScreenShape *shape, sbyte nagent)
         }
         else
         {
-            if ((nagent >= cryo_agents.NumAgents) || (mo_weapon == -1))
+            if ((nagent >= cryo_agents.NumAgents) || (mo_weapon == 0))
             {
                 if ((shape->Flags & 0x0400) != 0)
                 {
@@ -617,13 +618,13 @@ ubyte input_equip_agent_panel_shape(struct ScreenShape *shape, sbyte nagent)
             }
             else
             {
-                if (free_slot(nagent, mo_weapon + 1))
+                if (free_slot(nagent, mo_weapon))
                 {
                     LOGSYNC("Transferred weapon %s from agent %d to agent %d",
-                      weapon_codename(mo_weapon+1), mo_from_agent, nagent);
-                    player_cryo_transfer_weapon_between_agents(mo_from_agent, nagent, mo_weapon+1);
+                      weapon_codename(mo_weapon), mo_from_agent, nagent);
+                    player_cryo_transfer_weapon_between_agents(mo_from_agent, nagent, mo_weapon);
                 }
-                mo_weapon = -1;
+                mo_weapon = 0;
                 shape->Flags &= ~0x0400;
             }
             gbstate = GBxSta_HLIGHT2;
@@ -881,14 +882,14 @@ ubyte show_equipment_screen(void)
         drawn = equip_display_box.DrawFn(&equip_display_box);
     }
 
-    if (mo_weapon != -1)
+    if (mo_weapon != 0)
     {
         short ms_x, ms_y;
         struct TbSprite *spr;
 
         ms_x = lbDisplay.GraphicsScreenHeight < 400 ? 2 * lbDisplay.MMouseX : lbDisplay.MMouseX;
         ms_y = lbDisplay.GraphicsScreenHeight < 400 ? 2 * lbDisplay.MMouseY : lbDisplay.MMouseY;
-        spr = &fepanel_sprites[weapon_sprite_index(mo_weapon + 1, true)];
+        spr = &fepanel_sprites[weapon_sprite_index(mo_weapon, true)];
         draw_sprite_purple_list(ms_x, ms_y, spr);
     }
 
@@ -1089,7 +1090,7 @@ ubyte show_weapon_list(struct ScreenTextBox *box)
 {
     int h0;
     int sheight;
-    short weapon;
+    short wep_line;
     struct TbSprite *spr;
 
     if ((box->Flags & 0x8000) == 0)
@@ -1119,14 +1120,14 @@ ubyte show_weapon_list(struct ScreenTextBox *box)
     spr = &fepanel_sprites[15 + 0];
     sheight = spr->SHeight;
 
-    for (weapon = box->TextTopLine; (weapon < WEP_TYPES_COUNT) && (h0 + sheight < box->ScrollWindowHeight + 23); weapon++)
+    for (wep_line = box->TextTopLine; (wep_line < WEP_TYPES_COUNT) && (h0 + sheight < box->ScrollWindowHeight + 23); wep_line++)
     {
         short msy, msx;
         short y1, y2;
         const char *text;
         WeaponType wtype;
 
-        wtype = weapon + 1;
+        wtype = wep_line + 1;
         if (!weapon_available_for_purchase(wtype))
             continue;
 
@@ -1140,13 +1141,13 @@ ubyte show_weapon_list(struct ScreenTextBox *box)
             if (lbDisplay.LeftButton)
             {
                 lbDisplay.LeftButton = 0;
-                selected_weapon = weapon + 1;
+                selected_weapon = wep_line + 1;
                 switch_equip_offer_to_buy();
                 equip_update_for_selected_weapon();
             }
         }
 
-        if (weapon + 1 == selected_weapon) {
+        if (wep_line + 1 == selected_weapon) {
             lbDisplay.DrawFlags = Lb_TEXT_ONE_COLOR;
             lbDisplay.DrawColour = 87;
         } else {
@@ -1239,19 +1240,19 @@ void show_weapon_slot(short scr_x, short scr_y, WeaponType wtype)
     }
 
     lbDisplay.DrawFlags = 0;
-    if ((mo_weapon == -1) && lbDisplay.LeftButton)
+    if ((mo_weapon == 0) && lbDisplay.LeftButton)
     {
         if (mouse_down_over_box_coords(scr_x, scr_y, scr_x + 181, scr_y + 42))
         {
             lbDisplay.LeftButton = 0;
-            mo_weapon = (int)wtype - 1;
+            mo_weapon = wtype;
             mo_from_agent = selected_agent;
             LOGSYNC("Dragging weapon %s from agent %d",
-              weapon_codename(mo_weapon+1), mo_from_agent);
+              weapon_codename(mo_weapon), mo_from_agent);
         }
     }
 
-    if ((mo_weapon != -1) && !lbDisplay.MLeftButton)
+    if ((mo_weapon != 0) && !lbDisplay.MLeftButton)
     {
         if (mouse_move_over_box_coords(scr_x, scr_y, scr_x + 181, scr_y + 42))
         {
@@ -1262,10 +1263,10 @@ void show_weapon_slot(short scr_x, short scr_y, WeaponType wtype)
         // Cancel the dragging, unless the mouse is on active areas handled by other functions
         // The specific active areas have to be defined here, as we really want to stop
         // the dragging if mouse was released anywhere else
-        if ((int)wtype - 1 >= mo_weapon && !mouse_over_purple_apps_icon(ApBar_RESEARCH)) {
+        if (wtype >= mo_weapon && !mouse_over_purple_apps_icon(ApBar_RESEARCH)) {
             LOGSYNC("Return dragged weapon %s to agent %d",
-              weapon_codename(mo_weapon+1), mo_from_agent);
-            mo_weapon = -1;
+              weapon_codename(mo_weapon), mo_from_agent);
+            mo_weapon = 0;
         }
     }
 }

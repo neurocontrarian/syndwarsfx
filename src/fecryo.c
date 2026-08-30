@@ -1671,7 +1671,7 @@ ubyte input_cryo_agent_panel_shape(struct ScreenShape *shape, sbyte nagent)
         }
         else
         {
-            if ((nagent >= cryo_agents.NumAgents) || (mo_weapon == -1))
+            if ((nagent >= cryo_agents.NumAgents) || (mo_weapon == 0))
             {
                 if ((shape->Flags & 0x0400) != 0)
                 {
@@ -1693,7 +1693,7 @@ ubyte input_cryo_agent_panel_shape(struct ScreenShape *shape, sbyte nagent)
             else
             {
                 // No drag and drop ability in mods screen
-                mo_weapon = -1;
+                mo_weapon = 0;
                 shape->Flags &= ~0x0400;
             }
             gbstate = GBxSta_HLIGHT2;

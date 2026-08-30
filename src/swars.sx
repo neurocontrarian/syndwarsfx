@@ -135499,8 +135499,8 @@ GLOBAL (unkn_rate)	/* 0x155150 */
 		.byte	0x0
 data_155151:
 		.ascii  "\x4b\x00\x00"
-GLOBAL (mo_weapon)	/* 0x155154 */
-		.ascii  "\xff\x00\x00\x00"
+		.align  4
+
 GLOBAL (month_days)
 		.ascii  "\x1f\x1c\x1f\x1e\x1f\x1e\x1f\x1f\x1e"
 data_155161:

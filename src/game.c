@@ -6231,7 +6231,7 @@ void mouse_sprite_animate(void)
 
 void menu_screen_redraw(void)
 {
-    mo_weapon = -1;
+    mo_weapon = 0;
     reload_background_flag = 1;
     if (screentype == SCRT_WORLDMAP)
     {

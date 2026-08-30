@@ -41,6 +41,7 @@ struct ScreenBoxBase;
  */
 extern ubyte selected_weapon;
 extern ubyte display_box_content;
+extern ubyte mo_weapon;
 
 ubyte show_equipment_screen(void);
 
