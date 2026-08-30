@@ -148,7 +148,7 @@ void sprint_joy_key(char *ostr, int buttons_num, JoyButtonSet jkeys)
         {
             if (tx_len > 0)
                 ostr[tx_len++] = '+';
-            const char *label = joy_get_button_label(jbtn);
+            const char *label = JoyGetButtonLabel(jbtn);
             while (*label && tx_len < 50) {
                 ostr[tx_len++] = *label++;
             }

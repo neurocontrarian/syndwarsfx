@@ -146,7 +146,7 @@ ubyte show_controls_joystick_box(struct ScreenBox *p_box)
     lbDisplay.DrawFlags |= 0x8000;
     if (ctl_joystick_type == JTyp_EXT_DRIVER)
     {
-      if (joy_get_device_name(locstr) != -1)
+      if (JoyGetDeviceName(locstr) != -1)
       {
         text = loctext_to_gtext(locstr);
         tx_width = my_string_width(locstr);
@@ -177,7 +177,7 @@ ubyte show_controls_joystick_box(struct ScreenBox *p_box)
             ubyte last_type;
 
             if (ctl_joystick_type != JTyp_NONE)
-                joy_refresh_devices(&joy);
+                JoyRefreshDevices(&joy);
             lbDisplay.LeftButton = 0;
 
             setup_ret = -1;
@@ -191,7 +191,7 @@ ubyte show_controls_joystick_box(struct ScreenBox *p_box)
                     ctl_joystick_type = JTyp_NONE;
                 }
                 if (joy_types_available[ctl_joystick_type]) {
-                    setup_ret = joy_setup_device(&joy, ctl_joystick_type);
+                    setup_ret = JoySetupDevice(&joy, ctl_joystick_type);
                 }
                 if (last_type == JTyp_NONE)
                     last_type = JTyp_ANALG_2BTN;

@@ -8738,7 +8738,7 @@ GLOBAL_FUNC (ASM_joy_input)	/* 0x3DC68 */
 		push   %ebp
 		mov    $EXPORT_SYMBOL(joy)+0,%eax # joy.Yaw
 		xor    %edx,%edx
-		call   ac_joy_update_inputs
+		call   ac_JoyUpdateInputs
 		mov    EXPORT_SYMBOL(local_player_no),%dl
 		lea    0x0(,%edx,8),%eax
 		add    %edx,%eax

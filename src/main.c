@@ -552,8 +552,7 @@ main (int argc, char **argv)
     ingame.LowerMemoryUse = 0;
     ingame.Flags = 0;
     setup_log();
-    /* Gravis Grip joystick driver initialization */
-    joy_driver_init();
+    JoyDriverInit();
 
     if (!process_options(&argc, &argv))
         return 1;
@@ -581,7 +580,7 @@ main (int argc, char **argv)
     if ( in_network_game ) {
         LbNetworkReset();
     }
-    joy_driver_shutdown();
+    JoyDriverShutdown();
     reset_log();
     LbMemoryReset();
     game_quit();

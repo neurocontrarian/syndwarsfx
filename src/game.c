@@ -6982,7 +6982,7 @@ void joy_input(void)
         :  :  : "eax" );
     return;
 #endif
-    joy_update_inputs(&joy);
+    JoyUpdateInputs(&joy);
 
     PlayerInfo *p_locplayer = &players[local_player_no];
 
