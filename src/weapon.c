@@ -97,6 +97,8 @@ ubyte weapon_tech_level[33] = {
   0, 1, 1, 3, 3, 5, 6, 2, 4, 3, 3, 2, 4, 4, 255, 5, 7, 8, 1, 255, 9, 6, 6, 255, 8, 7, 5, 2, 6, 7, 5, 255, 255,
 };
 
+ushort weapon_text_index[WEP_TYPES_COUNT] = {0};
+
 struct WeaponDefAdd weapon_defs_a[33] = {0};
 struct TbNamedEnum weapon_names[33] = {0};
 
@@ -448,6 +450,13 @@ void init_weapon_text(void)
     s = weapon_text;
     weapon_text[totlen] = '\0';
 
+    for (i = 0; i < WEP_TYPES_COUNT; i++) {
+        weapon_text_index[i] = totlen;
+    }
+    for (i = 0; i < MOD_TYPES_COUNT; i++) {
+        cybmod_text_index[i] = totlen;
+    }
+
     // section_start = s;
     weptxt_pos = 0;
 
@@ -478,7 +487,6 @@ void init_weapon_text(void)
             const char *codename;
             codename = weapon_codename(i);
             if (strcmp(codename, locstr) == 0) {
-                i--;
                 break;
             }
         }
@@ -529,7 +537,6 @@ void init_weapon_text(void)
             const char *codename;
             codename = cybmod_codename(i);
             if (strcmp(codename, locstr) == 0) {
-                i--;
                 break;
             }
         }

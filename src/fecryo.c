@@ -192,7 +192,7 @@ void cryo_display_box_redraw(struct ScreenTextBox *p_box)
 
         p_box->TextTopLine = 0;
         p_box->Lines = 0;
-        p_box->Text = &weapon_text[cybmod_text_index[selected_mod - 1]];
+        p_box->Text = &weapon_text[cybmod_text_index[selected_mod]];
         lbFontPtr = small_font;
         p_box->LineHeight = byte_197160 + my_char_height('A');
         lbFontPtr = p_box->Font;

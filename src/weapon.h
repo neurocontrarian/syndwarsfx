@@ -183,6 +183,8 @@ extern ubyte weapon_sound[32];
 extern ubyte weapon_sound_z[32];
 extern short persuaded_person_weapons_sell_cost_permil;
 
+extern ushort weapon_text_index[WEP_TYPES_COUNT];
+
 void read_weapons_conf_file(void);
 void init_weapon_text(void);
 

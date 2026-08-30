@@ -216,8 +216,6 @@ extern ubyte byte_1C6DDC[5];
 extern ushort word_1C8446;
 extern ushort unkn3de_len;
 
-extern ushort weapon_text_index[32];
-extern ushort cybmod_text_index[16];
 extern ubyte background_type;
 extern ubyte old_screentype;
 extern ubyte screentype;
