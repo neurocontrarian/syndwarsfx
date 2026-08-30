@@ -135529,10 +135529,7 @@ GLOBAL (selected_weapon)	/* 0x155164 */
 		.byte	0xff
 GLOBAL (selected_mod)	/* 0x155165 */
 		.byte	0xff
-GLOBAL (research_selected_wep)	/* 0x155166 */
-		.byte	0xff
-GLOBAL (research_selected_mod)	/* 0x155167 */
-		.byte	0xff
+		.align  4
 GLOBAL (research_on_weapons)	/* 0x155168 */
 		.byte	0x1
 GLOBAL (unkn_city_no)	/* 0x155169 */

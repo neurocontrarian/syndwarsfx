@@ -52,8 +52,8 @@ struct ScreenButton research_list_buttons[2] = {0};
 extern ubyte research_completed;// = 0;
 extern ubyte research_on_weapons;// = true;
 extern ubyte research_unkn_var_01;
-extern sbyte research_selected_wep; // = -1;
-extern sbyte research_selected_mod; // = -1;
+ubyte research_selected_wep = 0;
+ubyte research_selected_mod = 0;
 extern ubyte byte_1551E4[5];
 
 /******************************************************************************/
@@ -163,10 +163,10 @@ ubyte do_research_submit(ubyte click)
 {
     if (research_on_weapons)
     {
-        if (research_selected_wep != -1)
+        if (research_selected_wep != 0)
         {
-            research.CurrentWeapon = research_selected_wep;
-            research_selected_wep = -1;
+            research.CurrentWeapon = research_selected_wep - 1;
+            research_selected_wep = 0;
             research_curr_wep_date = global_date;
             research_curr_wep_date.Minute = global_date.Minute - 1;
 
@@ -175,10 +175,10 @@ ubyte do_research_submit(ubyte click)
         }
     }
     {
-        if (research_selected_mod != -1)
+        if (research_selected_mod != 0)
         {
-            research.CurrentMod = research_selected_mod;
-            research_selected_mod = -1;
+            research.CurrentMod = research_selected_mod - 1;
+            research_selected_mod = 0;
             research_curr_mod_date = global_date;
             research_curr_mod_date.Minute = global_date.Minute - 1;
 
@@ -207,8 +207,8 @@ ubyte do_research_suspend(ubyte click)
 ubyte do_unkn12_WEAPONS_MODS(ubyte click)
 {
     research_on_weapons = (research_on_weapons == 0);
-    research_selected_mod = -1;
-    research_selected_wep = -1;
+    research_selected_mod = 0;
+    research_selected_wep = 0;
     switch_research_screen_boxes_weapons_mods();
     return 1;
 }
@@ -278,8 +278,8 @@ ubyte show_unkn21_box(struct ScreenTextBox *p_box)
                   if (lbDisplay.LeftButton)
                   {
                       lbDisplay.LeftButton = 0;
-                      research_selected_wep = line;
-                      if (research.CurrentWeapon == line) {
+                      research_selected_wep = line + 1;
+                      if (research.CurrentWeapon == research_selected_wep - 1) {
                           text = gui_strings[418];
                           research_submit_button.CallBackFn = do_research_suspend;
                       } else {
@@ -289,7 +289,7 @@ ubyte show_unkn21_box(struct ScreenTextBox *p_box)
                       research_submit_button.Text = text;
                   }
               }
-              if (research_selected_wep == line)
+              if (research_selected_wep == line + 1)
               {
                   lbDisplay.DrawFlags |= Lb_TEXT_ONE_COLOR;
                   lbDisplay.DrawColour = 87;
@@ -318,8 +318,8 @@ ubyte show_unkn21_box(struct ScreenTextBox *p_box)
                 if (lbDisplay.LeftButton)
                 {
                     lbDisplay.LeftButton = 0;
-                    research_selected_mod = line;
-                    if (research.CurrentMod == line)
+                    research_selected_mod = line + 1;
+                    if (research.CurrentMod == research_selected_mod - 1)
                     {
                         text = gui_strings[418];
                         research_submit_button.CallBackFn = do_research_suspend;
@@ -332,7 +332,7 @@ ubyte show_unkn21_box(struct ScreenTextBox *p_box)
                     research_submit_button.Text = text;
                 }
             }
-            if (research_selected_mod == line)
+            if (research_selected_mod == line + 1)
             {
                 lbDisplay.DrawFlags |= 0x0040;
                 lbDisplay.DrawColour = 87;
@@ -835,8 +835,8 @@ void init_research_screen_boxes(void)
 void reset_research_screen_player_state(void)
 {
     research_on_weapons = 1;
-    research_selected_mod = -1;
-    research_selected_wep = -1;
+    research_selected_mod = 0;
+    research_selected_wep = 0;
     switch_research_screen_boxes_weapons_mods();
 }
 
