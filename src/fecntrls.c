@@ -173,28 +173,28 @@ ubyte show_controls_joystick_box(struct ScreenBox *p_box)
     {
         if (lbDisplay.LeftButton)
         {
-            sbyte v23;
-            ubyte v24;
+            sbyte setup_ret;
+            ubyte last_type;
 
             if (ctl_joystick_type != JTyp_NONE)
                 joy_refresh_devices(&joy);
             lbDisplay.LeftButton = 0;
 
-            v23 = -1;
-            v24 = ctl_joystick_type;
-            while (v23 != 1)
+            setup_ret = -1;
+            last_type = ctl_joystick_type;
+            while (setup_ret != 1)
             {
                 if (++ctl_joystick_type >= JTyp_TYPES_COUNT)
                     ctl_joystick_type = JTyp_ANALG_2BTN; // first one
-                if (v24 == ctl_joystick_type)
-                {
-                    v23 = 1;
+                if (last_type == ctl_joystick_type) {
+                    setup_ret = 1;
                     ctl_joystick_type = JTyp_NONE;
                 }
-                if (unkn01_maskarr[ctl_joystick_type])
-                    v23 = joy_setup_device(&joy, ctl_joystick_type);
-                if (!v24)
-                    v24 = 1;
+                if (joy_types_available[ctl_joystick_type]) {
+                    setup_ret = joy_setup_device(&joy, ctl_joystick_type);
+                }
+                if (last_type == JTyp_NONE)
+                    last_type = JTyp_ANALG_2BTN;
             }
         }
     }

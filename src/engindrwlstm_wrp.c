@@ -110,7 +110,7 @@ extern ubyte byte_176D49;
 
 extern long dword_176CAC;
 extern long dword_176CB0;
-extern long dword_152E4C;
+u32 dword_152E4C = 0x3F69A093;
 
 extern struct BulStart bul_starts[4000];
 

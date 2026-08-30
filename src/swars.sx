@@ -21172,7 +21172,7 @@ GLOBAL_FUNC(ASM_process_wander)	/* 0x04BB8C */
 		or     $0x4,%bl
 		mov    0x57(%edi),%al
 		mov    %bl,0xc(%edi)
-		mov    data_15335a(,%eax,4),%eax
+		mov    EXPORT_SYMBOL(angle_direction)-0x02(,%eax,4),%eax
 		sar    $0x10,%eax
 		mov    %eax,0x2c(%edi)
 		xor    %eax,%eax
@@ -21620,7 +21620,7 @@ GLOBAL_FUNC(ASM_process_avoid_group)	/* 0x04C134 */
 		jne    jump_4c20a
 		xor    %eax,%eax
 		mov    0x57(%edx),%al
-		mov    data_15335a(,%eax,4),%eax
+		mov    EXPORT_SYMBOL(angle_direction)-0x02(,%eax,4),%eax
 		sar    $0x10,%eax
 		mov    %eax,0x2c(%edx)
 		xor    %eax,%eax
@@ -29451,7 +29451,7 @@ GLOBAL_FUNC(ASM_process_im_shoved)	/* 0x051A2C */
 		mov    0x5c(%edx),%al
 		add    $0x7,%eax
 		and    $0x7,%eax
-		mov    data_15335a(,%eax,4),%eax
+		mov    EXPORT_SYMBOL(angle_direction)-0x02(,%eax,4),%eax
 		sar    $0x10,%eax
 		sar    $0x4,%eax
 		mov    %eax,0x2c(%edx)
@@ -32391,7 +32391,7 @@ GLOBAL_FUNC(ASM_person_burning)	/* 0x053D8C */
 	jump_53e7f:
 		xor    %eax,%eax
 		mov    0x57(%esi),%al
-		mov    data_15335a(,%eax,4),%eax
+		mov    EXPORT_SYMBOL(angle_direction)-0x02(,%eax,4),%eax
 		sar    $0x10,%eax
 		mov    %eax,0x2c(%esi)
 		xor    %eax,%eax
@@ -116755,7 +116755,7 @@ GLOBAL_FUNC(ASM_init_uzi)	/* 0x0C1C0C */
 		mov    0x57(%esi),%bl
 		xor    %edx,%edx
 		mov    %ah,0x1c(%esp)
-		mov    data_15335a(,%ebx,4),%eax
+		mov    EXPORT_SYMBOL(angle_direction)-0x02(,%ebx,4),%eax
 		mov    %dx,0x14(%esp)
 		sar    $0x10,%eax
 		mov    EXPORT_SYMBOL(angle_direction)(,%ebx,4),%ebx
@@ -117122,7 +117122,7 @@ GLOBAL_FUNC(ASM_init_long_range)	/* 0x0C2078 */
 		mov    %ah,0x20(%esp)
 		xor    %eax,%eax
 		mov    0x57(%esi),%al
-		mov    data_15335a(,%eax,4),%ebx
+		mov    EXPORT_SYMBOL(angle_direction)-0x02(,%eax,4),%ebx
 		mov    0x18(%esi),%edx
 		sar    $0x10,%ebx
 		mov    EXPORT_SYMBOL(angle_direction)(,%eax,4),%eax
@@ -117489,7 +117489,7 @@ GLOBAL_FUNC(ASM_init_minigun)	/* 0x0C24C4 */
 		mov    0x57(%esi),%dl
 		xor    %edi,%edi
 		mov    %ah,0x24(%esp)
-		mov    data_15335a(,%edx,4),%eax
+		mov    EXPORT_SYMBOL(angle_direction)-0x02(,%edx,4),%eax
 		mov    EXPORT_SYMBOL(angle_direction)(,%edx,4),%ebp
 		sar    $0x10,%eax
 		sar    $0x10,%ebp
@@ -118034,7 +118034,7 @@ GLOBAL_FUNC(ASM_init_time_gun)	/* 0x0C2AE0 */
 		xor    %eax,%eax
 		mov    0x57(%esi),%al
 		mov    0x18(%esi),%edx
-		mov    data_15335a(,%eax,4),%ecx
+		mov    EXPORT_SYMBOL(angle_direction)-0x02(,%eax,4),%ecx
 		mov    0x20(%esi),%ebx
 		sar    $0x10,%ecx
 		mov    EXPORT_SYMBOL(angle_direction)(,%eax,4),%eax
@@ -118172,7 +118172,7 @@ GLOBAL_FUNC(ASM_init_stasis_gun)	/* 0x0C2C6C */
 		mov    0x57(%eax),%dl
 		mov    0x18(%esi),%ebx
 		mov    0x20(%esi),%ebp
-		mov    data_15335a(,%edx,4),%eax
+		mov    EXPORT_SYMBOL(angle_direction)-0x02(,%edx,4),%eax
 		mov    EXPORT_SYMBOL(angle_direction)(,%edx,4),%ecx
 		sar    $0x10,%eax
 		sar    $0x10,%ecx
@@ -118365,7 +118365,7 @@ GLOBAL_FUNC(ASM_init_c_iff)	/* 0x0C2E8C */
 		call   ac_play_dist_sample
 		xor    %edx,%edx
 		mov    0x57(%esi),%dl
-		mov    data_15335a(,%edx,4),%eax
+		mov    EXPORT_SYMBOL(angle_direction)-0x02(,%edx,4),%eax
 		sar    $0x10,%eax
 		mov    0x18(%esi),%ebp
 		shl    $0x7,%eax
@@ -118455,7 +118455,7 @@ GLOBAL_FUNC(ASM_init_flamer)	/* 0x0C303C */
 		mov    0x57(%edx),%al
 		mov    0x18(%esp),%ebp
 		mov    0x18(%esi),%esi
-		mov    data_15335a(,%eax,4),%edx
+		mov    EXPORT_SYMBOL(angle_direction)-0x02(,%eax,4),%edx
 		mov    EXPORT_SYMBOL(angle_direction)(,%eax,4),%eax
 		mov    0x20(%edi),%edi
 		sar    $0x10,%eax
@@ -119949,7 +119949,7 @@ GLOBAL_FUNC(ASM_init_laser_elec)	/* 0x0C422C */
 		xor    %eax,%eax
 		mov    0x57(%edi),%al
 		mov    0x18(%edi),%ecx
-		mov    data_15335a(,%eax,4),%edx
+		mov    EXPORT_SYMBOL(angle_direction)-0x02(,%eax,4),%edx
 		mov    EXPORT_SYMBOL(angle_direction)(,%eax,4),%eax
 		mov    0x20(%edi),%ebp
 		sar    $0x10,%eax
@@ -120021,7 +120021,7 @@ GLOBAL_FUNC(ASM_init_laser_elec)	/* 0x0C422C */
 	jump_c4379:
 		xor    %ebx,%ebx
 		mov    0x57(%edi),%bl
-		mov    data_15335a(,%ebx,4),%ebx
+		mov    EXPORT_SYMBOL(angle_direction)-0x02(,%ebx,4),%ebx
 		sar    $0x10,%ebx
 		mov    %ebx,(%esp)
 		xor    %ebx,%ebx
@@ -120363,7 +120363,7 @@ GLOBAL_FUNC(ASM_init_laser_guided)	/* 0x0C4720 */
 		mov    0x57(%esi),%al
 		add    $0x4,%eax
 		and    $0x7,%eax
-		mov    data_15335a(,%eax,4),%edx
+		mov    EXPORT_SYMBOL(angle_direction)-0x02(,%eax,4),%edx
 		sar    $0x10,%edx
 		mov    0x18(%esi),%ecx
 		shl    $0x7,%edx
@@ -120485,7 +120485,7 @@ GLOBAL_FUNC(ASM_init_laser_beam)	/* 0x0C48CC */
 		xor    %eax,%eax
 		mov    0x57(%edx),%al
 		mov    0x1c(%esp),%ecx
-		mov    data_15335a(,%eax,4),%edx
+		mov    EXPORT_SYMBOL(angle_direction)-0x02(,%eax,4),%edx
 		mov    0x18(%ecx),%ecx
 		sar    $0x10,%edx
 		mov    EXPORT_SYMBOL(angle_direction)(,%eax,4),%eax
@@ -120560,7 +120560,7 @@ GLOBAL_FUNC(ASM_init_laser_beam)	/* 0x0C48CC */
 		xor    %ebx,%ebx
 		mov    0x57(%ecx),%bl
 		xor    %ecx,%ecx
-		mov    data_15335a(,%ebx,4),%ebx
+		mov    EXPORT_SYMBOL(angle_direction)-0x02(,%ebx,4),%ebx
 		mov    EXPORT_SYMBOL(weapon_defs)+425,%cx # sizeof(struct WeaponDef) * 17
 		sar    $0x10,%ebx
 		imul   %ecx,%ebx
@@ -124344,7 +124344,7 @@ GLOBAL_FUNC(ASM_init_rocket)	/* 0x0C7F10 */
 		xor    %eax,%eax
 		mov    0x57(%edi),%al
 		mov    0x18(%edi),%ebx
-		mov    data_15335a(,%eax,4),%edx
+		mov    EXPORT_SYMBOL(angle_direction)-0x02(,%eax,4),%edx
 		mov    EXPORT_SYMBOL(angle_direction)(,%eax,4),%eax
 		sar    $0x10,%edx
 		sar    $0x10,%eax
@@ -124485,7 +124485,7 @@ GLOBAL_FUNC(ASM_init_rocket)	/* 0x0C7F10 */
 	jump_c80f6:
 		xor    %ecx,%ecx
 		mov    0x57(%edi),%cl
-		mov    data_15335a(,%ecx,4),%ebx
+		mov    EXPORT_SYMBOL(angle_direction)-0x02(,%ecx,4),%ebx
 		sar    $0x10,%ebx
 		mov    EXPORT_SYMBOL(angle_direction)(,%ecx,4),%ecx
 		mov    %ebx,0x2c(%esi)
@@ -124849,7 +124849,7 @@ GLOBAL_FUNC(ASM_init_grenade)	/* 0x0C84D0 */
 		xor    %eax,%eax
 		mov    0x57(%ecx),%al
 		mov    0x18(%ecx),%esi
-		mov    data_15335a(,%eax,4),%edx
+		mov    EXPORT_SYMBOL(angle_direction)-0x02(,%eax,4),%edx
 		mov    EXPORT_SYMBOL(angle_direction)(,%eax,4),%eax
 		sar    $0x10,%edx
 		sar    $0x10,%eax
@@ -124915,7 +124915,7 @@ GLOBAL_FUNC(ASM_init_grenade)	/* 0x0C84D0 */
 		jmp    jump_c85f3
 	jump_c85c9:
 		mov    0x57(%ecx),%dl
-		mov    data_15335a(,%edx,4),%edx
+		mov    EXPORT_SYMBOL(angle_direction)-0x02(,%edx,4),%edx
 		sar    $0x10,%edx
 		movl   $0xfa0,0x30(%ebx)
 		add    %edx,%edx
@@ -125222,7 +125222,7 @@ GLOBAL_FUNC(ASM_init_laser)	/* 0x0C88A4 */
 		xor    %eax,%eax
 		mov    0x57(%edi),%al
 		mov    0x18(%edi),%ecx
-		mov    data_15335a(,%eax,4),%ebx
+		mov    EXPORT_SYMBOL(angle_direction)-0x02(,%eax,4),%ebx
 		mov    EXPORT_SYMBOL(angle_direction)(,%eax,4),%eax
 		mov    0x20(%edi),%ebp
 		sar    $0x10,%eax
@@ -125302,7 +125302,7 @@ GLOBAL_FUNC(ASM_init_laser)	/* 0x0C88A4 */
 	jump_c89e1:
 		xor    %eax,%eax
 		mov    0x57(%edi),%al
-		mov    data_15335a(,%eax,4),%ebx
+		mov    EXPORT_SYMBOL(angle_direction)-0x02(,%eax,4),%ebx
 		xor    %eax,%eax
 		sar    $0x10,%ebx
 		mov    EXPORT_SYMBOL(weapon_defs)+75,%ax # sizeof(struct WeaponDef) * 3
@@ -131655,42 +131655,6 @@ data_152e38:
 		.ascii  "\xff\xff\xff\xff\xff\xff\xff\xff"
 		.ascii  "\xff\xff\xff\xff\xff\xff\xff\xff"
 		.ascii  "\xff\xff\xff\xff"
-GLOBAL (dword_152E4C)	/* 0x152E4C */
-		.ascii  "\x93\xa0\x69\x3f"
-GLOBAL (dword_152E50)	/* 0x152E50 */
-		.ascii  "\x00\x01\x00\x00"
-GLOBAL (dword_152E54)	/* 0x152E54 */
-		.ascii  "\x50\x00\x00\x00"
-GLOBAL (dword_152E58)	/* 0x152E58 */
-		.ascii  "\x9a\x01\x00\x00"
-ASM_waft_table2:	/* 0x152E5E */
-		.ascii  "\xe4\xff\xe5\xff\xe7\xff\xea\xff"
-		.ascii  "\xee\xff\xf3\xff\xf9\xff\x00\x00"
-		.ascii  "\x07\x00\x0d\x00\x12\x00\x16\x00"
-		.ascii  "\x19\x00\x1b\x00\x1c\x00\x1d\x00"
-		.ascii  "\x1c\x00\x1b\x00\x16\x00\x12\x00"
-		.ascii  "\x0d\x00\x07\x00\x00\x00\xf9\xff"
-		.ascii  "\xf3\xff\xee\xff\xea\xff\xe7\xff"
-		.ascii  "\xe5\xff\xe4\xff\xe3\xff\xe4\xff"
-ASM_waft_table:	/* 0x152E9E */
-		.ascii  "\xe4\xff\xe8\xff\xeb\xff\xef\xff"
-		.ascii  "\xf2\xff\xf6\xff\xf9\xff\xfd\xff"
-		.ascii  "\x00\x00\x04\x00\x07\x00\x0b\x00"
-		.ascii  "\x0e\x00\x12\x00\x15\x00\x18\x00"
-		.ascii  "\x1c\x00\x18\x00\x15\x00\x12\x00"
-		.ascii  "\x0e\x00\x0b\x00\x07\x00\x04\x00"
-		.ascii  "\x00\x00\xfd\xff\xf9\xff\xf6\xff"
-		.ascii  "\xf2\xff\xef\xff\xeb\xff\xe8\xff"
-		.ascii  "\xe4\xff\x01\x00"
-		.short  0x0
-
-GLOBAL (female_peep)	/* 0x1531A4 */
-		.ascii  "\x28\x20"
-GLOBAL (head_my_path)	/* 0x1531A6 */
-		.ascii  "\x01\x00"
-
-GLOBAL (word_1531DA)	/* 0x1531DA */
-		.ascii  "\x01\x00"
 
 GLOBAL (tex00dat_fname)	/* 0x153278 */
 		.long   aDataTex00_dat
@@ -131707,25 +131671,6 @@ paQdataSavegam_5:	/* 0x15330C */
 		.long   aQdataSavegam_5
 paQdataSavegam_6:	/* 0x153310 */
 		.long   aQdataSavegam_6
-
-ASM_sfx_man_shot:	/* 0x153350 */
-		.ascii  "\x0b\x1a\x29\x2a\x2b\x0b\x1a\x29"
-ASM_sfx_woman_shot:	/* 0x153358 */
-		.ascii  "\x0c\x1b"
-data_15335a:
-		.short  0x0
-GLOBAL(ASM_angle_direction)	/* 0x15335C */
-		.ascii  "\x00\x00\x00\x01\xb5\x00\xb5\x00"
-		.ascii  "\x00\x01\x00\x00\xb5\x00\x4b\xff"
-		.ascii  "\x00\x00\x00\xff\x4b\xff\x4b\xff"
-		.ascii  "\x00\xff\x00\x00\x4b\xff\xb5\x00"
-GLOBAL (unkn01_maskarr)	/* 0x15337C */
-		.ascii  "\x00\x00\x00\x00\x00\x05\x06\x00"
-		.ascii  "\x00\x09\x00\x00\x0c\x0d\x00\x00"
-		.ascii  "\x00"
-data_15338d:
-		.ascii  "\x00\x12\x13\x00\x00\x00\x00"
-		.ascii  "\x18\x00\x00\x00"
 
 master_glare:	/* 0x153774 */
 		.byte	0x0

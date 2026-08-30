@@ -153,7 +153,6 @@ extern ubyte is_single_game;
 extern ubyte cmdln_colour_tables;
 extern ubyte cmdln_param_bcg;
 extern ubyte keyboard_mode_direct;
-extern ubyte unkn01_maskarr[28];
 extern long map_editor;
 
 extern ubyte login_control__State;

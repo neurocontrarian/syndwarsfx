@@ -268,7 +268,7 @@ extern ushort people_frames[SubTT_PERS_COUNT][22];
 extern ushort word_1531DA;
 extern ushort word_17FA58[400];
 
-extern ushort head_my_path; // = 1;
+extern ushort head_my_path;
 extern ushort path_count;
 extern struct MyPath my_paths[1600];
 

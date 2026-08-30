@@ -7,14 +7,16 @@
 #include "bfini.h"
 #include "bfscreen.h"
 #include "bflog.h"
-#include "swlog.h"
 #include "bfjoyst.h"
+
+#include "swlog.h"
 #include "display.h"
 #include "guitext.h"
 #include "game.h"
 #include "game_data.h"
 #include "game_options.h"
 #include "game_save.h"
+#include "keyboard.h"
 #include "lvfiles.h"
 #include "lvobjctv.h"
 #include "network.h"
@@ -87,7 +89,8 @@ print_help (const char *argv0)
 "                -d <str>  Activate debug functions; t - things debug HUD,\n"
 "                          o - objectives debug HUD, c - collision debug HUD\n"
 "                          v - navigation perf HUD\n"
-"                -E <num>  Joystick config\n"
+"                -E <num>  Enable Joystick support from external driver, using\n"
+"                          given IRQ for communication (DOS only)\n"
 "                -F        Re-compute and re-save `tables.dat` colour tables\n"
 "                          file, using `fade.dat` as input\n"
 "                -g        Enter normal gameplay mode; to be used when playing\n"
@@ -237,8 +240,7 @@ static TbBool process_options(int *argc, char ***argv)
 
         case 'E':
             tmpint = atoi(optarg);
-            if ( JoySetInterrupt(tmpint) != -1 )
-              unkn01_maskarr[17] = 17;
+            joy_ext_driver_irq_init(tmpint);
             break;
 
         case 'F':

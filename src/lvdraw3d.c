@@ -59,9 +59,9 @@ struct Range {
 #define SUPER_QUICK_LIGHTS_MAX (RENDER_AREA_MAX+1)*(RENDER_AREA_MAX+1)
 extern short super_quick_light[(RENDER_AREA_MAX+1)*(RENDER_AREA_MAX+1)];
 
-extern long dword_152E50;
-extern long dword_152E54;
-extern long dword_152E58;
+s32 dword_152E50 = 256;
+s32 dword_152E54 = 80;
+s32 dword_152E58 = 410;
 
 extern long dword_176CC0;
 

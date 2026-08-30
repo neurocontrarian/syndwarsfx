@@ -213,7 +213,10 @@ ubyte sfx_woman_shot[] = {
   12, 27,
 };
 
-extern ushort female_peep;
+ushort female_peep = 0x2028;
+ushort head_my_path = 1;
+ushort word_1531DA = 1;
+
 extern sbyte byte_154F6C[8];
 extern short word_1AA38E;
 extern short word_1AA390;
