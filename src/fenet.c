@@ -71,7 +71,6 @@ struct ScreenBox net_grpaint = {0};
 struct ScreenBox net_protocol_box = {0};
 struct ScreenButton net_protocol_option_button = {0};
 
-extern char net_unkn40_text[];
 extern char net_baudrate_text[8];
 extern char net_proto_param_text[8];
 extern ubyte byte_155174; // = 166;
@@ -103,7 +102,6 @@ ubyte ac_do_net_groups_LOGON(ubyte click);
 ubyte ac_do_unkn8_EJECT(ubyte click);
 ubyte ac_show_net_benefits_box(struct ScreenBox *box);
 ubyte ac_show_net_grpaint(struct ScreenBox *box);
-ubyte ac_show_net_comms_box(struct ScreenBox *box);
 ubyte ac_do_net_protocol_select(ubyte click);
 ubyte ac_show_net_protocol_box(struct ScreenBox *box);
 
@@ -1086,12 +1084,6 @@ ubyte show_net_grpaint(struct ScreenBox *p_box)
 
 ubyte show_net_comms_box(struct ScreenBox *p_box)
 {
-#if 0
-    ubyte ret;
-    asm volatile ("call ASM_show_net_comms_box\n"
-        : "=r" (ret) : "a" (p_box));
-    return ret;
-#endif
     char plyrname[20];
     char locstr[40];
     int i;
@@ -2006,35 +1998,35 @@ void init_net_screen_boxes(void)
     scr_h = 432;
 #endif
 
-    init_screen_box(&net_groups_box, 213u, 72u, 171u, 155, 6);
-    init_screen_box(&net_users_box, 393u, 72u, 240u, 155, 6);
+    init_screen_box(&net_groups_box, 213, 72, 171, 155, 6);
+    init_screen_box(&net_users_box, 393, 72, 240, 155, 6);
 
-    init_screen_box(&net_faction_box, 213u, 236u, 73u, 67, 6);
-    init_screen_box(&net_team_box, 295u, 236u, 72u, 67, 6);
-    init_screen_box(&net_benefits_box, 376u, 236u, 257u, 67, 6);
-    init_screen_box(&net_protocol_box, 7u, 252u, 197u, 51, 6);
+    init_screen_box(&net_faction_box, 213, 236, 73, 67, 6);
+    init_screen_box(&net_team_box, 295, 236, 72, 67, 6);
+    init_screen_box(&net_benefits_box, 376, 236, 257, 67, 6);
+    init_screen_box(&net_protocol_box, 7, 252, 197, 51, 6);
 
-    init_screen_box(&net_grpaint, 7u, 312u, 279u, 104, 6);
-    init_screen_box(&net_comms_box, 295u, 312u, 336u, 104, 6);
+    init_screen_box(&net_grpaint, 7u, 312, 279, 104, 6);
+    init_screen_box(&net_comms_box, 295u, 312, 336, 104, 6);
 
-    init_screen_button(&net_INITIATE_button, 218u, 185u, gui_strings[385], 6,
-        med2_font, 1, 0);
-    init_screen_button(&net_groups_LOGON_button, 218u, 206u, gui_strings[386],
+    init_screen_button(&net_INITIATE_button, 218, 185, gui_strings[385],
         6, med2_font, 1, 0);
-    init_screen_button(&unkn8_EJECT_button, 308u, 206u, gui_strings[403], 6,
-        med2_font, 1, 0);
-
-    init_screen_button(&net_SET2_button, 562u, 251u, gui_strings[440], 6,
-        med2_font, 1, 0);
-    init_screen_button(&net_SET_button, 562u, 284u, gui_strings[440], 6,
-        med2_font, 1, 0);
-
-    init_screen_button(&net_protocol_select_button, 37u, 256u, gui_strings[498],
+    init_screen_button(&net_groups_LOGON_button, 218, 206, gui_strings[386],
         6, med2_font, 1, 0);
-    init_screen_button(&net_unkn40_button, 37u, 256u, net_unkn40_text, 6,
-        med2_font, 1, 0);
-    init_screen_button(&net_protocol_option_button, 7u, 275u,
-        net_proto_param_text, 6, med2_font, 1, 0);
+    init_screen_button(&unkn8_EJECT_button, 308, 206, gui_strings[403],
+        6, med2_font, 1, 0);
+
+    init_screen_button(&net_SET2_button, 562, 251, gui_strings[440],
+        6, med2_font, 1, 0);
+    init_screen_button(&net_SET_button, 562, 284, gui_strings[440],
+        6, med2_font, 1, 0);
+
+    init_screen_button(&net_protocol_select_button, 37, 256, gui_strings[498],
+        6, med2_font, 1, 0);
+    init_screen_button(&net_unkn40_button, 37, 256, "",
+        6, med2_font, 1, 0);
+    init_screen_button(&net_protocol_option_button, 7, 275, net_proto_param_text,
+        6, med2_font, 1, 0);
 
     net_groups_LOGON_button.Width = 85;
     net_INITIATE_button.Width = 85;

@@ -64,7 +64,6 @@ struct ScreenTextBox brief_netscan_box = {0};
 struct ScreenBox brief_graphical_box = {0};
 
 extern sbyte selected_netscan_objective;// = -1;
-extern char unkn39_text[];
 
 ubyte brief_state_city_selected = 0;
 ubyte brief_citymap_content = BriCtM_AUTO_SCANNER;
@@ -697,19 +696,20 @@ void init_brief_screen_boxes(void)
 
     init_screen_text_box(&brief_netscan_box, 7, 281, 322, 145,
       6, small_med_font, 3);
-    init_screen_button(&brief_NETSCAN_button, 312u, 405u,
-      gui_strings[441], 6, med2_font, 1, 0x80);
-    init_screen_info_box(&brief_NETSCAN_COST_box, 12u, 405u, 213u,
-      gui_strings[442], unkn39_text, 6, med_font, small_med_font, 1);
+    init_screen_button(&brief_NETSCAN_button, 312, 405, gui_strings[441],
+      6, med2_font, 1, 0x80);
+    init_screen_info_box(&brief_NETSCAN_COST_box, 12, 405, 213, gui_strings[442], "",
+      6, med_font, small_med_font, 1);
     brief_NETSCAN_COST_box.Text2 = brief_netscan_cost_text;
     brief_NETSCAN_button.CallBackFn = brief_do_netscan_enhance;
     brief_netscan_box.DrawTextFn = show_brief_netscan_box;
 
-    init_screen_text_box(&brief_mission_text_box, 338u, 72u, 295u, 354, 6, small_font, 3);
-    init_screen_button(&unkn1_ACCEPT_button, 343u, 405u,
-      gui_strings[436], 6, med2_font, 1, 0x00);
-    init_screen_button(&unkn1_CANCEL_button, 616u, 405u,
-      gui_strings[437], 6, med2_font, 1, 0x80);
+    init_screen_text_box(&brief_mission_text_box, 338u, 72u, 295u, 354,
+      6, small_font, 3);
+    init_screen_button(&unkn1_ACCEPT_button, 343u, 405u, gui_strings[436],
+      6, med2_font, 1, 0x00);
+    init_screen_button(&unkn1_CANCEL_button, 616u, 405u, gui_strings[437],
+      6, med2_font, 1, 0x80);
     brief_mission_text_box.Buttons[0] = &unkn1_ACCEPT_button;
     brief_mission_text_box.Buttons[1] = &unkn1_CANCEL_button;
     brief_mission_text_box.Text = mission_briefing_text;
