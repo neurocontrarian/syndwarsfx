@@ -91,7 +91,7 @@ extern ubyte month_days[12];
 extern ubyte enter_game;
 
 extern char alert_text[200];
-extern short alert_textpos;
+short alert_textpos = 0;
 
 struct ScreenBoxBase global_top_bar_box = {4, 4, 632, 15};
 struct ScreenBoxBase global_apps_bar_box = {3, 432, 634, 48};

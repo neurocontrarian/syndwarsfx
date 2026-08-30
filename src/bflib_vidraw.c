@@ -29,8 +29,8 @@
 #include "engintrns.h"
 /******************************************************************************/
 
-extern ubyte byte_1DDC44[640];
-extern ubyte byte_1DDEC4;
+ubyte byte_1DDC44[640];
+ubyte byte_1DDEC4 = 0;
 extern ubyte byte_1C4B7F;// = 0;
 extern ubyte byte_1C6DED;// = 0;
 extern ubyte byte_155189;// = 0xF7;

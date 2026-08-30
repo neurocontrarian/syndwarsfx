@@ -51,7 +51,6 @@ struct ScreenButton research_list_buttons[2] = {0};
 
 extern ubyte research_completed;// = 0;
 extern ubyte research_on_weapons;// = true;
-extern ubyte research_unkn_var_01;
 ubyte research_selected_wep = 0;
 ubyte research_selected_mod = 0;
 extern ubyte byte_1551E4[5];

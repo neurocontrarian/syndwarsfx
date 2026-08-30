@@ -696,11 +696,6 @@ void SCANNER_shift_center_point(int dt_cor_x, int dt_cor_z)
 
 void SCANNER_draw_new_transparent_map(void)
 {
-#if 0
-    asm volatile ("call ASM_SCANNER_draw_new_transparent_map\n"
-        :  :  : "eax" );
-    return;
-#endif
     int dt_x, dt_y;
     int sh_x, sh_y;
     int cu_x1, cu_y1, cu_x2, cu_y2;

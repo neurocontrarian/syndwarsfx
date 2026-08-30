@@ -232,7 +232,6 @@ extern long outro_unkn02;
 extern long outro_unkn03;
 extern long people_groups_count;
 extern long data_1ddb68;
-extern ubyte byte_1DDC40;
 
 extern ubyte debug_hud_collision;
 

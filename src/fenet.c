@@ -53,6 +53,7 @@
 #include "swlog.h"
 #include "util.h"
 /******************************************************************************/
+#define MONITORED_SESSIONS_COUNT 20
 
 struct ScreenButton net_INITIATE_button = {0};
 struct ScreenButton net_groups_LOGON_button = {0};
@@ -88,9 +89,9 @@ extern ubyte net_autostart_done;
 extern ubyte byte_155170[4];
 extern char net_unkn1_text[25];
 extern char byte_1811E2[16];
-extern uint32_t sessionlist_last_update[20];
+TbClockMSec sessionlist_last_update[MONITORED_SESSIONS_COUNT] = {0};
 extern ubyte byte_1C6D48;
-extern struct TbNetworkSessionList unkstruct04_arr[20];
+extern struct TbNetworkSessionList unkstruct04_arr[MONITORED_SESSIONS_COUNT];
 
 ubyte do_net_protocol_option(ubyte click);
 ubyte ac_do_net_unkn40(ubyte click);
@@ -172,7 +173,7 @@ void net_sessionlist_update_latest_one(void)
     LOGSYNC("Updating session %d", sess_no);
     p_nslist = &unkstruct04_arr[sess_no];
     LbMemoryCopy(p_nslist, &locsesslst, sizeof(struct TbNetworkSessionList));
-    sessionlist_last_update[sess_no] = dos_clock();
+    sessionlist_last_update[sess_no] = LbTimerClock();
 }
 
 void net_unkn2_names_clear(void)
@@ -1913,7 +1914,7 @@ void net_sessionlist_remove_old(void)
 
     for (sess_no = 0; sess_no < byte_1C6D48; sess_no++)
     {
-        if (dos_clock() - sessionlist_last_update[sess_no] > 4 * DOS_CLOCKS_PER_SEC)
+        if (LbTimerClock() - sessionlist_last_update[sess_no] > 4000)
         {
             LOGSYNC("Retiring session %d", sess_no);
             net_sessionlist_remove(sess_no);
@@ -1926,7 +1927,7 @@ int net_unkn_func_30(void)
 {
     int preval;
 
-    if (byte_1C6D48 < 20)
+    if (byte_1C6D48 < MONITORED_SESSIONS_COUNT)
     {
         net_sessionlist_update_latest_one();
         net_sessionlist_remove_old();
@@ -1934,7 +1935,7 @@ int net_unkn_func_30(void)
     preval = byte_15516C;
     if (byte_15516C == -1 && byte_1C6D48)
         byte_15516C = 0;
-    if (!byte_1C6D48)
+    if (byte_1C6D48 == 0)
         byte_15516C = -1;
     return preval;
 }

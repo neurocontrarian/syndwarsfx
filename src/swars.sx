@@ -105738,415 +105738,6 @@ GLOBAL_FUNC(ASM_SCANNER_dnt_sub1_sub12)
 		ret
 
 
-vtable_adf18:
-		.long   SCANNER_dnt_sw1_case0
-		.long   SCANNER_dnt_sw1_case1
-		.long   SCANNER_dnt_sw1_case2
-		.long   SCANNER_dnt_sw1_loop
-		.long   SCANNER_dnt_sw1_case4
-		.long   SCANNER_dnt_sw1_case5
-		.long   SCANNER_dnt_sw1_case6
-		.long   SCANNER_dnt_sw1_loop
-		.long   SCANNER_dnt_sw1_case8
-		.long   SCANNER_dnt_sw1_case9
-		.long   SCANNER_dnt_sw1_case10
-
-/*----------------------------------------------------------------*/
-GLOBAL_FUNC(ASM_SCANNER_draw_new_transparent_map)	/* 0x0ADF44 */
-/*----------------------------------------------------------------*/
-		push   %ebx
-		push   %ecx
-		push   %edx
-		push   %esi
-		push   %edi
-		push   %ebp
-		sub    $0x114,%esp
-		mov    EXPORT_SYMBOL(scanner_next_key_no),%eax
-		mov    $0x7fffffff,%edx
-		mov    scanner_keys(,%eax,4),%eax
-		mov    %edx,0x5c(%esp)
-		cmpb   $0x0,EXPORT_SYMBOL(lbKeyOn)(%eax)
-		je     jump_adfa9
-		xor    %dh,%dh
-		mov    %dh,EXPORT_SYMBOL(lbKeyOn)(%eax)
-		mov    EXPORT_SYMBOL(scanner_next_key_no),%ebx
-		inc    %ebx
-		mov    scanner_keys(,%ebx,4),%ecx
-		mov    %ebx,EXPORT_SYMBOL(scanner_next_key_no)
-		cmp    $0x270f,%ecx
-		jne    jump_adfa9
-		mov    EXPORT_SYMBOL(scanner_arrow_mode),%bl
-		xor    %esi,%esi
-		xor    $0x1,%bl
-		mov    %esi,EXPORT_SYMBOL(scanner_next_key_no)
-		mov    %bl,EXPORT_SYMBOL(scanner_arrow_mode)
-	jump_adfa9:
-		call   ac_SCANNER_process_bbpoints
-		mov    EXPORT_SYMBOL(ingame)+0x028,%edi # ingame.Scanner.Angle
-		mov    EXPORT_SYMBOL(ingame)+0x024,%ebp # ingame.Scanner.Zoom
-		mov    EXPORT_SYMBOL(lbSinTable)(,%edi,4),%edi
-		imul   %ebp,%edi
-		mov    EXPORT_SYMBOL(ingame)+0x028,%eax # ingame.Scanner.Angle
-		mov    EXPORT_SYMBOL(lbSinTable)+2048(,%eax,4),%esi
-		imul   %ebp,%esi
-		mov    EXPORT_SYMBOL(ingame)+0x00C,%edx # ingame.Scanner.X1
-		mov    EXPORT_SYMBOL(ingame)+0x014,%eax # ingame.Scanner.X2
-		mov    EXPORT_SYMBOL(ingame)+0x010,%ebx # ingame.Scanner.Y1
-		sub    %edx,%eax
-		mov    EXPORT_SYMBOL(ingame)+0x018,%edx # ingame.Scanner.Y2
-		sub    %ebx,%edx
-		sar    %edx
-		sar    %eax
-		mov    %edx,0x18(%esp)
-		mov    EXPORT_SYMBOL(ingame)+0x00C,%edx # ingame.Scanner.X1
-		add    %eax,%edx
-		sar    $0x8,%edi
-		mov    %edx,0x68(%esp)
-		mov    0x18(%esp),%edx
-		sar    $0x8,%esi
-		add    %ebx,%edx
-		mov    0x18(%esp),%ebp
-		mov    %edx,0x6c(%esp)
-		cmp    %ebp,%eax
-		jge    jump_ae01e
-		mov    %eax,%edx
-		jmp    jump_ae020
-	jump_ae01e:
-		mov    %ebp,%edx
-	jump_ae020:
-		sub    $0x5,%edx
-		mov    %edx,0x70(%esp)
-		imul   %edx,%edx
-		mov    %edx,0x74(%esp)
-		mov    EXPORT_SYMBOL(ingame)+0x01C,%edx # ingame.Scanner.MX
-		shl    $0x10,%edx
-		mov    %edx,0xb4(%esp)
-		mov    %eax,%edx
-		imul   %edi,%edx
-		mov    EXPORT_SYMBOL(ingame)+0x020,%ebx # ingame.Scanner.MZ
-		shl    $0x10,%ebx
-		mov    %ebx,%ecx
-		sub    %edx,%ecx
-		mov    %ecx,0xf4(%esp)
-		mov    %eax,%ecx
-		imul   %esi,%ecx
-		mov    0xb4(%esp),%eax
-		sub    %ecx,%eax
-		mov    %eax,0xb8(%esp)
-		mov    0x18(%esp),%eax
-		imul   %esi,%eax
-		mov    0xf4(%esp),%ebp
-		add    %eax,%ebp
-		mov    %ebp,0x4(%esp)
-		mov    0x18(%esp),%ebp
-		imul   %edi,%ebp
-		add    %edx,%ebx
-		add    %ebx,%eax
-		mov    %edi,%ebx
-		shl    $0x10,%ebx
-		mov    %ebx,EXPORT_SYMBOL(SCANNER_dw07C)
-		mov    %esi,%ebx
-		mov    0xb4(%esp),%edx
-		shl    $0x10,%ebx
-		add    %ecx,%edx
-		mov    %ebx,EXPORT_SYMBOL(SCANNER_dw080)
-		mov    %edi,%ebx
-		mov    %ebp,0x9c(%esp)
-		sar    $0x10,%ebx
-		mov    0xb8(%esp),%ebp
-		mov    0x9c(%esp),%ecx
-		mov    %bl,EXPORT_SYMBOL(SCANNER_bt084)
-		sub    0x9c(%esp),%ebp
-		sub    %ecx,%edx
-		mov    %esi,%ebx
-		mov    EXPORT_SYMBOL(ingame)+0x00C,%ecx # ingame.Scanner.X1
-		sar    $0x10,%ebx
-		mov    %ebp,0x8(%esp)
-		mov    %bl,EXPORT_SYMBOL(SCANNER_bt085)
-		mov    EXPORT_SYMBOL(ingame)+0x030,%bl # ingame.Scanner.Brightness
-		mov    0x18(%esp),%ebp
-		mov    %bl,EXPORT_SYMBOL(SCANNER_brig)
-		mov    EXPORT_SYMBOL(ingame)+0x02C,%bl # ingame.Scanner.Contrast
-		add    %ebp,%ebp
-		mov    %bl,EXPORT_SYMBOL(SCANNER_cont)
-		mov    EXPORT_SYMBOL(ingame)+0x010,%ebx # ingame.Scanner.Y1
-		mov    %ebp,0x18(%esp)
-		mov    %ebx,0xc(%esp)
-		mov    EXPORT_SYMBOL(lbDisplay)+4,%ebx # lbDisplay.WScreen
-		mov    EXPORT_SYMBOL(lbDisplay)+24,%ebp # lbDisplay.PhysicalScreenWidth
-		add    %ebx,%ecx
-		mov    0xc(%esp),%ebx
-		imul   %ebp,%ebx
-		mov    %edi,EXPORT_SYMBOL(SCANNER_dw064)
-		mov    %eax,0x2c(%esp)
-		mov    SCANNER_width,%eax
-		mov    %esi,EXPORT_SYMBOL(SCANNER_dw068)
-		mov    %eax,0x3c(%esp)
-		mov    %edx,0x30(%esp)
-		mov    EXPORT_SYMBOL(ingame)+0x018,%edx # ingame.Scanner.Y2
-		add    %ebx,%ecx
-		mov    0x4(%esp),%ebx
-		mov    0xc(%esp),%eax
-		mov    %ebx,0x24(%esp)
-		mov    0x8(%esp),%ebx
-		mov    %ecx,0x40(%esp)
-		mov    %ebx,0x28(%esp)
-		cmp    %edx,%eax
-		jmp    jump_ae81b
-	jump_ae16d:
-		test   %ecx,%eax
-		je     jump_ae9af
-		call   ac_SCANNER_dnt_sub1_sub1
-		jmp    SCANNER_dnt_sw1_loop
-
-
-	SCANNER_dnt_sw1_case0:	/* 0xAE1DA */
-		mov    $0xfffffff,%ebp
-		mov    %ebp,0x44(%esp)
-		test   $0x1,%cl
-		je     jump_ae202
-		mov    EXPORT_SYMBOL(SCANNER_dw064),%ebx
-		mov    EXPORT_SYMBOL(SCANNER_dw06C),%edx
-		mov    %edx,%eax
-		shl    $0x10,%eax
-		sar    $0x10,%edx
-		idiv   %ebx
-		neg    %eax
-		jmp    jump_ae223
-	jump_ae202:
-		test   $0x2,%cl
-		je     jump_ae22a
-		mov    $0x1000000,%edx
-		mov    EXPORT_SYMBOL(SCANNER_dw06C),%eax
-		mov    EXPORT_SYMBOL(SCANNER_dw064),%ebx
-		sub    %eax,%edx
-		mov    %edx,%eax
-		shl    $0x10,%eax
-		sar    $0x10,%edx
-		idiv   %ebx
-	jump_ae223:
-		sar    $0x10,%eax
-		mov    %eax,0x44(%esp)
-	jump_ae22a:
-		test   $0x4,%cl
-		je     jump_ae24b
-		mov    EXPORT_SYMBOL(SCANNER_dw068),%ebx
-		mov    EXPORT_SYMBOL(SCANNER_dw070),%edx
-		mov    %edx,%eax
-		shl    $0x10,%eax
-		sar    $0x10,%edx
-		idiv   %ebx
-		mov    %eax,%ebp
-		neg    %ebp
-		jmp    jump_ae26f
-	jump_ae24b:
-		test   $0x8,%cl
-		je     jump_ae272
-		mov    $0x1000000,%edx
-		mov    EXPORT_SYMBOL(SCANNER_dw070),%ecx
-		mov    EXPORT_SYMBOL(SCANNER_dw068),%ebx
-		sub    %ecx,%edx
-		mov    %edx,%eax
-		shl    $0x10,%eax
-		sar    $0x10,%edx
-		idiv   %ebx
-		mov    %eax,%ebp
-	jump_ae26f:
-		sar    $0x10,%ebp
-	jump_ae272:
-		mov    EXPORT_SYMBOL(SCANNER_dw074),%edx
-		cmp    %edx,%ebp
-		jge    jump_ae280
-		mov    %ebp,%eax
-		jmp    jump_ae282
-	jump_ae280:
-		mov    %edx,%eax
-	jump_ae282:
-		mov    0x44(%esp),%ebx
-		cmp    %ebx,%eax
-		jle    jump_ae28e
-		mov    %ebx,%eax
-		jmp    jump_ae29e
-	jump_ae28e:
-		mov    EXPORT_SYMBOL(SCANNER_dw074),%ecx
-		cmp    %ecx,%ebp
-		jge    jump_ae29c
-		mov    %ebp,%eax
-		jmp    jump_ae29e
-	jump_ae29c:
-		mov    %ecx,%eax
-	jump_ae29e:
-		mov    %eax,EXPORT_SYMBOL(SCANNER_dw074)
-		sub    %eax,%edx
-		test   %eax,%eax
-		jle    jump_ae37d
-		cmp    $0x190,%eax
-		jg     jump_ae37d
-		call   ac_SCANNER_dnt_sub1_sub2
-	jump_ae37d:
-		test   %edx,%edx
-		jle    SCANNER_dnt_sw1_loop
-		cmp    $0x190,%edx
-		jg     SCANNER_dnt_sw1_loop
-		mov    %edx,EXPORT_SYMBOL(SCANNER_dw074)
-		call   ac_SCANNER_dnt_sub1_sub3
-		jmp    SCANNER_dnt_sw1_loop
-
-
-	SCANNER_dnt_sw1_case1:	/* 0xAE3FC */
-		call   ac_SCANNER_dnt_sub1_sub4
-		cmp    EXPORT_SYMBOL(SCANNER_dw074),%ebx
-		jne    jump_ae894
-		jmp    SCANNER_dnt_sw1_loop
-
-
-	SCANNER_dnt_sw1_case2:	/* 0xAE471 */
-		call   ac_SCANNER_dnt_sub1_sub5
-		cmp    EXPORT_SYMBOL(SCANNER_dw074),%ebx
-		jne    jump_ae894
-		jmp    SCANNER_dnt_sw1_loop
-
-
-	SCANNER_dnt_sw1_case4:	/* 0xAE4EA */
-		call   ac_SCANNER_dnt_sub1_sub6
-		cmp    EXPORT_SYMBOL(SCANNER_dw074),%ebx
-		jne    jump_ae894
-		jmp    SCANNER_dnt_sw1_loop
-
-
-	SCANNER_dnt_sw1_case8:	/* 0xAE55F */
-		call   ac_SCANNER_dnt_sub1_sub7
-		cmp    EXPORT_SYMBOL(SCANNER_dw074),%ebx
-		jne    jump_ae894
-		jmp    SCANNER_dnt_sw1_loop
-
-
-	SCANNER_dnt_sw1_case5:	/* 0xAE5D8 */
-		call   ac_SCANNER_dnt_sub1_sub8
-		cmp    EXPORT_SYMBOL(SCANNER_dw074),%ebx
-		jne    jump_ae894
-		jmp    SCANNER_dnt_sw1_loop
-
-
-	SCANNER_dnt_sw1_case6:	/* 0xAE651 */
-		call   ac_SCANNER_dnt_sub1_sub9
-		cmp    EXPORT_SYMBOL(SCANNER_dw074),%ebx
-		jne    jump_ae894
-		jmp    SCANNER_dnt_sw1_loop
-
-
-	SCANNER_dnt_sw1_case9:	/* 0xAE6CE */
-		call   ac_SCANNER_dnt_sub1_sub10
-		cmp    EXPORT_SYMBOL(SCANNER_dw074),%ebx
-		jne    jump_ae894
-		jmp    SCANNER_dnt_sw1_loop
-
-
-	SCANNER_dnt_sw1_case10:	/* 0xAE748 */
-		call   ac_SCANNER_dnt_sub1_sub11
-		cmp    EXPORT_SYMBOL(SCANNER_dw074),%ebx
-		jne    jump_ae894
-
-	SCANNER_dnt_sw1_loop:	/* 0xAE7C4 */
-		mov    0xc(%esp),%ebx
-		mov    0x3c(%esp),%ecx
-		mov    0x40(%esp),%ebp
-		mov    0x28(%esp),%edx
-		mov    EXPORT_SYMBOL(lbDisplay)+24,%eax # lbDisplay.PhysicalScreenWidth
-		inc    %ebx
-		add    $0x4,%ecx
-		add    %eax,%ebp
-		add    %edi,%edx
-		mov    0x24(%esp),%eax
-		mov    %ebx,0xc(%esp)
-		mov    %ecx,0x3c(%esp)
-		mov    %ebp,0x40(%esp)
-		mov    %edx,0x28(%esp)
-		mov    0x2c(%esp),%ebx
-		mov    0x30(%esp),%ecx
-		sub    %esi,%eax
-		mov    EXPORT_SYMBOL(ingame)+0x018,%ebp # ingame.Scanner.Y2
-		mov    %eax,0x24(%esp)
-		sub    %esi,%ebx
-		add    %edi,%ecx
-		mov    0xc(%esp),%eax
-		mov    %ebx,0x2c(%esp)
-		mov    %ecx,0x30(%esp)
-		cmp    %ebp,%eax
-	jump_ae81b:
-		jg     SCANNER_draw_new_transparent_sw1_end
-		mov    0x24(%esp),%eax
-		mov    %eax,EXPORT_SYMBOL(SCANNER_dw06C)
-		mov    0x28(%esp),%eax
-		mov    %eax,EXPORT_SYMBOL(SCANNER_dw070)
-		mov    0x3c(%esp),%eax
-		mov    (%eax),%eax
-		inc    %eax
-		mov    0x2c(%esp),%edx
-		mov    %eax,EXPORT_SYMBOL(SCANNER_dw074)
-		mov    0x40(%esp),%eax
-		xor    %ecx,%ecx
-		mov    %eax,EXPORT_SYMBOL(SCANNER_screenptr)
-		test   %edx,%edx
-		setl   %al
-		mov    %al,%cl
-		cmp    $0x1000000,%edx
-		setge  %al
-		and    $0xff,%eax
-		add    %eax,%eax
-		mov    0x30(%esp),%ebp
-		or     %eax,%ecx
-		test   %ebp,%ebp
-		setl   %al
-		and    $0xff,%eax
-		shl    $0x2,%eax
-		or     %eax,%ecx
-		cmp    $0x1000000,%ebp
-		setge  %al
-		and    $0xff,%eax
-		shl    $0x3,%eax
-		or     %eax,%ecx
-		mov    $0x1000000,%ebp
-		xor    %ebx,%ebx
-	jump_ae894:
-		cmp    EXPORT_SYMBOL(SCANNER_dw06C),%ebx
-		setg   %al
-		xor    %edx,%edx
-		mov    %al,%dl
-		cmp    EXPORT_SYMBOL(SCANNER_dw06C),%ebp
-		setle  %al
-		and    $0xff,%eax
-		add    %eax,%eax
-		or     %edx,%eax
-		cmp    EXPORT_SYMBOL(SCANNER_dw070),%ebx
-		setg   %dl
-		and    $0xff,%edx
-		shl    $0x2,%edx
-		or     %edx,%eax
-		cmp    EXPORT_SYMBOL(SCANNER_dw070),%ebp
-		setle  %dl
-		and    $0xff,%edx
-		shl    $0x3,%edx
-		or     %edx,%eax
-		mov    %eax,%edx
-		or     %ecx,%edx
-		jne    jump_ae16d
-		call   ac_SCANNER_dnt_sub1_sub12
-		jmp    SCANNER_dnt_sw1_loop
-	jump_ae9af:
-		cmp    $0xa,%eax
-		ja     SCANNER_dnt_sw1_loop
-		jmp    *%cs:vtable_adf18(,%eax,4)
-	SCANNER_draw_new_transparent_sw1_end:
-		add    $0x114,%esp
-		pop    %ebp
-		pop    %edi
-		pop    %esi
-		pop    %edx
-		pop    %ecx
-		pop    %ebx
-		ret
-
 /*----------------------------------------------------------------*/
 GLOBAL_FUNC(ASM_SCANNER_draw_signals)	/* 0xAE9C0 */
 /*----------------------------------------------------------------*/
@@ -106353,7 +105944,7 @@ GLOBAL_FUNC(ASM_SCANNER_draw_signals)	/* 0xAE9C0 */
 		and    $0xf,%edx
 		sar    $0x10,%eax
 		mov    EXPORT_SYMBOL(circle_line_sz7)(,%edx,8),%ebp
-		mov    data_155344(,%edx,8),%edx
+		mov    EXPORT_SYMBOL(circle_line_sz7)+0x4(,%edx,8),%edx
 		mov    %eax,0x1c(%esp)
 		add    %ecx,%edx
 		add    %ebp,%eax
@@ -106385,7 +105976,7 @@ GLOBAL_FUNC(ASM_SCANNER_draw_signals)	/* 0xAE9C0 */
 		and    $0xf,%eax
 		lea    0x0(,%eax,8),%edx
 		mov    EXPORT_SYMBOL(circle_line_sz7)(%edx),%ebx
-		mov    data_155344(%edx),%edx
+		mov    EXPORT_SYMBOL(circle_line_sz7)+0x4(%edx),%edx
 		mov    0x1c(%esp),%eax
 		add    %ecx,%edx
 		add    %ebx,%eax
@@ -106417,7 +106008,7 @@ GLOBAL_FUNC(ASM_SCANNER_draw_signals)	/* 0xAE9C0 */
 		and    $0xf,%eax
 		lea    0x0(,%eax,8),%edx
 		mov    EXPORT_SYMBOL(circle_line_sz7)(%edx),%ebx
-		mov    data_155344(%edx),%edx
+		mov    EXPORT_SYMBOL(circle_line_sz7)+0x4(%edx),%edx
 		mov    0x1c(%esp),%eax
 		add    %ecx,%edx
 		add    %ebx,%eax
@@ -110288,7 +109879,7 @@ GLOBAL_FUNC(ASM_flashy_draw_purple_shape)	/* 0x0B2ACC */
 		cmp    $0x18,%ebx
 		jg     jump_b2e00
 		xor    %eax,%eax
-		mov    proj_origin_m2,%ebp
+		mov    EXPORT_SYMBOL(proj_origin)-0x2,%ebp
 		mov    (%esi),%ax
 		sar    $0x10,%ebp
 		mov    %eax,%edx
@@ -110360,7 +109951,7 @@ GLOBAL_FUNC(ASM_flashy_draw_purple_shape)	/* 0x0B2ACC */
 		mov    0x28(%esi),%al
 		sar    $0x10,%edx
 		push   %eax
-		mov    proj_origin_m2,%eax
+		mov    EXPORT_SYMBOL(proj_origin)-0x2,%eax
 		mov    %ebp,%ecx
 		sar    $0x10,%eax
 		call   ac_draw_line_purple_list
@@ -110672,7 +110263,7 @@ GLOBAL_FUNC(ASM_flashy_draw_purple_shape)	/* 0x0B2ACC */
 		mov    EXPORT_SYMBOL(proj_origin),%edx
 		mov    %eax,0x14(%esp)
 		add    %eax,%ebx
-		mov    proj_origin_m2,%eax
+		mov    EXPORT_SYMBOL(proj_origin)-0x2,%eax
 		sar    $0x10,%edx
 		sar    $0x10,%eax
 		call   ac_draw_line_purple_list
@@ -110881,7 +110472,7 @@ GLOBAL_FUNC(ASM_flashy_draw_purple_shape)	/* 0x0B2ACC */
 		mov    (%edi,%esi,1),%bx
 		mov    %eax,0x14(%esp)
 		add    %eax,%ebx
-		mov    proj_origin_m2,%eax
+		mov    EXPORT_SYMBOL(proj_origin)-0x2,%eax
 		add    %ebp,%ecx
 		sar    $0x10,%eax
 		call   ac_draw_line_purple_list
@@ -134465,44 +134056,14 @@ rand_c:	/* 0x155304 */
 		.ascii  "\x93\xa0\x69\x3f"
 GLOBAL (scanner_arrow_mode)	/* 0x155308 */
 		.ascii  "\x01\x00\x00\x00"
-scanner_keys:	/* 0x15530C */
-		.ascii  "\x51\x00\x00\x00\x53\x00\x00\x00"
-		.ascii  "\x4f\x00\x00\x00\x4b\x00\x00\x00"
-		.ascii  "\x4f\x00\x00\x00\x4c\x00\x00\x00"
-		.ascii  "\x49\x00\x00\x00\x50\x00\x00\x00"
-		.ascii  "\x4d\x00\x00\x00\x4c\x00\x00\x00"
-		.ascii  "\x51\x00\x00\x00\x4c\x00\x00\x00"
-		.ascii  "\x0f\x27\x00\x00"
-GLOBAL (ASM_circle_line_sz7)	/* 0x155340 */
-		.ascii  "\xff\xff\xff\xff"
-data_155344:
-		.ascii  "\xfd\xff\xff\xff"
-		.long	0x0
-		.ascii  "\xfd\xff\xff\xff\x01\x00\x00\x00"
-		.ascii  "\xfd\xff\xff\xff\x02\x00\x00\x00"
-		.ascii  "\xfe\xff\xff\xff\x03\x00\x00\x00"
-		.ascii  "\xff\xff\xff\xff\x03"
-		.fill   0x7
-		.ascii  "\x03\x00\x00\x00\x01\x00\x00\x00"
-		.ascii  "\x02\x00\x00\x00\x02\x00\x00\x00"
-		.ascii  "\x01\x00\x00\x00\x03"
-		.fill   0x7
-		.ascii  "\x03\x00\x00\x00\xff\xff\xff\xff"
-		.ascii  "\x03\x00\x00\x00\xfe\xff\xff\xff"
-		.ascii  "\x02\x00\x00\x00\xfd\xff\xff\xff"
-		.ascii  "\x01\x00\x00\x00\xfd\xff\xff\xff"
-		.long	0x0
-		.ascii  "\xfd\xff\xff\xff\xff\xff\xff\xff"
-		.ascii  "\xfe\xff\xff\xff\xfe\xff\xff\xff"
-		.ascii  "\x80\x00\x00\x00\x80\x00\x00\x00"
+		.align  4
+
 GLOBAL (scroll_text)	/* 0x1553C8 */
 		.long   aNoObjective
 
 GLOBAL (scanner_unkn3CC)	/* 0x1553CC */
 		.ascii  "\x5a\x00\x00\x00"
 
-proj_origin_m2:
-		.short  0x0
 /* struct ScreenPoint proj_origin;
  */
 GLOBAL (proj_origin)	/* 0x1553D0 */
@@ -136828,19 +136389,3 @@ data_1ddbde:
 		.short  0x0
 data_1ddbe0:
 		.fill   0x10
-GLOBAL (sessionlist_last_update)	/* 0x1ddbf0 */
-		.fill   0x50
-GLOBAL (byte_1DDC40)	/* 0x1DDC40 */
-		.byte	0x0
-		.byte	0x0
-GLOBAL (alert_textpos)	/* 0x1DDC42 */
-		.short  0x0
-GLOBAL (byte_1DDC44)
-		.fill   0x280
-GLOBAL (byte_1DDEC4)
-		.byte	0x0
-GLOBAL (research_unkn_var_01)	/* 0x1DDEC5 */
-		.byte	0x0
-GLOBAL (current_frame)	/* 0x1DDEC6 */
-		.byte	0x0
-		.byte	0x0

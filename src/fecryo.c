@@ -60,7 +60,12 @@ struct ScreenButton cryo_offer_cancel_button = {0};
 
 extern char cybmod_name_text[];
 
-extern ubyte current_frame;
+ubyte byte_1DDC40 = 0;
+
+/** Currently visible frame of cyborg breathing animation.
+ */
+ubyte current_frame = 0;
+
 extern short word_15511E; // = -1;
 extern ubyte byte_155174; // = 166;
 extern ubyte byte_155175[];
