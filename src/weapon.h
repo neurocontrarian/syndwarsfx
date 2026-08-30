@@ -179,6 +179,9 @@ struct WeaponsFourPack {
 extern struct WeaponDef weapon_defs[33];
 extern struct TbNamedEnum weapon_names[33];
 extern ubyte weapon_tech_level[33];
+extern ushort weapon_nrg[WEP_TYPES_COUNT];
+extern ushort weapon_range[WEP_TYPES_COUNT];
+extern ushort weapon_damage[WEP_TYPES_COUNT];
 extern ubyte weapon_sound[32];
 extern ubyte weapon_sound_z[32];
 extern short persuaded_person_weapons_sell_cost_permil;

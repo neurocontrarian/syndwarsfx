@@ -76,9 +76,6 @@ extern ubyte mo_from_agent;
 
 extern char unkn41_text[];
 extern char equip_cost_text[20];
-extern ubyte weapon_nrg[31];
-extern ubyte weapon_range[31];
-extern ubyte weapon_damage[31];
 
 /* Points for shape of the agent selection buttons, X coords.
  */
@@ -1044,9 +1041,9 @@ ubyte display_weapon_info(struct ScreenTextBox *box)
         stridx = 65;
     draw_text_property_lv(&categ_box, gui_strings[stridx]);
 
-    draw_discrete_rects_bar_lv(&power_box, weapon_damage[selected_weapon - 1], 8, byte_155175);
-    draw_discrete_rects_bar_lv(&range_box, weapon_range[selected_weapon - 1], 8, byte_155181);
-    draw_discrete_rects_bar_lv(&energ_box, weapon_nrg[selected_weapon - 1], 8, byte_155175);
+    draw_discrete_rects_bar_lv(&power_box, weapon_damage[selected_weapon], 8, byte_155175);
+    draw_discrete_rects_bar_lv(&range_box, weapon_range[selected_weapon], 8, byte_155181);
+    draw_discrete_rects_bar_lv(&energ_box, weapon_nrg[selected_weapon], 8, byte_155175);
 
     if (equip_offer_can_buy_or_sell(selected_weapon))
     {

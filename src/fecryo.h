@@ -56,6 +56,8 @@ enum ModDrawStage {
 
 #pragma pack()
 /******************************************************************************/
+/** Cyb modification selected in the cryovat screen, 0 for none.
+ */
 extern ubyte selected_mod;
 
 ubyte show_cryo_chamber_screen(void);
