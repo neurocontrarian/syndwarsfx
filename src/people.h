@@ -209,13 +209,12 @@ enum PersonSex {
  */
 #define PERSON_ENERGY_TO_SHIELD_MUL 4
 
-/** Max amount of frames a standard person animation can have.
+/** Max amount of frames a person animation can have.
  *
- * Named that way as the limit is for standard walking/firing anims,
- * not special ones like disintegration. Within this limit,
- * subframe can be restored during AnimMode change.
+ * All parson animations must fit, not only walking/firing,
+ * but also special ones like disintegration.
  */
-#define PERSON_STD_ANIM_MAX_FRAMES 6
+#define PERSON_ANIM_MAX_FRAMES 12
 
 enum ThingWeaponSelectFlags {
     WepSel_TOGGLE = 0,

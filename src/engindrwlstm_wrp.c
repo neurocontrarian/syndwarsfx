@@ -33,6 +33,7 @@
 #include "engindrwlstx.h"
 #include "enginfloor.h"
 #include "enginpeff.h"
+#include "enginshadws.h"
 #include "enginsngobjs.h"
 #include "enginsngtxtr.h"
 #include "enginshrapn.h"
@@ -158,6 +159,9 @@ static void draw_pers_shadow(struct Thing *p_thing,
 
     angl = p_thing->U.UPerson.Angle;
     sbfrm = get_person_anim_subframe(p_thing);
+    /* shadows are strictly limited in amount of frames */
+    if (sbfrm >= MUCOL_SHADOW_FRAMES_COUNT)
+        sbfrm = sbfrm % MUCOL_SHADOW_FRAMES_COUNT;
 
     anmode = p_thing->U.UPerson.AnimMode;
     if ((anmode == ANIM_PERS_WEPHEAVY_IDLE) ||

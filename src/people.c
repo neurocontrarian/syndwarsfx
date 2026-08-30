@@ -1187,7 +1187,7 @@ ushort get_person_anim_subframe(struct Thing *p_person)
     // though if some special effect frames exceed that, no problem - we will limit the value
     // We may also encounter outranged value here if frame was modified to an animation
     // which is not stored in StartFrame, this happens for some effects
-    if ((sbfrm < 0) || (sbfrm >= PERSON_STD_ANIM_MAX_FRAMES))
+    if ((sbfrm < 0) || (sbfrm >= PERSON_ANIM_MAX_FRAMES))
         sbfrm = 0;
 
     return sbfrm;
