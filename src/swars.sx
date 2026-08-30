@@ -130031,7 +130031,7 @@ func_cc59c:
 	jump_cc5d6:
 		cmpb   $0x0,data_1ddb78(%esi)
 		je     jump_cc5ce
-		mov    data_1ddb70(%esi),%eax
+		mov    EXPORT_SYMBOL(data_1ddb70)(%esi),%eax
 		xor    %ebx,%ebx
 		mov    data_1ddb74(%esi),%edx
 		mov    data_1ddb7a(%esi),%bl
@@ -130079,7 +130079,7 @@ GLOBAL_FUNC (ASM_func_cc638)	/* 0xcc638 */
 	jump_cc647:
 		add    $0xc,%eax
 		xor    %dl,%dl
-		mov    %dl,data_1ddb6c(%eax)
+		mov    %dl,EXPORT_SYMBOL(data_1ddb70)-0x04(%eax)
 		cmp    $0x60,%eax
 		jne    jump_cc647
 		mov    $0xe,%edx
@@ -130117,18 +130117,18 @@ GLOBAL_FUNC (ASM_func_cc638)	/* 0xcc638 */
 		cmp    $0x60,%eax
 		je     jump_cc6f7
 	jump_cc6ce:
-		lea    people_groups_count(%eax),%edi
-		lea    data_1ddb70(%eax),%esi
+		lea    EXPORT_SYMBOL(data_1ddb70)-0x0C(%eax),%edi
+		lea    EXPORT_SYMBOL(data_1ddb70)(%eax),%esi
 		xor    %edx,%edx
 		movsl  %ds:(%esi),%es:(%edi)
 		movsl  %ds:(%esi),%es:(%edi)
 		movsl  %ds:(%esi),%es:(%edi)
-		mov    data_1ddb6d(%eax),%dl
+		mov    EXPORT_SYMBOL(data_1ddb70)-0x03(%eax),%dl
 		cmp    $0x20,%edx
 		jle    jump_cc6c6
 		mov    %dl,%ch
 		sub    $0x4,%ch
-		mov    %ch,data_1ddb6d(%eax)
+		mov    %ch,EXPORT_SYMBOL(data_1ddb70)-0x03(%eax)
 		jmp    jump_cc6c6
 	jump_cc6f7:
 		xor    %cl,%cl
@@ -130241,18 +130241,18 @@ GLOBAL_FUNC (ASM_func_cc638)	/* 0xcc638 */
 		cmp    $0x60,%eax
 		je     jump_cc88c
 	jump_cc863:
-		lea    people_groups_count(%eax),%edi
-		lea    data_1ddb70(%eax),%esi
+		lea    EXPORT_SYMBOL(data_1ddb70)-0x0C(%eax),%edi
+		lea    EXPORT_SYMBOL(data_1ddb70)(%eax),%esi
 		xor    %edx,%edx
 		movsl  %ds:(%esi),%es:(%edi)
 		movsl  %ds:(%esi),%es:(%edi)
 		movsl  %ds:(%esi),%es:(%edi)
-		mov    data_1ddb6d(%eax),%dl
+		mov    EXPORT_SYMBOL(data_1ddb70)-0x03(%eax),%dl
 		cmp    $0x20,%edx
 		jle    jump_cc85b
 		mov    %dl,%ch
 		sub    $0x4,%ch
-		mov    %ch,data_1ddb6d(%eax)
+		mov    %ch,EXPORT_SYMBOL(data_1ddb70)-0x03(%eax)
 		jmp    jump_cc85b
 	jump_cc88c:
 		xor    %al,%al
@@ -130282,17 +130282,17 @@ GLOBAL_FUNC (ASM_func_cc638)	/* 0xcc638 */
 		cmp    $0x60,%eax
 		je     jump_cc8b1
 	jump_cc8cf:
-		lea    people_groups_count(%eax),%edi
-		lea    data_1ddb70(%eax),%esi
+		lea    EXPORT_SYMBOL(data_1ddb70)-0x0C(%eax),%edi
+		lea    EXPORT_SYMBOL(data_1ddb70)(%eax),%esi
 		xor    %edx,%edx
 		movsl  %ds:(%esi),%es:(%edi)
 		movsl  %ds:(%esi),%es:(%edi)
 		movsl  %ds:(%esi),%es:(%edi)
-		mov    data_1ddb6d(%eax),%dl
+		mov    EXPORT_SYMBOL(data_1ddb70)-0x03(%eax),%dl
 		cmp    $0x20,%edx
 		jle    jump_cc8c7
 		sub    %cl,%dl
-		mov    %dl,data_1ddb6d(%eax)
+		mov    %dl,EXPORT_SYMBOL(data_1ddb70)-0x03(%eax)
 		jmp    jump_cc8c7
 	jump_cc8f5:
 		add    $0xc,%esp
@@ -134187,9 +134187,9 @@ GLOBAL (data_1ddb68)	/* 0x1ddb68 */
 		.long	0x0
 data_1ddb6c:
 		.byte	0x0
-data_1ddb6d:
-		.ascii  "\x00\x00\x00"
-data_1ddb70:
+		.align	4
+
+GLOBAL (data_1ddb70)	/* 0x1ddb70 */
 		.long	0x0
 data_1ddb74:
 		.long	0x0
