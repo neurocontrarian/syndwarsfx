@@ -101,6 +101,8 @@ short agent_name_shape_points_y[] = {
       0,   0,  17,  17,   0,
 };
 
+ubyte selected_weapon = 0;
+
 /******************************************************************************/
 
 ubyte ac_display_weapon_info(struct ScreenTextBox *box);
@@ -141,13 +143,13 @@ void update_equip_cost_text(void)
 {
     int cost;
 
-    if (selected_weapon == -1) // No weapon selected
+    if (selected_weapon == 0) // No weapon selected
     {
         equip_cost_text[0] = '\0';
         return;
     }
 
-    cost = 100 * weapon_defs[selected_weapon + 1].Cost;
+    cost = 100 * weapon_defs[selected_weapon].Cost;
     if (equip_offer_buy_button.CallBackFn == do_equip_offer_buy)
         sprintf(equip_cost_text, "%d", cost);
     else
@@ -158,17 +160,17 @@ void equip_name_box_redraw(struct ScreenTextBox *p_box)
 {
     const char *text;
 
-    if (selected_weapon + 1 < 1)
+    if (selected_weapon == 0)
     {
         text = NULL;
     }
-    else if (is_research_weapon_completed(selected_weapon + 1) || (login_control__State != LognCt_Unkn6))
+    else if (is_research_weapon_completed(selected_weapon) || (login_control__State != LognCt_Unkn6))
     {
         struct Campaign *p_campgn;
         ushort strid;
 
         p_campgn = &campaigns[background_type];
-        strid = p_campgn->WeaponsTextIdShift + selected_weapon + 1 - 1;
+        strid = p_campgn->WeaponsTextIdShift + selected_weapon - 1;
         text = gui_strings[strid];
     }
     else
@@ -184,7 +186,7 @@ void equip_display_box_redraw(struct ScreenTextBox *p_box)
     const char *text;
     ubyte real_dbcontent;
 
-    real_dbcontent = weapon_has_display_anim(selected_weapon + 1) ? display_box_content : DiBoxCt_TEXT;
+    real_dbcontent = weapon_has_display_anim(selected_weapon) ? display_box_content : DiBoxCt_TEXT;
     switch (real_dbcontent)
     {
     case DiBoxCt_TEXT:
@@ -193,10 +195,10 @@ void equip_display_box_redraw(struct ScreenTextBox *p_box)
         p_box->Flags |= GBxFlg_RadioBtn;
 
         p_box->Lines = 0;
-        if (selected_weapon + 1 < 1) {
+        if (selected_weapon == 0) {
             text = NULL;
-        } else if (is_research_weapon_completed(selected_weapon + 1) || (login_control__State != LognCt_Unkn6)) {
-            text = &weapon_text[weapon_text_index[selected_weapon]];
+        } else if (is_research_weapon_completed(selected_weapon) || (login_control__State != LognCt_Unkn6)) {
+            text = &weapon_text[weapon_text_index[selected_weapon - 1]];
         } else {
             text = gui_strings[536];
         }
@@ -207,7 +209,7 @@ void equip_display_box_redraw(struct ScreenTextBox *p_box)
         // Remove scroll bars
         p_box->Flags &= ~GBxFlg_RadioBtn;
 
-        init_weapon_anim(selected_weapon + 1 - 1);
+        init_weapon_anim(selected_weapon - 1);
         // Negative value saves the background before starting animation
         p_box->TextFadePos = -2;
         break;
@@ -218,7 +220,7 @@ void equip_update_for_selected_weapon(void)
 {
     update_equip_cost_text();
 
-    if (selected_weapon == -1) // No weapon selected
+    if (selected_weapon == 0) // No weapon selected
     {
         return;
     }
@@ -231,7 +233,7 @@ ubyte do_equip_offer_buy_weapon(ubyte click)
     struct WeaponDef *wdef;
     ubyte nbought;
 
-    wdef = &weapon_defs[selected_weapon + 1];
+    wdef = &weapon_defs[selected_weapon];
     nbought = 0;
 
     if (selected_agent != 4)
@@ -245,10 +247,10 @@ ubyte do_equip_offer_buy_weapon(ubyte click)
 
         if (ingame.Credits - cost < 0)
             added = false;
-        else if (!free_slot(plagent, selected_weapon + 1)) {
+        else if (!free_slot(plagent, selected_weapon)) {
             added = false;
         } else {
-            added = player_cryo_add_weapon_one(plagent, selected_weapon + 1);
+            added = player_cryo_add_weapon_one(plagent, selected_weapon);
         }
 
         if (added) {
@@ -270,10 +272,10 @@ ubyte do_equip_offer_buy_weapon(ubyte click)
             if (ingame.Credits - cost < 0)
                 break;
 
-            if (!free_slot(plagent, selected_weapon + 1)) {
+            if (!free_slot(plagent, selected_weapon)) {
                 added = false;
             } else {
-                added = player_cryo_add_weapon_one(plagent, selected_weapon + 1);
+                added = player_cryo_add_weapon_one(plagent, selected_weapon);
             }
 
             if (added) {
@@ -337,7 +339,7 @@ ubyte sell_equipment(ubyte click)
     {
         struct WeaponDef *wdef;
 
-        wdef = &weapon_defs[selected_weapon + 1];
+        wdef = &weapon_defs[selected_weapon];
 
         if (selected_agent == 4)
         {
@@ -345,7 +347,7 @@ ubyte sell_equipment(ubyte click)
 
             for (cryo_no = 0; cryo_no < 4; cryo_no++)
             {
-                if (player_cryo_remove_weapon_one(cryo_no, selected_weapon + 1)) {
+                if (player_cryo_remove_weapon_one(cryo_no, selected_weapon)) {
                     ingame.Credits += (100 * wdef->Cost) >> 1;
                     sold = true;
                 }
@@ -353,7 +355,7 @@ ubyte sell_equipment(ubyte click)
         }
         else
         {
-            if (player_cryo_remove_weapon_one(selected_agent, selected_weapon + 1)) {
+            if (player_cryo_remove_weapon_one(selected_agent, selected_weapon)) {
                 ingame.Credits += (100 * wdef->Cost) >> 1;
                 sold = true;
             }
@@ -417,24 +419,24 @@ ubyte get_buy_sell_button_mode(void)
     mode = 0;
     if (screentype == 5)
     {
-        if (selected_weapon == -1)
+        if (selected_weapon == 0)
         {
             // no weapon selected - no check
         }
         else
         {
-            mode = equip_offer_can_buy_or_sell(selected_weapon + 1);
+            mode = equip_offer_can_buy_or_sell(selected_weapon);
         }
     }
     else
     {
-        if (selected_mod == -1)
+        if (selected_mod == 0)
         {
             // no mod selected - no check
         }
         else
         {
-            mode = cryo_offer_can_buy_or_sell(selected_mod + 1);
+            mode = cryo_offer_can_buy_or_sell(selected_mod);
         }
     }
     return mode;
@@ -982,7 +984,7 @@ void draw_display_box_content_wep(struct ScreenTextBox *p_box)
 {
     ubyte real_dbcontent;
 
-    real_dbcontent = weapon_has_display_anim(selected_weapon + 1) ? display_box_content : DiBoxCt_TEXT;
+    real_dbcontent = weapon_has_display_anim(selected_weapon) ? display_box_content : DiBoxCt_TEXT;
     switch (real_dbcontent)
     {
     case DiBoxCt_TEXT:
@@ -1030,23 +1032,23 @@ ubyte display_weapon_info(struct ScreenTextBox *box)
     }
     my_set_text_window(box->X + 4, box->Y + 4, box->Width - 8, box->Height - 8);
 
-    if (selected_weapon == -1)
+    if (selected_weapon == 0)
         return 0;
     lbDisplay.DrawFlags = Lb_TEXT_HALIGN_CENTER;
     lbFontPtr = small_med_font;
 
     // Weapon category
-    if (is_research_weapon_completed(selected_weapon + 1) || (login_control__State != LognCt_Unkn6))
-        stridx = 59 + weapon_defs[selected_weapon + 1].Category;
+    if (is_research_weapon_completed(selected_weapon) || (login_control__State != LognCt_Unkn6))
+        stridx = 59 + weapon_defs[selected_weapon].Category;
     else
         stridx = 65;
     draw_text_property_lv(&categ_box, gui_strings[stridx]);
 
-    draw_discrete_rects_bar_lv(&power_box, weapon_damage[selected_weapon], 8, byte_155175);
-    draw_discrete_rects_bar_lv(&range_box, weapon_range[selected_weapon], 8, byte_155181);
-    draw_discrete_rects_bar_lv(&energ_box, weapon_nrg[selected_weapon], 8, byte_155175);
+    draw_discrete_rects_bar_lv(&power_box, weapon_damage[selected_weapon - 1], 8, byte_155175);
+    draw_discrete_rects_bar_lv(&range_box, weapon_range[selected_weapon - 1], 8, byte_155181);
+    draw_discrete_rects_bar_lv(&energ_box, weapon_nrg[selected_weapon - 1], 8, byte_155175);
 
-    if (equip_offer_can_buy_or_sell(selected_weapon + 1))
+    if (equip_offer_can_buy_or_sell(selected_weapon))
     {
         equip_offer_buy_button.DrawFn(&equip_offer_buy_button);
     }
@@ -1141,13 +1143,13 @@ ubyte show_weapon_list(struct ScreenTextBox *box)
             if (lbDisplay.LeftButton)
             {
                 lbDisplay.LeftButton = 0;
-                selected_weapon = weapon;
+                selected_weapon = weapon + 1;
                 switch_equip_offer_to_buy();
                 equip_update_for_selected_weapon();
             }
         }
 
-        if (weapon == selected_weapon) {
+        if (weapon + 1 == selected_weapon) {
             lbDisplay.DrawFlags = Lb_TEXT_ONE_COLOR;
             lbDisplay.DrawColour = 87;
         } else {
@@ -1256,7 +1258,7 @@ void show_weapon_slot(short scr_x, short scr_y, WeaponType wtype)
     {
         if (mouse_move_over_box_coords(scr_x, scr_y, scr_x + 181, scr_y + 42))
         {
-            selected_weapon = (int)wtype - 1;
+            selected_weapon = wtype;
             switch_equip_offer_to_sell();
             equip_update_for_selected_weapon();
         }
@@ -1494,7 +1496,7 @@ void init_equip_screen_shapes(void)
 
 void reset_equip_screen_player_state(void)
 {
-    selected_weapon = -1;
+    selected_weapon = 0;
     selected_agent = 0;
     refresh_equip_list = 0;
 }

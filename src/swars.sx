@@ -135525,11 +135525,8 @@ data_155162:
 		.byte	0x1e
 data_155163:
 		.byte	0x1f
-GLOBAL (selected_weapon)	/* 0x155164 */
-		.byte	0xff
-GLOBAL (selected_mod)	/* 0x155165 */
-		.byte	0xff
 		.align  4
+
 GLOBAL (research_on_weapons)	/* 0x155168 */
 		.byte	0x1
 GLOBAL (unkn_city_no)	/* 0x155169 */

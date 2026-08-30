@@ -56,7 +56,7 @@ enum ModDrawStage {
 
 #pragma pack()
 /******************************************************************************/
-extern sbyte selected_mod;
+extern ubyte selected_mod;
 
 ubyte show_cryo_chamber_screen(void);
 void update_flic_mods(ubyte *mods);

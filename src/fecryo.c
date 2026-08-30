@@ -87,6 +87,8 @@ ubyte ac_do_cryo_all_agents_set(ubyte click);
 void ac_weapon_flic_data_to_screen(void);
 ubyte do_equip_offer_buy(ubyte click);
 
+ubyte selected_mod = 0;
+
 struct ScreenRect equip_blokey_rect[] = {
     {23,  0,  93, 197},
     {46,  0,  47,  50},
@@ -117,13 +119,13 @@ void update_cybmod_cost_text(void)
     struct ModDef *mdef;
     int cost;
 
-    if (selected_mod == -1) // No mod selected
+    if (selected_mod == 0) // No mod selected
     {
         equip_cost_text[0] = '\0';
         return;
     }
 
-    mdef = &mod_defs[selected_mod + 1];
+    mdef = &mod_defs[selected_mod];
     cost = 10 * (int)mdef->Cost;
     sprintf(equip_cost_text, "%d", cost);
 }
@@ -134,13 +136,13 @@ void update_cybmod_name_text(void)
     ushort mdstr_id, lvstr_id;
     ubyte modgrp, modlv;
 
-    if (selected_mod == -1) // No mod selected
+    if (selected_mod == 0) // No mod selected
     {
         cybmod_name_text[0] = '\0';
         return;
     }
 
-    mtype = selected_mod + 1;
+    mtype = selected_mod;
 
     modgrp = cybmod_group_type(mtype);
     modlv = cybmod_version(mtype);
@@ -180,7 +182,7 @@ void cryo_display_box_redraw(struct ScreenTextBox *p_box)
 {
     ubyte real_dbcontent;
 
-    real_dbcontent = cybmod_has_display_anim(selected_mod + 1) ? display_box_content : DiBoxCt_TEXT;
+    real_dbcontent = cybmod_has_display_anim(selected_mod) ? display_box_content : DiBoxCt_TEXT;
     switch (real_dbcontent)
     {
     case DiBoxCt_TEXT:
@@ -190,7 +192,7 @@ void cryo_display_box_redraw(struct ScreenTextBox *p_box)
 
         p_box->TextTopLine = 0;
         p_box->Lines = 0;
-        p_box->Text = &weapon_text[cybmod_text_index[selected_mod]];
+        p_box->Text = &weapon_text[cybmod_text_index[selected_mod - 1]];
         lbFontPtr = small_font;
         p_box->LineHeight = byte_197160 + my_char_height('A');
         lbFontPtr = p_box->Font;
@@ -200,7 +202,7 @@ void cryo_display_box_redraw(struct ScreenTextBox *p_box)
         // Remove scroll bars
         p_box->Flags &= ~GBxFlg_RadioBtn;
 
-        init_weapon_anim(selected_mod + 32);
+        init_weapon_anim(selected_mod + 31);
         // Negative value saves the background before starting animation
         p_box->TextFadePos = -2;
         break;
@@ -212,7 +214,7 @@ void cryo_update_for_selected_cybmod(void)
     update_cybmod_name_text();
     update_cybmod_cost_text();
 
-    if (selected_mod == -1) // No mod selected
+    if (selected_mod == 0) // No mod selected
     {
         cryo_cybmod_list_box.Flags |= GBxFlg_Unkn0080;
         // Re-add scroll bars
@@ -228,7 +230,7 @@ void cryo_update_for_selected_cybmod(void)
 
 ubyte do_cryo_offer_cancel(ubyte click)
 {
-    selected_mod = -1;
+    selected_mod = 0;
     cryo_update_for_selected_cybmod();
     refresh_equip_list = 1;
     return 0;
@@ -295,7 +297,7 @@ ubyte do_equip_offer_buy_cybmod(ubyte click)
     struct ModDef *mdef;
     ubyte nbought;
 
-    mdef = &mod_defs[selected_mod + 1];
+    mdef = &mod_defs[selected_mod];
     nbought = 0;
 
     if (selected_agent != 4)
@@ -310,10 +312,10 @@ ubyte do_equip_offer_buy_cybmod(ubyte click)
         if (ingame.Credits - cost < 0)
             added = false;
         else
-            added = player_cryo_add_cybmod(nagent, selected_mod + 1);
+            added = player_cryo_add_cybmod(nagent, selected_mod);
 
         if (added) {
-            mod_draw_update_on_change(selected_mod + 1);
+            mod_draw_update_on_change(selected_mod);
         }
 
         if (added) {
@@ -335,10 +337,10 @@ ubyte do_equip_offer_buy_cybmod(ubyte click)
             if (ingame.Credits - cost < 0)
                 break;
 
-            added = player_cryo_add_cybmod(nagent, selected_mod + 1);
+            added = player_cryo_add_cybmod(nagent, selected_mod);
 
             if (added) {
-                mod_draw_update_on_change(selected_mod + 1);
+                mod_draw_update_on_change(selected_mod);
             }
 
             if (added) {
@@ -354,7 +356,7 @@ ubyte do_equip_offer_buy_cybmod(ubyte click)
         if ((login_control__State == LognCt_Unkn5) && ((net_game_play_flags & NGPF_Unkn08) != 0)) {
             net_schedule_player_cryo_equip_sync();
         }
-        selected_mod = -1;
+        selected_mod = 0;
         cryo_update_for_selected_cybmod();
         refresh_equip_list = 1;
     }
@@ -1447,7 +1449,7 @@ void draw_display_box_content_mod(struct ScreenTextBox *p_box)
 {
     ubyte real_dbcontent;
 
-    real_dbcontent = cybmod_has_display_anim(selected_mod + 1) ? display_box_content : DiBoxCt_TEXT;
+    real_dbcontent = cybmod_has_display_anim(selected_mod) ? display_box_content : DiBoxCt_TEXT;
     switch (real_dbcontent)
     {
     case DiBoxCt_TEXT:
@@ -1526,7 +1528,7 @@ ubyte show_cryo_cybmod_list_box(struct ScreenTextBox *p_box)
         lbFontPtr = small_med_font;
     }
 
-    if (selected_mod == -1) // No mod selected - show list of available ones
+    if (selected_mod == 0) // No mod selected - show list of available ones
     {
         ushort mtype;
         short text_h;
@@ -1552,11 +1554,11 @@ ubyte show_cryo_cybmod_list_box(struct ScreenTextBox *p_box)
                   {
                       if (lbDisplay.LeftButton) {
                           lbDisplay.LeftButton = 0;
-                          selected_mod = mtype - 1;
+                          selected_mod = mtype;
                           cryo_update_for_selected_cybmod();
                       }
                   }
-                  if (selected_mod == mtype - 1) {
+                  if (selected_mod == mtype) {
                       lbDisplay.DrawFlags = Lb_TEXT_ONE_COLOR;
                       lbDisplay.DrawColour = 87;
                   } else {
@@ -1581,7 +1583,7 @@ ubyte show_cryo_cybmod_list_box(struct ScreenTextBox *p_box)
     {
         struct ModDef *mdef;
 
-        mdef = &mod_defs[selected_mod + 1];
+        mdef = &mod_defs[selected_mod];
 
         draw_discrete_rects_bar_lv(&power_box, mdef->PowerOutput, 8, byte_155175);
         draw_discrete_rects_bar_lv(&resil_box, mdef->Resilience, 8, byte_155181);
@@ -1597,7 +1599,7 @@ ubyte show_cryo_cybmod_list_box(struct ScreenTextBox *p_box)
         cryo_offer_cancel_button.DrawFn(&cryo_offer_cancel_button);
         equip_cost_box.DrawFn(&equip_cost_box);
 
-        if (selected_mod == -1)
+        if (selected_mod == 0)
         {
             equip_cost_box.Flags = (GBxFlg_NoBkCopy|GBxFlg_Unkn0001);
             equip_offer_buy_button.Flags |= GBxFlg_Unkn0001;
@@ -1762,7 +1764,7 @@ ubyte show_cryo_chamber_screen(void)
         }
     }
 
-    if (refresh_equip_list && selected_mod == -1)
+    if (refresh_equip_list && selected_mod == 0)
     {
         ushort mtype;
 
@@ -1931,7 +1933,7 @@ void init_cryo_screen_boxes(void)
 
 void reset_cryo_screen_player_state(void)
 {
-    selected_mod = -1;
+    selected_mod = 0;
     selected_agent = 0;
 }
 

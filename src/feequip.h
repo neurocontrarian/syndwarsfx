@@ -39,7 +39,7 @@ struct ScreenBoxBase;
 /******************************************************************************/
 // TODO for this variable the first weapon is 0 instead of 1
 // to be fixed to define variables in the same way everywhere
-extern sbyte selected_weapon;
+extern ubyte selected_weapon;
 extern ubyte display_box_content;
 
 ubyte show_equipment_screen(void);
