@@ -34,6 +34,10 @@ short scientists_per_group = 4;
 short weapon_donate_research_incr_permil = 125;
 short research_progress_rtc_minutes = 0;
 
+struct ResearchInfo research;
+
+/******************************************************************************/
+
 void load_scientist_lost_reason(ushort reason_no, ubyte *scratch_buf)
 {
     int totlen;

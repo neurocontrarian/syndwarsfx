@@ -3593,10 +3593,6 @@ ushort set_player_weapon_turn(struct Thing *p_person, ushort delay_turns)
 
 void init_fire_weapon(struct Thing *p_person)
 {
-#if 0
-    asm volatile ("call ASM_init_fire_weapon\n"
-        : : "a" (p_person));
-#else
     struct WeaponDef *wdef;
     int plagent;
     struct Thing *p_target;
@@ -3856,7 +3852,6 @@ void init_fire_weapon(struct Thing *p_person)
         p_person->Flag &= ~TngF_ShootAtPos;
     if ((p_person->Flag & TngF_PlayerAgent) != 0)
         set_player_weapon_turn(p_person, p_person->U.UPerson.WeaponTurn);
-#endif
 }
 
 void init_clone_disguise(struct Thing *p_person)
