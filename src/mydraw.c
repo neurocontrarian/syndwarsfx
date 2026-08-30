@@ -32,6 +32,7 @@
 extern ubyte text_colours[15];
 
 ushort my_font_flags = MyFF_NONE;
+ubyte byte_197160 = 0;
 
 ubyte my_char_to_upper(ubyte c)
 {

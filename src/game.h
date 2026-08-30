@@ -224,7 +224,6 @@ extern ubyte data_1c498d;
 extern ubyte mouse_sprite_anim_frame;
 extern char *outro_text_s;
 extern char *outro_text_z;
-extern long data_197150;
 extern long data_1dd91c;
 extern ubyte unkn_flags_01;
 extern long outro_credits_enabled;
@@ -310,7 +309,6 @@ extern char brief_netscan_cost_text[];
 extern char *misc_text[5];
 
 extern ubyte game_system_screen;
-extern ubyte byte_197160;
 
 extern ubyte execute_commands;
 

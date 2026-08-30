@@ -4290,7 +4290,7 @@ GLOBAL_FUNC(ASM_fill_floor_textures)	/* 0x0301A0 */
 		xor    %eax,%eax
 		mov    %dx,%ax
 		imul   $0x12,%eax,%ebx
-		mov    prim4_textures,%eax
+		mov    EXPORT_SYMBOL(prim4_textures),%eax
 		add    %ebx,%eax
 		xor    %ebx,%ebx
 		mov    0x8(%eax),%bl
@@ -4365,7 +4365,7 @@ GLOBAL_FUNC (ASM_read_primveh_obj)
 		mov    %ecx,%eax
 		call   ac_LbFileRead
 		mov    $0x2,%ebx
-		mov    $prim_unknprop01,%edx
+		mov    $EXPORT_SYMBOL(prim_unknprop01),%edx
 		mov    %ecx,%eax
 		call   ac_LbFileRead
 		xor    %edx,%edx
@@ -4373,7 +4373,7 @@ GLOBAL_FUNC (ASM_read_primveh_obj)
 		lea    0x0(,%edx,4),%ebx
 		mov    %ecx,%eax
 		add    %edx,%ebx
-		mov    prim_object_points,%edx
+		mov    EXPORT_SYMBOL(prim_object_points),%edx
 		add    %ebx,%ebx
 		call   ac_LbFileRead
 		xor    %ebx,%ebx
@@ -4387,7 +4387,7 @@ GLOBAL_FUNC (ASM_read_primveh_obj)
 		lea    0x0(,%edx,4),%ebx
 		mov    %ecx,%eax
 		add    %edx,%ebx
-		mov    prim_object_faces4,%edx
+		mov    EXPORT_SYMBOL(prim_object_faces4),%edx
 		shl    $0x3,%ebx
 		call   ac_LbFileRead
 		xor    %edx,%edx
@@ -4395,7 +4395,7 @@ GLOBAL_FUNC (ASM_read_primveh_obj)
 		lea    0x0(,%edx,8),%ebx
 		mov    %ecx,%eax
 		add    %edx,%ebx
-		mov    prim_objects,%edx
+		mov    EXPORT_SYMBOL(prim_objects),%edx
 		shl    $0x2,%ebx
 		call   ac_LbFileRead
 		xor    %edx,%edx
@@ -4403,11 +4403,11 @@ GLOBAL_FUNC (ASM_read_primveh_obj)
 		lea    0x0(,%edx,8),%ebx
 		mov    %ecx,%eax
 		add    %edx,%ebx
-		mov    prim4_textures,%edx
+		mov    EXPORT_SYMBOL(prim4_textures),%edx
 		add    %ebx,%ebx
 		call   ac_LbFileRead
 		xor    %ebx,%ebx
-		mov    prim_face_textures,%edx
+		mov    EXPORT_SYMBOL(prim_face_textures),%edx
 		mov    EXPORT_SYMBOL(prim_face_textures_count),%bx
 		mov    %ecx,%eax
 		shl    $0x4,%ebx
@@ -9421,7 +9421,7 @@ GLOBAL_FUNC (ASM_veh_add)	/* 0x041A80 */
 		rep movsl %ds:(%esi),%es:(%edi)
 		mov    %bx,0x54(%eax)
 		mov    %dx,0x26(%eax)
-		mov    prim_unknprop01,%si
+		mov    EXPORT_SYMBOL(prim_unknprop01),%si
 		mov    0x1c(%ebp),%eax
 		xor    %ecx,%ecx
 		sar    $0x8,%eax
@@ -9513,7 +9513,7 @@ GLOBAL_FUNC (ASM_veh_add)	/* 0x041A80 */
 		sar    $0x8,%eax
 		mov    %bx,EXPORT_SYMBOL(next_local_mat)
 		add    $0x14,%eax
-		mov    prim_unknprop01,%bx
+		mov    EXPORT_SYMBOL(prim_unknprop01),%bx
 		mov    %ax,%cx
 		mov    $0xffffffe5,%eax
 		xor    %dl,%dl
@@ -9599,7 +9599,7 @@ GLOBAL_FUNC (ASM_veh_add)	/* 0x041A80 */
 		sar    $0x8,%eax
 		xor    %ecx,%ecx
 		add    $0x14,%eax
-		mov    prim_unknprop01,%dx
+		mov    EXPORT_SYMBOL(prim_unknprop01),%dx
 		mov    %ax,%cx
 		mov    $0xffffffe2,%eax
 		inc    %ebx
@@ -48765,7 +48765,7 @@ func_61628:
 		mov    0x8(%esp),%ebx
 		mov    (%esp),%di
 		add    %eax,%ebx
-		mov    prim_unknprop01,%ax
+		mov    EXPORT_SYMBOL(prim_unknprop01),%ax
 		mov    %ebx,0x8(%esp)
 		neg    %eax
 		movzwl 0x8(%esp),%ebp
@@ -63551,7 +63551,7 @@ GLOBAL_FUNC (ASM_init_level_3d)	/* 0x07445C */
 		xor    %ebp,%ebp
 		jmp    jump_74586
 	jump_7454c:
-		mov    prim_unknprop01,%ax
+		mov    EXPORT_SYMBOL(prim_unknprop01),%ax
 		neg    %eax
 		mov    %ebp,%ecx
 		sub    $0x14,%eax
@@ -110021,7 +110021,7 @@ init_unkn1thing:	/* 0x0BBFC0 */
 		sar    $0x8,%eax
 		mov    %dl,EXPORT_SYMBOL(byte_1C83D1)
 		mov    %ax,%cx
-		mov    prim_unknprop01,%ax
+		mov    EXPORT_SYMBOL(prim_unknprop01),%ax
 		mov    0x24(%esp),%edx
 		neg    %eax
 		sub    %edx,%eax
@@ -132453,44 +132453,7 @@ shrapnel_free:	/* 0x19714C */
 		.short  0x0
 phwoar_free:	/* 0x19714E */
 		.short  0x0
-GLOBAL (data_197150) /* 0x197150 */
-		.fill   0x8
-/* ushort text_window_x1;
- */
-GLOBAL (text_window_x1)	/* 0x197158 */
-		.short  0x0
-/* ushort text_window_y1;
- */
-GLOBAL (text_window_y1)
-		.short  0x0
-/* ushort text_window_x2;
- */
-GLOBAL (text_window_x2)	/* 0x19715C */
-		.short  0x0
-/* ushort text_window_y2;
- */
-GLOBAL (text_window_y2)
-		.short  0x0
-GLOBAL (byte_197160)	/* 0x197160 */
-		.byte	0x0
-		.fill   0x3
-data_197164:
-		.fill   0xc0
-GLOBAL (prim_unknprop01)	/* 0x197224 */
-		.short  0x0
-		.align	4
-GLOBAL (prim4_textures)	/* 0x197228 */
-		.long	0x0
-GLOBAL (prim_face_textures)	/* 0x19722C */
-		.long	0x0
-GLOBAL (prim_object_points)	/* 0x197230 */
-		.long	0x0
-GLOBAL (prim_object_faces3)	/* 0x197234 */
-		.long	0x0
-GLOBAL (prim_object_faces4)	/* 0x197238 */
-		.long	0x0
-GLOBAL (prim_objects)	/* 0x19723C */
-		.long	0x0
+
 /* ushort same_type_head[290];
  */
 GLOBAL (same_type_head)	/* 0x197240 */

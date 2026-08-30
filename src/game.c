@@ -2050,7 +2050,6 @@ void init_outro(void)
     setup_heaps(SHSC_CreditsSnd, language_3str);
     play_sample_using_heap(0, 1, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_4EVER, 3);
 
-    data_197150 = 1;
     data_1dd91c = 0;
     unkn_flags_01 = 1;
     overall_scale = 40;
