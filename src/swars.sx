@@ -199,7 +199,7 @@ GLOBAL_FUNC(ASM_place_default_player)	/* 0x0101F0 */
 		sub    %edx,%eax
 		xor    %edx,%edx
 		lea    -0x1(%edi),%ecx
-		mov    data_1a639b(%eax),%dl
+		mov    EXPORT_SYMBOL(players)+0x0BB(%eax),%dl # players[].MissionAgents
 		cmp    %ecx,%edx
 		jl     jump_1028e
 		jmp    jump_102a3
@@ -393,7 +393,7 @@ GLOBAL_FUNC(ASM_place_default_player)	/* 0x0101F0 */
 		mov    0x16(%ebx),%ax
 		movb   $0x0,0x99(%ebx)
 		call   ac_find_nth_weapon_held
-		mov    %al,data_1a638c(%ecx)
+		mov    %al,EXPORT_SYMBOL(players)+0x0AC(%ecx) # players[].PrevWeapon[]
 		xor    %eax,%eax
 		jmp    jump_1053a
 	jump_10524:
@@ -8600,270 +8600,6 @@ GLOBAL_FUNC (ASM_build_packet4)	/* 0x03D3B0 */
 
 
 /*----------------------------------------------------------------*/
-GLOBAL_FUNC (ASM_change_brightness)	/* 0x03D5F0 */
-/*----------------------------------------------------------------*/
-		push   %ebx
-		push   %ecx
-		push   %edx
-		push   %esi
-		push   %edi
-		push   %ebp
-		sub    $0x64,%esp
-		mov    EXPORT_SYMBOL(display_palette),%esi
-		mov    %eax,%ebx
-		xor    %eax,%eax
-		mov    EXPORT_SYMBOL(ingame)+0x987,%al # ingame.PalType
-		push   %eax
-		mov    palette_fname_fmt,%edx
-		push   %edx
-		lea    0x8(%esp),%eax
-		push   %eax
-		call   ac_sprintf
-		add    $0xc,%esp
-		mov    %esp,%eax
-		mov    EXPORT_SYMBOL(display_palette),%edx
-		call   ac_LbFileLoadAt
-		add    %bx,EXPORT_SYMBOL(momentary_brightness)
-		mov    data_1a730e,%eax
-		sar    $0x10,%eax
-		mov    EXPORT_SYMBOL(display_palette),%esi
-		cmp    $0xffff8ad0,%eax
-		jge    jump_3d64f
-		movw   $0x8ad0,EXPORT_SYMBOL(momentary_brightness)
-	jump_3d64f:
-		mov    data_1a730e,%eax
-		sar    $0x10,%eax
-		cmp    $0x7530,%eax
-		jle    jump_3d667
-		movw   $0x7530,EXPORT_SYMBOL(momentary_brightness)
-	jump_3d667:
-		mov    $0x3f,%ebp
-		xor    %ebx,%ebx
-		xor    %edi,%edi
-		jmp    jump_3d675
-	jump_3d672:
-		add    $0x3,%ebx
-	jump_3d675:
-		xor    %eax,%eax
-		mov    %bx,%ax
-		cmp    $0x300,%eax
-		jge    jump_3d6cd
-		mov    %edi,%edx
-		jmp    jump_3d686
-	jump_3d685:
-		inc    %edx
-	jump_3d686:
-		xor    %eax,%eax
-		mov    %dx,%ax
-		cmp    $0x3,%eax
-		jge    jump_3d672
-		xor    %ecx,%ecx
-		mov    %bx,%cx
-		add    %ecx,%eax
-		add    %esi,%eax
-		mov    EXPORT_SYMBOL(momentary_brightness),%cl
-		mov    (%eax),%ch
-		add    %cl,%ch
-		mov    %ch,(%eax)
-		movsbl %ch,%ecx
-		test   %ecx,%ecx
-		jge    jump_3d6af
-		movb   $0x0,(%eax)
-	jump_3d6af:
-		xor    %ecx,%ecx
-		xor    %eax,%eax
-		mov    %bx,%cx
-		mov    %dx,%ax
-		add    %ecx,%eax
-		mov    %esi,%ecx
-		add    %esi,%eax
-		xor    %esi,%ecx
-		mov    (%eax),%cl
-		cmp    $0x3f,%ecx
-		jle    jump_3d685
-		movb   $0x3f,(%eax)
-		jmp    jump_3d685
-	jump_3d6cd:
-		push   %esi
-		mov    %esi,EXPORT_SYMBOL(display_palette)
-		call   ac_LbPaletteSet
-		mov    EXPORT_SYMBOL(display_palette),%esi
-		add    $0x4,%esp
-		add    $0x64,%esp
-		pop    %ebp
-		pop    %edi
-		pop    %esi
-		pop    %edx
-		pop    %ecx
-		pop    %ebx
-		ret
-
-
-/*----------------------------------------------------------------*/
-GLOBAL_FUNC(ASM_set_user_selected_brightness)	/* 0x03D6EC */
-/*----------------------------------------------------------------*/
-		mov    EXPORT_SYMBOL(user_sel_brightness),%ax
-		mov    %ax,EXPORT_SYMBOL(momentary_brightness)
-		xor    %eax,%eax
-		jmp    ac_change_brightness
-
-
-/*----------------------------------------------------------------*/
-GLOBAL_FUNC (ASM_reset_user_selected_brightness)	/* 0x03D700 */
-/*----------------------------------------------------------------*/
-		push   %edx
-		sub    $0x64,%esp
-		push   $0x3
-		mov    palette_fname_fmt,%edx
-		push   %edx
-		lea    0x8(%esp),%eax
-		push   %eax
-		call   ac_sprintf
-		add    $0xc,%esp
-		mov    %esp,%eax
-		mov    EXPORT_SYMBOL(display_palette),%edx
-		call   ac_LbFileLoadAt
-		add    $0x64,%esp
-		pop    %edx
-		ret
-
-
-/*----------------------------------------------------------------*/
-GLOBAL_FUNC (ASM_joy_input)	/* 0x3DC68 */
-/*----------------------------------------------------------------*/
-		push   %ebx
-		push   %ecx
-		push   %edx
-		push   %esi
-		push   %edi
-		push   %ebp
-		mov    $EXPORT_SYMBOL(joy)+0,%eax # joy.Yaw
-		xor    %edx,%edx
-		call   ac_JoyUpdateInputs
-		mov    EXPORT_SYMBOL(local_player_no),%dl
-		lea    0x0(,%edx,8),%eax
-		add    %edx,%eax
-		shl    $0x3,%eax
-		sub    %edx,%eax
-		add    %eax,%eax
-		mov    %eax,%edx
-		shl    $0x2,%eax
-		sub    %edx,%eax
-		cmpb   $0x0,data_1a63ae(%eax)
-		je     jump_3dcad
-		mov    EXPORT_SYMBOL(ingame)+0x000,%eax # ingame.GameMode
-		sar    $0x10,%eax
-		cmp    $0x37,%eax
-		jne    jump_3dd15
-	jump_3dcad:
-		mov    EXPORT_SYMBOL(joy)+0x0a04,%ecx # joy.NumberOfDevices
-		xor    %edx,%edx
-		xor    %ebx,%ebx
-		test   %ecx,%ecx
-		jle    jump_3dd6c
-		xor    %eax,%eax
-	jump_3dcc1:
-		cmpb   $0x0,EXPORT_SYMBOL(joy)+0x0a48(%edx) # joy.Init
-		je     jump_3dd05
-		mov    EXPORT_SYMBOL(joy)+0x900,%esi # joy.Buttons
-		mov    EXPORT_SYMBOL(joy)+0x900(%eax),%ecx # joy.Buttons
-		or     %ecx,%esi
-		mov    %esi,EXPORT_SYMBOL(joy)+0x900 # joy.Buttons
-		mov    EXPORT_SYMBOL(joy)+0x240,%edi # joy.DigitalX[edi]
-		mov    EXPORT_SYMBOL(joy)+0x240(%eax),%ecx # joy.DigitalX[eax]
-		or     %ecx,%edi
-		mov    %edi,EXPORT_SYMBOL(joy)+0x240 # joy.DigitalX
-		mov    EXPORT_SYMBOL(joy)+0x280,%ebp # joy.DigitalY
-		or     EXPORT_SYMBOL(joy)+0x280(%eax),%ebp # joy.DigitalY
-		inc    %ebx
-		mov    %ebp,EXPORT_SYMBOL(joy)+0x280 # joy.DigitalY
-	jump_3dd05:
-		mov    EXPORT_SYMBOL(joy)+0x0a04,%ecx # joy.NumberOfDevices
-		add    $0x4,%eax
-		inc    %edx
-		cmp    %ecx,%ebx
-		jge    jump_3dd6c
-		jmp    jump_3dcc1
-	jump_3dd15:
-		cmp    $0x32,%eax
-		jne    jump_3dd6c
-		mov    EXPORT_SYMBOL(joy)+0x0a04,%ebx # joy.NumberOfDevices
-		xor    %edx,%edx
-		xor    %eax,%eax
-		test   %ebx,%ebx
-		jle    jump_3dd6c
-		xor    %ebx,%ebx
-	jump_3dd2a:
-		cmpb   $0x0,EXPORT_SYMBOL(joy)+0x0a48(%edx) # joy.Init
-		je     jump_3dd5e
-		xor    %esi,%esi
-		xor    %ecx,%ecx
-		mov    EXPORT_SYMBOL(jskeys)+12,%esi
-		mov    EXPORT_SYMBOL(jskeys)+16,%ecx
-		mov    EXPORT_SYMBOL(joy)+0x900(%ebx),%edi # joy.Buttons
-		or     %esi,%ecx
-		mov    EXPORT_SYMBOL(joy)+0x900,%ebp # joy.Buttons
-		and    %edi,%ecx
-		or     %ecx,%ebp
-		inc    %eax
-		mov    %ebp,EXPORT_SYMBOL(joy)+0x900 # joy.Buttons
-	jump_3dd5e:
-		mov    EXPORT_SYMBOL(joy)+0x0a04,%esi # joy.NumberOfDevices
-		add    $0x4,%ebx
-		inc    %edx
-		cmp    %esi,%eax
-		jl     jump_3dd2a
-	jump_3dd6c:
-		pop    %ebp
-		pop    %edi
-		pop    %esi
-		pop    %edx
-		pop    %ecx
-		pop    %ebx
-		ret
-
-
-/*----------------------------------------------------------------*/
-GLOBAL_FUNC (ASM_input)	/* 0x3DE08 */
-/*----------------------------------------------------------------*/
-		push   %edx
-		mov    EXPORT_SYMBOL(lbShift),%dl
-		cmpb   $0x0,EXPORT_SYMBOL(lbKeyOn)+42
-		jne    jump_3de21
-		cmpb   $0x0,EXPORT_SYMBOL(lbKeyOn)+54
-		je     jump_3de26
-	jump_3de21:
-		or     $0x1,%dl
-		jmp    jump_3de29
-	jump_3de26:
-		and    $0xfe,%dl
-	jump_3de29:
-		cmpb   $0x0,EXPORT_SYMBOL(lbKeyOn)+29
-		jne    jump_3de3b
-		cmpb   $0x0,EXPORT_SYMBOL(lbKeyOn)+157
-		je     jump_3de40
-	jump_3de3b:
-		or     $0x2,%dl
-		jmp    jump_3de43
-	jump_3de40:
-		and    $0xfd,%dl
-	jump_3de43:
-		cmpb   $0x0,EXPORT_SYMBOL(lbKeyOn)+184
-		jne    jump_3de55
-		cmpb   $0x0,EXPORT_SYMBOL(lbKeyOn)+56
-		je     jump_3de5a
-	jump_3de55:
-		or     $0x4,%dl
-		jmp    jump_3de5d
-	jump_3de5a:
-		and    $0xfb,%dl
-	jump_3de5d:
-		mov    %dl,EXPORT_SYMBOL(lbShift)
-		pop    %edx
-		ret
-
-
-/*----------------------------------------------------------------*/
 GLOBAL_FUNC (ASM_player_chat_message_add_key)	/* 0x3E580 */
 /*----------------------------------------------------------------*/
 		push   %ebx
@@ -8940,7 +8676,7 @@ GLOBAL_FUNC (ASM_player_chat_message_add_key)	/* 0x3E580 */
 		xor    %eax,%eax
 		mov    mouser,%al
 		xor    %bl,%bl
-		mov    %bl,data_1a6390(%edx,%eax,1)
+		mov    %bl,EXPORT_SYMBOL(players)+0x0B0(%edx,%eax,1) # players[].PanelState[]
 		add    $0x4,%esp
 		pop    %edi
 		pop    %esi
@@ -15944,7 +15680,7 @@ GLOBAL_FUNC(ASM_peep_change_weapon)	/* 0x047F24 */
 		and    $0xffff,%edx
 		add    %edx,%eax
 		mov    0x99(%ebx),%dl
-		mov    %dl,data_1a638c(%eax)
+		mov    %dl,EXPORT_SYMBOL(players)+0x0AC(%eax) # players[].PrevWeapon[]
 	jump_48002:
 		pop    %edx
 		pop    %ebx
@@ -26470,7 +26206,7 @@ func_4f631:
 		xor    %ah,%ah
 		and    $0x3,%al
 		and    $0xffff,%eax
-		mov    %bl,data_1a638c(%edx,%eax,1)
+		mov    %bl,EXPORT_SYMBOL(players)+0x0AC(%edx,%eax,1) # players[].PrevWeapon[]
 	jump_4f6ee:
 		movb   $0x0,0x99(%esi)
 		add    $0x4,%esp
@@ -26648,7 +26384,7 @@ func_4f834:
 		xor    %ah,%ah
 		and    $0x3,%al
 		and    $0xffff,%eax
-		mov    data_1a638c(%edx,%eax,1),%al
+		mov    EXPORT_SYMBOL(players)+0x0AC(%edx,%eax,1),%al # players[].PrevWeapon[]
 		and    $0xff,%eax
 		cmp    %eax,%edi
 		jne    jump_4f916
@@ -26674,7 +26410,7 @@ func_4f834:
 		xor    %ah,%ah
 		and    $0x3,%al
 		and    $0xffff,%eax
-		mov    %dl,data_1a638c(%ebx,%eax,1)
+		mov    %dl,EXPORT_SYMBOL(players)+0x0AC(%ebx,%eax,1) # players[].PrevWeapon[]
 	jump_4f916:
 		xor    %eax,%eax
 		mov    0x99(%esi),%al
@@ -26712,7 +26448,7 @@ func_4f834:
 		xor    %ah,%ah
 		and    $0x3,%al
 		and    $0xffff,%eax
-		mov    data_1a638c(%edx,%eax,1),%al
+		mov    EXPORT_SYMBOL(players)+0x0AC(%edx,%eax,1),%al # players[].PrevWeapon[]
 		and    $0xff,%eax
 		jne    jump_4f9ea
 		mov    $0x1,%edx
@@ -26736,7 +26472,7 @@ func_4f834:
 		xor    %ah,%ah
 		and    $0x3,%al
 		and    $0xffff,%eax
-		mov    %bl,data_1a638c(%edx,%eax,1)
+		mov    %bl,EXPORT_SYMBOL(players)+0x0AC(%edx,%eax,1) # players[].PrevWeapon[]
 		add    $0x4,%esp
 		pop    %ebp
 		pop    %edi
@@ -27633,7 +27369,7 @@ GLOBAL_FUNC(ASM_plant_mine)	/* 0x0501F0 */
 		xor    %ah,%ah
 		and    $0x3,%al
 		and    $0xffff,%eax
-		mov    %dl,data_1a638c(%ebx,%eax,1)
+		mov    %dl,EXPORT_SYMBOL(players)+0x0AC(%ebx,%eax,1) # players[].PrevWeapon[]
 	jump_502e4:
 		movb   $0x0,0x99(%esi)
 	jump_502eb:
@@ -41554,7 +41290,7 @@ GLOBAL_FUNC(ASM_thing_select_specific_weapon)	/* 0x05A73C */
 		and    $0xffff,%eax
 		add    %edx,%eax
 		mov    0x99(%esi),%dl
-		mov    %dl,data_1a638c(%eax)
+		mov    %dl,EXPORT_SYMBOL(players)+0x0AC(%eax) # players[].PrevWeapon[]
 	jump_5a858:
 		xor    %edx,%edx
 		mov    0x8(%esi),%dl
@@ -64041,10 +63777,10 @@ GLOBAL_FUNC(ASM_init_level)	/* 0x074CDC */
 		mov    %di,data_1a6482(%ecx,%edx,2)
 		xor    %al,%al
 		mov    %di,data_1a63d0(%ecx,%edx,2)
-		mov    %al,data_1a6394(%ecx,%edx,1)
+		mov    %al,EXPORT_SYMBOL(players)+0x0B4(%ecx,%edx,1) # players[].PanelItem[]
 		xor    %ah,%ah
 		inc    %ebx
-		mov    %ah,data_1a6390(%ecx,%edx,1)
+		mov    %ah,EXPORT_SYMBOL(players)+0x0B0(%ecx,%edx,1) # players[].PanelState[]
 	jump_74d65:
 		xor    %edx,%edx
 		mov    %bx,%dx
@@ -105320,7 +105056,7 @@ GLOBAL_FUNC(ASM_SCANNER_unkn_func_205)	/* 0x0B0908 */
 		sub    %edx,%eax
 		xor    %edx,%edx
 		mov    mouser,%dl
-		mov    data_1a6390(%edx,%eax,1),%al
+		mov    EXPORT_SYMBOL(players)+0x0B0(%edx,%eax,1),%al # players[].PanelState[]
 		and    $0xff,%eax
 		cmp    $0x11,%eax
 		jne    jump_b099d
@@ -130653,7 +130389,7 @@ GLOBAL_FUNC(ASM_remove_agent)	/* 0x0CFA64 */
 		mov    $0x1,%dl
 		shl    %cl,%dl
 		not    %dl
-		and    %dl,data_1a639b(%eax)
+		and    %dl,EXPORT_SYMBOL(players)+0x0BB(%eax) # players[].MissionAgents
 		jmp    jump_cfb91
 	jump_cfbc6:
 		mov    %dh,EXPORT_SYMBOL(local_player_no)
@@ -132600,55 +132336,31 @@ GLOBAL (gameturn)	/* 0x1A62DC */
  */
 GLOBAL (players)	/* 0x1a62e0 players+0x000  */
 		.short  0x0
-players_0_UserInput_0_Bits_p2:	/* 0x1a62e2 players+0x002  */
 		.byte	0x0
-players_0_UserInput_0_Bits_p3:	/* 0x1a62e3 players+0x003  */
 		.byte	0x0
 		.ascii  "\x00\x00"
-players_0_UserInput_0_Turn: /* 0x1a62e6 players+0x006 */
 		.fill   0x18
-players_0_UserInput_0_ControlMode: /* 0x1a62fe players+0x01e */
 		.byte	0x0
-players_0_UserInput_0_ControlMode_p1: /* 0x1a62ff players+0x01f */
 		.fill   0x03
-players_0_UserInput_1_Bits:
 		.fill   0x1e
-players_0_UserInput_1_ControlMode: /* 0x1a6320 players+0x040 */
 		.fill   0x22
-players_0_UserInput_2_ControlMode: /* 0x1a6342 players+0x062 */
 		.fill   0x22
-players_0_UserInput_3_ControlMode: /* 0x1a6364 players+0x084 */
 		.short  0x0
 		.short  0x0
-players_0_DirectControl_0:	/* 0x1a6368 players+0x088 */
 		.long	0x0
-players_0_DirectControl_1:	/* 0x1a636c players+0x08c */
 		.long	0x0
-players_0_DirectControl_2:	/* 0x1a6370 players+0x090 */
 		.long	0x0
-players_0_DirectControl_3:	/* 0x1a6374 players+0x094 */
 		.long	0x0
-players_0_ControlPad:	/* 0x1a6378 players+0x098 */
 		.long	0x0
-players_0_MyAgent_0:	/* 0x1a637c players+0x09C players[0].MyAgent[0] */
 		.long	0x0
-players_0_MyAgent_1:	/* 0x1a6380 players+0x0a0 players[0].MyAgent[1] */
 		.long	0x0
-players_0_MyAgent_2:	/* 0x1a6384 players+0x0a4 players[0].MyAgent[2] */
 		.long	0x0
-data_1a6388:
 		.ascii  "\x00\x00\x00"
-data_1a638b:
 		.byte	0x0
-data_1a638c:
 		.long	0x0
-data_1a6390:
 		.long	0x0
-data_1a6394:
 		.fill   0x7
-data_1a639b:
 		.ascii  "\x00\x00\x00"
-data_1a639e:
 		.fill   0x8
 data_1a63a6:
 		.byte	0x0

@@ -6977,11 +6977,6 @@ void load_packet(void)
 
 void joy_input(void)
 {
-#if 0
-    asm volatile ("call ASM_joy_input\n"
-        :  :  : "eax" );
-    return;
-#endif
     JoyUpdateInputs(&joy);
 
     PlayerInfo *p_locplayer = &players[local_player_no];

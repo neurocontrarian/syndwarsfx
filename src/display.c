@@ -314,33 +314,18 @@ void ingame_palette_reload(void)
 
 void change_brightness(short amount)
 {
-#if 0
-    asm volatile ("call ASM_change_brightness\n"
-        : : "a" (val));
-#endif
     ingame_palette_reload();
     change_brightness_from_normal(amount);
 }
 
 void set_user_selected_brightness(void)
 {
-#if 0
-    asm volatile ("call ASM_set_user_selected_brightness\n"
-        :  :  : "eax" );
-    return;
-#endif
     momentary_brightness = user_sel_brightness;
     change_brightness(0);
 }
 
 void reset_user_selected_brightness(void)
 {
-#if 0
-    TbResult ret;
-    asm volatile ("call ASM_reset_user_selected_brightness\n"
-        : "=r" (ret) : );
-    return ret;
-#endif
     ingame_palette_reload();
     user_sel_brightness = 0;
     set_user_selected_brightness();
