@@ -29,6 +29,7 @@
 #include "vehicle.h"
 #include "swlog.h"
 /******************************************************************************/
+struct TrafficNode *game_traffic_nodes = NULL;
 ushort next_traffic_node = 1;
 
 extern uint dword_1C8470;

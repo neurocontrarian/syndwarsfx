@@ -152,6 +152,8 @@ const char *state_change_result_names[] = {
     "goal unattainable",
 };
 
+ThingIdx same_type_head[256+32] = {0};
+
 /******************************************************************************/
 
 TbBool thing_type_is_simple(short ttype)

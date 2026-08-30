@@ -190,6 +190,8 @@ const struct TbNamedEnum missions_conf_any_bool[] = {
 
 struct Campaign campaigns[CAMPAIGNS_MAX_COUNT];
 
+struct Mission mission_list[MISSIONS_MAX_COUNT];
+
 /** Size of campaign strings within the engine buffer.
  */
 ushort campaign_strings_len = 0;

@@ -64298,9 +64298,9 @@ GLOBAL_FUNC(ASM_init_level)	/* 0x074CDC */
 		xor    %edx,%edx
 		mov    %ax,%dx
 		imul   $0x4c,%edx,%edx
-		mov    %bl,data_1974a5(%edx)
+		mov    %bl,EXPORT_SYMBOL(mission_list)+0x1D(%edx) # mission_list[].BankTest
 		inc    %eax
-		mov    %bl,data_1974c0(%edx)
+		mov    %bl,EXPORT_SYMBOL(mission_list)+0x38(%edx) # mission_list[].BankTestFail
 		cmp    %cx,%ax
 		jb     jump_75109
 	jump_75123:
@@ -96642,7 +96642,7 @@ GLOBAL_FUNC(ASM_test_single_mission)	/* 0x0A8C48 */
 		sub    %edx,%eax
 		mov    %ebx,0x14(%esp)
 		mov    %ebx,(%esp)
-		mov    data_197492(,%eax,4),%si
+		mov    EXPORT_SYMBOL(mission_list)+0x0A(,%eax,4),%si # mission_list[].SuccessHead
 		mov    %ebx,0xc(%esp)
 		test   %si,%si
 		je     jump_a8d5c
@@ -96674,7 +96674,7 @@ GLOBAL_FUNC(ASM_test_single_mission)	/* 0x0A8C48 */
 		sar    $0x10,%ebp
 		imul   $0x4c,%ebp,%ebp
 		mov    0x14(%eax),%dl
-		mov    data_1974a5(%ebp),%dh
+		mov    EXPORT_SYMBOL(mission_list)+0x1D(%ebp),%dh # mission_list[].BankTest
 		cmp    %dh,%dl
 		jne    jump_a8d3d
 		mov    0x14(%esp),%eax
@@ -96723,7 +96723,7 @@ GLOBAL_FUNC(ASM_test_single_mission)	/* 0x0A8C48 */
 		add    %edx,%eax
 		shl    $0x2,%eax
 		sub    %edx,%eax
-		incb   data_1974a5(,%eax,4)
+		incb   EXPORT_SYMBOL(mission_list)+0x1D(,%eax,4) # mission_list[].BankTest
 	jump_a8d8d:
 		cmp    %bx,%cx
 		jne    jump_a8da5
@@ -96740,7 +96740,7 @@ GLOBAL_FUNC(ASM_test_single_mission)	/* 0x0A8C48 */
 		add    %edx,%eax
 		shl    $0x2,%eax
 		sub    %edx,%eax
-		mov    data_197494(,%eax,4),%bx
+		mov    EXPORT_SYMBOL(mission_list)+0x0C(,%eax,4),%bx # mission_list[].FailHead
 		xor    %ecx,%ecx
 		test   %bx,%bx
 		je     jump_a8ea3
@@ -96896,8 +96896,8 @@ GLOBAL_FUNC (ASM_init_mission_states)	/* 0x0A8EE8 */
 		shl    $0x2,%edx
 		sub    %ecx,%edx
 		xor    %cl,%cl
-		mov    %cl,data_1974a5(,%edx,4)
-		mov    data_197492(,%edx,4),%dx
+		mov    %cl,EXPORT_SYMBOL(mission_list)+0x1D(,%edx,4) # mission_list[].BankTest
+		mov    EXPORT_SYMBOL(mission_list)+0x0A(,%edx,4),%dx # mission_list[].SuccessHead
 		test   %dx,%dx
 		je     jump_a8f97
 	jump_a8f6f:
@@ -96922,7 +96922,7 @@ GLOBAL_FUNC (ASM_init_mission_states)	/* 0x0A8EE8 */
 		add    %edx,%eax
 		shl    $0x2,%eax
 		sub    %edx,%eax
-		mov    data_197494(,%eax,4),%ax
+		mov    EXPORT_SYMBOL(mission_list)+0x0C(,%eax,4),%ax # mission_list[].FailHead
 		xor    %edx,%edx
 		test   %ax,%ax
 		je     jump_a8feb
@@ -132454,63 +132454,6 @@ shrapnel_free:	/* 0x19714C */
 phwoar_free:	/* 0x19714E */
 		.short  0x0
 
-/* ushort same_type_head[290];
- */
-GLOBAL (same_type_head)	/* 0x197240 */
-		.fill   0x200
-		.fill   0x44
-GLOBAL (game_traffic_nodes)			/* 197484 */
-		.long	0x0
-GLOBAL (mission_list)	/* 0x197488 */
-		.fill   0xa
-data_197492:
-		.short  0x0
-data_197494:
-		.short  0x0
-data_197496:
-		.short  0x0
-data_197498:
-		.short  0x0
-data_19749a:
-		.short  0x0
-data_19749c:
-		.byte	0x0
-data_19749d:
-		.byte	0x0
-data_19749e:
-		.byte	0x0
-data_19749f:
-		.ascii  "\x00\x00\x00"
-data_1974a2:
-		.ascii  "\x00\x00\x00"
-data_1974a5:
-		.fill   0x19
-data_1974be:
-		.byte	0x0
-data_1974bf:
-		.byte	0x0
-data_1974c0:
-		.byte	0x0
-data_1974c1:
-		.byte	0x0
-data_1974c2:
-		.fill   0x5
-data_1974c7:
-		.byte	0x0
-data_1974c8:
-		.long	0x0
-data_1974cc:
-		.short  0x0
-data_1974ce:
-		.fill   0x81e
-data_197cec:
-		.byte	0x0
-data_197ced:
-		.byte	0x0
-data_197cee:
-		.fill   0x11f3
-data_198ee1:
-		.fill   0x947
 GLOBAL (mission_status)	/* 0x199828 */
 		.long	0x0
 data_19982c:
