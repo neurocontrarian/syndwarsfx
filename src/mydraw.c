@@ -187,12 +187,6 @@ u32 my_string_width(const char *text)
 
 ushort my_count_lines(const char *text)
 {
-#if 0
-    ushort ret;
-    asm volatile ("call ASM_my_count_lines\n"
-        : "=r" (ret) : "a" (text));
-    return ret;
-#endif
     int pos, line_beg_pos, last_brkpoint_pos;
     int txline_len, last_brkpoint_lnlen;
     ushort nlines;
@@ -404,12 +398,6 @@ static void my_skip_chunk(short x, short y, short tot_width,
 
 ushort my_draw_text(short x, short y, const char *text, ushort startline)
 {
-#if 0
-    ushort ret;
-    asm volatile ("call ASM_my_draw_text\n"
-        : "=r" (ret) : "a" (x), "d" (y), "b" (text), "c" (startline));
-    return ret;
-#endif
     int beg_x, scr_x;
     ubyte uch;
     int ck_end;

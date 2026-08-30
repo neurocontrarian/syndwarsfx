@@ -26,6 +26,7 @@
 #include "campaign.h"
 #include "display.h"
 #include "febrief.h"
+#include "fecryo.h"
 #include "femain.h"
 #include "guiboxes.h"
 #include "guitext.h"
@@ -49,8 +50,6 @@ struct DebriefReport curr_report;
 
 struct ScreenBox debrief_mission_box = {0};
 struct ScreenBox debrief_people_box = {0};
-
-const ushort mod_group_type_strid[] = {74, 71, 72, 70, 73, };
 
 // Shared boxes
 extern struct ScreenTextBox world_city_info_box;
@@ -231,9 +230,7 @@ void snprint_concat_comma_separated_weapons_list(char *out, ushort outlen, ulong
 
 void snprint_concat_comma_separated_cybmods_list(char *out, ushort outlen, ulong cybmods)
 {
-    ushort mtype, mgrouptype;
-    ushort gt_strid;
-    ushort mv_strid;
+    ushort mtype;
     ushort pos;
 
     mtype = MOD_TYPES_COUNT;
@@ -243,23 +240,16 @@ void snprint_concat_comma_separated_cybmods_list(char *out, ushort outlen, ulong
         if (mtype == 0)
             break;
 
-        if (strlen(out) > outlen - 4u)
+        pos = strlen(out);
+
+        if (pos > outlen - 4u)
             break;
 
-        mgrouptype = cybmod_group_type(mtype);
-        gt_strid = mod_group_type_strid[mgrouptype];
-        if (mgrouptype == 4)
-            mv_strid = 75;
-        else
-            mv_strid = 76;
-
-        pos = strlen(out);
-        if (pos == 0)
-            snprintf(out, outlen, "%s %s %d",
-              gui_strings[gt_strid], gui_strings[mv_strid], cybmod_version(mtype));
-        else
-            snprintf(out + pos, outlen - pos, ", %s %s %d",
-              gui_strings[gt_strid], gui_strings[mv_strid], cybmod_version(mtype));
+        if (pos != 0) {
+            snprintf(out + pos, outlen - pos, ", ");
+            pos += 2;
+        }
+        snprint_cybmod_type_long_name(out + pos, outlen - pos, mtype);
     }
 }
 

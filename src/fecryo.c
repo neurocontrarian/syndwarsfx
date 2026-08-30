@@ -58,7 +58,7 @@ struct ScreenTextBox cryo_agent_list_box = {0};
 struct ScreenTextBox cryo_cybmod_list_box = {0};
 struct ScreenButton cryo_offer_cancel_button = {0};
 
-extern char cybmod_name_text[];
+char cybmod_name_text[20] = "";
 
 ubyte byte_1DDC40 = 0;
 
@@ -71,7 +71,6 @@ extern ubyte byte_155174; // = 166;
 extern ubyte byte_155175[];
 extern ubyte byte_155180; // = 109;
 extern ubyte byte_155181[];
-extern ubyte byte_1551F4[5];
 extern ubyte cheat_research_cybmods;
 extern ubyte byte_1C4978;
 extern ubyte byte_1C4979;
@@ -105,6 +104,50 @@ struct ScreenRect equip_blokey_rect[] = {
 
 /******************************************************************************/
 
+void snprint_cybmod_type_long_name(char *buf, u32 buflen, ushort mtype)
+{
+    ushort mdstr_id, lvstr_id;
+    ubyte mgroup;
+    ubyte modlv;
+
+    mgroup = cybmod_group_type(mtype);
+    modlv = cybmod_version(mtype);
+    mdstr_id = mod_group_type_strid[mgroup];
+    if (mgroup != MODGRP_EPIDERM)
+       lvstr_id = 76;
+    else
+       lvstr_id = 75;
+    snprintf(buf, buflen, "%s %s %d", gui_strings[mdstr_id], gui_strings[lvstr_id], modlv);
+}
+
+const char *fe_gtext_cybmod_group_type_name(ushort mtype)
+{
+    ubyte mgroup;
+    ushort mdstr_id;
+
+    mgroup = cybmod_group_type(mtype);
+    mdstr_id = mod_group_type_strid[mgroup];
+    return gui_strings[mdstr_id];
+}
+
+const char *fe_gtext_cybmod_level(ushort mtype)
+{
+    char locstr[48];
+    ubyte mgroup;
+    ubyte modlv;
+    ushort lvstr_id;
+
+    mgroup = cybmod_group_type(mtype);
+    modlv = cybmod_version(mtype);
+
+    if (mgroup != MODGRP_EPIDERM)
+        lvstr_id = 76;
+    else
+        lvstr_id = 75;
+    sprintf(locstr, "%s %d", gui_strings[lvstr_id], modlv);
+    return loctext_to_gtext(locstr);
+}
+
 /** Determines if buy or sell should be available in the cryo mod offer.
  *
  * Rather simple as cyborg mods cannot be sold.
@@ -137,45 +180,13 @@ void update_cybmod_cost_text(void)
 
 void update_cybmod_name_text(void)
 {
-    ushort mtype;
-    ushort mdstr_id, lvstr_id;
-    ubyte modgrp, modlv;
-
     if (selected_mod == 0) // No mod selected
     {
         cybmod_name_text[0] = '\0';
         return;
     }
 
-    mtype = selected_mod;
-
-    modgrp = cybmod_group_type(mtype);
-    modlv = cybmod_version(mtype);
-    mdstr_id = 70 + byte_1551F4[modgrp];
-    if (modgrp != MODGRP_EPIDERM)
-       lvstr_id = 76;
-    else
-       lvstr_id = 75;
-    sprintf(cybmod_name_text, "%s %s %d", gui_strings[mdstr_id], gui_strings[lvstr_id], modlv);
-}
-
-/** Get global text pointer to a mod level string.
- * @see loctext_to_gtext()
- */
-static const char *cryo_gtext_cybmod_list_item_level(ushort mtype)
-{
-    char locstr[48];
-    ubyte modlv;
-    ushort lvstr_id;
-
-    modlv = cybmod_version(mtype);
-
-    if (cybmod_group_type(mtype) != MODGRP_EPIDERM)
-        lvstr_id = 76;
-    else
-        lvstr_id = 75;
-    sprintf(locstr, "%s %d", gui_strings[lvstr_id], modlv);
-    return loctext_to_gtext(locstr);
+    snprint_cybmod_type_long_name(cybmod_name_text, sizeof(cybmod_name_text), selected_mod);
 }
 
 TbBool cybmod_has_display_anim(ubyte mod)
@@ -1163,7 +1174,7 @@ ubyte draw_blokey_body_mods_names(struct ScreenBox *p_box)
         draw_text_purple_list2(cx, cy, text, 0);
         cy += hline + 3;
 
-        text = cryo_gtext_cybmod_list_item_level(cryo_ordpart_to_mod_type(ordpart, mver));
+        text = fe_gtext_cybmod_level(cryo_ordpart_to_mod_type(ordpart, mver));
         draw_text_purple_list2(cx, cy, text, 0);
         lbDisplay.DrawFlags = 0;
         if (ordpart == 3)
@@ -1491,18 +1502,6 @@ TbBool input_display_box_content_mod(struct ScreenTextBox *p_box)
     return false;
 }
 
-/** Get global text pointer to a mod group name string.
- */
-static const char *cryo_gtext_cybmod_list_item_name(ushort mtype)
-{
-    ubyte modgrp;
-    ushort mdstr_id;
-
-    modgrp = cybmod_group_type(mtype);
-    mdstr_id = 70 + byte_1551F4[modgrp];
-    return gui_strings[mdstr_id];
-}
-
 ubyte show_cryo_cybmod_list_box(struct ScreenTextBox *p_box)
 {
     struct ScreenBoxBase power_box = {p_box->X + 8, p_box->Y + 152, 192, 17};
@@ -1570,12 +1569,12 @@ ubyte show_cryo_cybmod_list_box(struct ScreenTextBox *p_box)
                       lbDisplay.DrawFlags = 0;
                   }
 
-                  text = cryo_gtext_cybmod_list_item_name(mtype);
+                  text = fe_gtext_cybmod_group_type_name(mtype);
                   lbDisplay.DrawFlags |= 0x8000;
                   draw_text_purple_list2(3, cy + 1, text, 0);
                   lbDisplay.DrawFlags &= ~(0x8000|Lb_TEXT_HALIGN_RIGHT);
 
-                  text = cryo_gtext_cybmod_list_item_level(mtype);
+                  text = fe_gtext_cybmod_level(mtype);
                   lbDisplay.DrawFlags |= Lb_TEXT_HALIGN_RIGHT;
                   draw_text_purple_list2(-1, cy + 1, text, 0);
                   lbDisplay.DrawFlags = 0;

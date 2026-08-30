@@ -25,6 +25,7 @@
 
 #include "cybmod.h"
 #include "display.h"
+#include "fecryo.h"
 #include "femain.h"
 #include "game_data.h"
 #include "game_options.h"
@@ -53,7 +54,6 @@ extern ubyte research_completed;// = 0;
 extern ubyte research_on_weapons;// = true;
 ubyte research_selected_wep = 0;
 ubyte research_selected_mod = 0;
-extern ubyte byte_1551E4[5];
 
 /******************************************************************************/
 
@@ -309,16 +309,17 @@ ubyte show_unkn21_box(struct ScreenTextBox *p_box)
         }
         else if (is_research_cymod_allowed(line + 1))
         {
-            short mtype, mlev;
+            ushort mtype;
 
+            mtype = line + 1;
             if (mouse_down_over_box_coords(text_window_x1, text_window_y1 + scr_y - 2,
               text_window_x2, text_window_y1 + tx_height + scr_y + 2))
             {
                 if (lbDisplay.LeftButton)
                 {
                     lbDisplay.LeftButton = 0;
-                    research_selected_mod = line + 1;
-                    if (research.CurrentMod == research_selected_mod - 1)
+                    research_selected_mod = mtype;
+                    if (research.CurrentMod + 1 == research_selected_mod)
                     {
                         text = gui_strings[418];
                         research_submit_button.CallBackFn = do_research_suspend;
@@ -331,7 +332,7 @@ ubyte show_unkn21_box(struct ScreenTextBox *p_box)
                     research_submit_button.Text = text;
                 }
             }
-            if (research_selected_mod == line + 1)
+            if (research_selected_mod == mtype)
             {
                 lbDisplay.DrawFlags |= 0x0040;
                 lbDisplay.DrawColour = 87;
@@ -341,24 +342,12 @@ ubyte show_unkn21_box(struct ScreenTextBox *p_box)
                 lbDisplay.DrawFlags = 0;
             }
 
-            if (line == 15) {
-                mtype = 4;
-                mlev = line - 11;
-            } else {
-                mtype = line / 3;
-                mlev = line % 3 + 1;
-            }
-            text = gui_strings[70 + byte_1551E4[mtype]];
+            text = fe_gtext_cybmod_group_type_name(mtype);
             draw_text_purple_list2(3, scr_y + 1, text, 0);
 
             lbDisplay.DrawFlags |= 0x0080;
-            if ((1 << line < 4096) || (1 << line > 0x8000)) {
-                sprintf(locstr, "%s %d", gui_strings[76], (int)mlev);
-            } else {
-                sprintf(locstr, "%s %d", gui_strings[75], (int)mlev);
-            }
-            text = loctext_to_gtext(locstr);
             lbDisplay.DrawFlags |= 0x8000;
+            text = fe_gtext_cybmod_level(mtype);
             draw_text_purple_list2(-1, scr_y + 1, text, 0);
             lbDisplay.DrawFlags = 0;
             scr_y += tx_height + p_box->LineSpacing;
@@ -384,20 +373,10 @@ ubyte show_unkn21_box(struct ScreenTextBox *p_box)
     {
         if (research.CurrentMod != -1)
         {
-            short mtype, mlev;
+            ushort mtype;
 
-            if (research.CurrentMod == 15) {
-                mtype = 4;
-                mlev = research.CurrentMod - 11;
-            } else {
-                mtype = research.CurrentMod / 3;
-                mlev = research.CurrentMod % 3 + 1;
-            }
-            text = gui_strings[70 + byte_1551E4[mtype]];
-            if ( 1 << research.CurrentMod < 4096 || 1 << research.CurrentMod > 0x8000 )
-                sprintf(locstr, "%s %s %d", text, gui_strings[76], mlev);
-            else
-                sprintf(locstr, "%s %s %d", text, gui_strings[75], mlev);
+            mtype = research.CurrentMod + 1;
+            snprint_cybmod_type_long_name(locstr, sizeof(locstr), mtype);
             text = loctext_to_gtext(locstr);
             draw_text_purple_list2(4, 25, text, 0);
         }
