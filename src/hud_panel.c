@@ -380,11 +380,6 @@ short panel_state_to_player_agent(ushort panstate)
     return -1;
 }
 
-/** How much faster the objective text scrolls than it did back when one drawn
- * frame was one game turn. Four keeps the speed the game settled on at four
- * frames per turn; raise it to scroll faster, lower it to slow it down. */
-#define SCANNER_TEXT_SCROLL_RATE 4
-
 void SCANNER_move_objective_info(int width, int height, int end_pos)
 {
     PlayerInfo *p_locplayer;
@@ -419,11 +414,10 @@ void SCANNER_move_objective_info(int width, int height, int end_pos)
     {
         if (end_pos < 0)
             scanner_unkn3CC = width;
-        // The step is divided by the number of frames drawn per turn, so the
-        // text keeps the same speed whatever that number is, while moving in
-        // smaller and more frequent steps when there are more frames.
-        scanner_unkn3CC -= SCANNER_TEXT_SCROLL_RATE * 2 * height
-          / (9 * render_frames_per_turn);
+        // Advanced once per game turn (the caller only runs this on the frame
+        // which carries the turn forward), so the step is the original one,
+        // independent of how many frames are drawn per turn.
+        scanner_unkn3CC -= 2 * height / 9;
     }
 }
 
