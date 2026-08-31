@@ -41,9 +41,28 @@
 #include "delaunay.h"
 #include "swlog.h"
 /******************************************************************************/
-extern long ixE;
-extern long thin_wall_x1, thin_wall_y1;
-extern long thin_wall_x2, thin_wall_y2;
+s32 Ex[100];
+s32 Ey[100];
+s32 ixE = 0;
+s32 thin_wall_x1, thin_wall_y1;
+s32 thin_wall_x2, thin_wall_y2;
+s32 tree_dad[8000];
+s32 tree_val[8000];
+ubyte routeTags[8000];
+s32 tree_Ax8;
+s32 tree_Ay8;
+s32 tree_Bx8;
+s32 tree_By8;
+s32 tree_altA;
+s32 tree_altB;
+s32 tree_triA;
+s32 tree_triB;
+s32 tree_CentreDest;
+s32 tree_routelen;
+s32 tree_routecost;
+s32 tree_route[3000];
+s32 route_bak[3000];
+
 
 extern short link__MapColListEmptyHead;
 extern short link__MapColVectEmptyHead;

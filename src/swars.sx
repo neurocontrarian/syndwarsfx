@@ -150,6 +150,30 @@
 .global EXPORT_SYMBOL(build_packet3);
 .global EXPORT_SYMBOL(build_packet4);
 
+.global EXPORT_SYMBOL(Ex);				/* 0x1AAE48 */
+.global EXPORT_SYMBOL(Ey);				/* 0x1AAFD8 */
+.global EXPORT_SYMBOL(ixE);
+.global EXPORT_SYMBOL(thin_wall_x1);	/* 0x1AB16C */
+.global EXPORT_SYMBOL(thin_wall_y1);	/* 0x1AB170 */
+.global EXPORT_SYMBOL(thin_wall_x2);	/* 0x1AB174 */
+.global EXPORT_SYMBOL(thin_wall_y2);	/* 0x1AB178 */
+.global EXPORT_SYMBOL(tree_dad);		/* 0x1AB17C */
+.global EXPORT_SYMBOL(tree_val);		/* 0x1B2E7C */
+.global EXPORT_SYMBOL(routeTags);
+.global EXPORT_SYMBOL(tree_Ax8);
+.global EXPORT_SYMBOL(tree_Ay8);
+.global EXPORT_SYMBOL(tree_Bx8);
+.global EXPORT_SYMBOL(tree_By8);
+.global EXPORT_SYMBOL(tree_altA);		/* 0x1BCACC */
+.global EXPORT_SYMBOL(tree_altB);
+.global EXPORT_SYMBOL(tree_triA);
+.global EXPORT_SYMBOL(tree_triB);
+.global EXPORT_SYMBOL(tree_CentreDest);
+.global EXPORT_SYMBOL(tree_routelen);	/* 0x1BCAE0 */
+.global EXPORT_SYMBOL(tree_routecost);
+.global EXPORT_SYMBOL(tree_route);
+.global EXPORT_SYMBOL(route_bak);		/* 0x1BF9C8 */
+
 /*----------------------------------------------------------------*/
 /* int place_default_player(unsigned int player_id, __int16 a2)
 */
@@ -1341,9 +1365,9 @@ GLOBAL_FUNC(ASM_do_car_glare)	/* 0x015CB8 */
 		cmp    $0x1f,%eax
 		jg     jump_15dda
 		xor    %dh,%dh
-		mov    master_glare(,%eax,2),%dl
+		mov    EXPORT_SYMBOL(master_glare)+0(,%eax,2),%dl
 		mov    %edx,0x44(%esp)
-		mov    data_153775(,%eax,2),%al
+		mov    EXPORT_SYMBOL(master_glare)+1(,%eax,2),%al
 		xor    %ah,%ah
 		mov    %eax,0x40(%esp)
 		test   %ax,%ax
@@ -82860,7 +82884,7 @@ triangle_route_do_given:	/* 0x082B5C */
 		test   %eax,%eax
 		jne    jump_82bb2
 		mov    $0x1f40,%ebx
-		mov    $routeTags,%eax
+		mov    $EXPORT_SYMBOL(routeTags),%eax
 		xor    %edx,%edx
 		call   ac_memset
 		movb   $0x1,tag_current
@@ -82868,11 +82892,11 @@ triangle_route_do_given:	/* 0x082B5C */
 		mov    0x14(%esp),%eax
 		mov    $0x1,%ecx
 		mov    %eax,%edx
-		mov    %ecx,tree_val(,%eax,4)
-		mov    %eax,tree_dad(,%eax,4)
+		mov    %ecx,EXPORT_SYMBOL(tree_val)(,%eax,4)
+		mov    %eax,EXPORT_SYMBOL(tree_dad)(,%eax,4)
 		mov    tag_current,%al
 		mov    heap_end,%esi
-		mov    %al,routeTags(%edx)
+		mov    %al,EXPORT_SYMBOL(routeTags)(%edx)
 		cmp    $0x100,%esi
 		jge    jump_82bed
 		lea    (%esi,%ecx,1),%edi
@@ -82890,8 +82914,8 @@ triangle_route_do_given:	/* 0x082B5C */
 		lea    0x0(,%ebx,4),%edx
 		mov    heap(%eax),%esi
 		mov    heap(%edx),%ecx
-		mov    tree_val(,%esi,4),%ebp
-		cmp    tree_val(,%ecx,4),%ebp
+		mov    EXPORT_SYMBOL(tree_val)(,%esi,4),%ebp
+		cmp    EXPORT_SYMBOL(tree_val)(,%ecx,4),%ebp
 		jg     jump_82ce5
 		mov    heap(%edx),%ecx
 		mov    %esi,heap(%edx)
@@ -82912,12 +82936,12 @@ triangle_route_do_given:	/* 0x082B5C */
 		mov    (%esp),%esi
 		shl    $0x2,%edx
 		shl    $0x2,%ecx
-		mov    tree_val(%edx),%edi
+		mov    EXPORT_SYMBOL(tree_val)(%edx),%edi
 		shl    $0x2,%esi
-		cmp    tree_val(%ecx),%edi
+		cmp    EXPORT_SYMBOL(tree_val)(%ecx),%edi
 		jge    jump_82c9f
 		mov    heap(%esi),%ebx
-		cmp    tree_val(,%ebx,4),%edi
+		cmp    EXPORT_SYMBOL(tree_val)(,%ebx,4),%edi
 		jl     jump_82c9b
 		mov    (%esp),%eax
 	jump_82c9b:
@@ -82925,8 +82949,8 @@ triangle_route_do_given:	/* 0x082B5C */
 		jmp    jump_82cbb
 	jump_82c9f:
 		mov    heap(%esi),%edx
-		mov    tree_val(%ecx),%eax
-		cmp    tree_val(,%edx,4),%eax
+		mov    EXPORT_SYMBOL(tree_val)(%ecx),%eax
+		cmp    EXPORT_SYMBOL(tree_val)(,%edx,4),%eax
 		jge    jump_82cb8
 		mov    %ebx,%edx
 		jmp    jump_82cbb
@@ -82972,19 +82996,19 @@ triangle_route_do_given:	/* 0x082B5C */
 		lea    0x0(,%edx,4),%edi
 		shl    $0x2,%ebx
 		mov    heap(,%eax,8),%esi
-		mov    tree_val(%ebx),%ebp
+		mov    EXPORT_SYMBOL(tree_val)(%ebx),%ebp
 		shl    $0x2,%esi
-		cmp    tree_val(%esi),%ebp
+		cmp    EXPORT_SYMBOL(tree_val)(%esi),%ebp
 		jge    jump_82d93
 		mov    heap(%edi),%ecx
-		cmp    tree_val(,%ecx,4),%ebp
+		cmp    EXPORT_SYMBOL(tree_val)(,%ecx,4),%ebp
 		jge    jump_82daa
 		mov    %eax,%edx
 		jmp    jump_82daa
 	jump_82d93:
 		mov    heap(%edi),%edi
-		mov    tree_val(%esi),%ebx
-		cmp    tree_val(,%edi,4),%ebx
+		mov    EXPORT_SYMBOL(tree_val)(%esi),%ebx
+		cmp    EXPORT_SYMBOL(tree_val)(,%edi,4),%ebx
 		jge    jump_82daa
 		mov    %ecx,%edx
 	jump_82daa:
@@ -83002,8 +83026,8 @@ triangle_route_do_given:	/* 0x082B5C */
 		lea    0x0(,%ebp,4),%eax
 		mov    heap(%ebx),%edx
 		mov    heap(%eax),%ecx
-		mov    tree_val(,%edx,4),%edx
-		cmp    tree_val(,%ecx,4),%edx
+		mov    EXPORT_SYMBOL(tree_val)(,%edx,4),%edx
+		cmp    EXPORT_SYMBOL(tree_val)(,%ecx,4),%edx
 		jl     jump_82e10
 		mov    heap(%eax),%edx
 		mov    heap(%ebx),%ecx
@@ -83027,13 +83051,13 @@ triangle_route_do_given:	/* 0x082B5C */
 		sar    $0x10,%ebx
 		cmp    $0xffffffff,%ebx
 		je     jump_82e1f
-		mov    routeTags(%ebx),%cl
+		mov    EXPORT_SYMBOL(routeTags)(%ebx),%cl
 		cmp    tag_current,%cl
 		je     jump_82e1f
 		testb  $0x8,0xe(%eax)
 		jne    jump_82e1f
-		mov    tree_Ax8,%edi
-		mov    tree_Ay8,%eax
+		mov    EXPORT_SYMBOL(tree_Ax8),%edi
+		mov    EXPORT_SYMBOL(tree_Ay8),%eax
 		mov    %ebx,0x20(%esp)
 		mov    %ebx,%esi
 		sar    $0x8,%edi
@@ -83162,10 +83186,10 @@ triangle_route_do_given:	/* 0x082B5C */
 	jump_82fb5:
 		mov    tag_current,%dl
 		mov    heap_end,%eax
-		mov    %dl,routeTags(%ebx)
+		mov    %dl,EXPORT_SYMBOL(routeTags)(%ebx)
 		mov    0x1c(%esp),%edx
-		mov    %ecx,tree_val(,%ebx,4)
-		mov    %edx,tree_dad(,%ebx,4)
+		mov    %ecx,EXPORT_SYMBOL(tree_val)(,%ebx,4)
+		mov    %edx,EXPORT_SYMBOL(tree_dad)(,%ebx,4)
 		cmp    $0x100,%eax
 		jge    jump_82fe8
 		lea    0x1(%eax),%edx
@@ -83183,8 +83207,8 @@ triangle_route_do_given:	/* 0x082B5C */
 		lea    0x0(,%ebx,4),%edx
 		mov    heap(%eax),%esi
 		mov    heap(%edx),%ecx
-		mov    tree_val(,%esi,4),%edi
-		cmp    tree_val(,%ecx,4),%edi
+		mov    EXPORT_SYMBOL(tree_val)(,%esi,4),%edi
+		cmp    EXPORT_SYMBOL(tree_val)(,%ecx,4),%edi
 		jg     jump_82e1f
 		mov    heap(%eax),%ecx
 		mov    heap(%edx),%esi
@@ -83201,15 +83225,15 @@ triangle_route_do_given:	/* 0x082B5C */
 		xor    $0x1,%si
 		shl    $0x2,%ebx
 		mov    %edx,0x8(%esp)
-		mov    tree_val(%ebx),%edi
+		mov    EXPORT_SYMBOL(tree_val)(%ebx),%edi
 		mov    heap(,%esi,4),%edx
 		mov    0x8(%esp),%ecx
 		shl    $0x2,%edx
 		shl    $0x2,%ecx
-		cmp    tree_val(%edx),%edi
+		cmp    EXPORT_SYMBOL(tree_val)(%edx),%edi
 		jge    jump_830a0
 		mov    heap(%ecx),%ecx
-		cmp    tree_val(,%ecx,4),%edi
+		cmp    EXPORT_SYMBOL(tree_val)(,%ecx,4),%edi
 		jl     jump_8309c
 		mov    0x8(%esp),%eax
 	jump_8309c:
@@ -83217,8 +83241,8 @@ triangle_route_do_given:	/* 0x082B5C */
 		jmp    jump_830bd
 	jump_830a0:
 		mov    heap(%ecx),%eax
-		mov    tree_val(%edx),%edx
-		cmp    tree_val(,%eax,4),%edx
+		mov    EXPORT_SYMBOL(tree_val)(%edx),%edx
+		cmp    EXPORT_SYMBOL(tree_val)(,%eax,4),%edx
 		jge    jump_830b9
 		mov    %esi,%edx
 		jmp    jump_830bd
@@ -83249,7 +83273,7 @@ triangle_route_do_given:	/* 0x082B5C */
 	jump_8310b:
 		add    $0x4,%eax
 		inc    %ebx
-		mov    tree_dad(,%edx,4),%edx
+		mov    EXPORT_SYMBOL(tree_dad)(,%edx,4),%edx
 	jump_83116:
 		mov    %edx,(%eax)
 		cmp    %edi,%edx
@@ -83285,7 +83309,7 @@ triangle_route_do_bak:
 		test   %eax,%eax
 		jne    jump_8317e
 		mov    $0x1f40,%ebx
-		mov    $routeTags,%eax
+		mov    $EXPORT_SYMBOL(routeTags),%eax
 		xor    %edx,%edx
 		call   ac_memset
 		movb   $0x1,tag_current
@@ -83293,11 +83317,11 @@ triangle_route_do_bak:
 		mov    0x14(%esp),%eax
 		mov    $0x1,%ecx
 		mov    %eax,%edx
-		mov    %ecx,tree_val(,%eax,4)
-		mov    %eax,tree_dad(,%eax,4)
+		mov    %ecx,EXPORT_SYMBOL(tree_val)(,%eax,4)
+		mov    %eax,EXPORT_SYMBOL(tree_dad)(,%eax,4)
 		mov    tag_current,%al
 		mov    heap_end,%esi
-		mov    %al,routeTags(%edx)
+		mov    %al,EXPORT_SYMBOL(routeTags)(%edx)
 		mov    %edx,%eax
 		cmp    $0x100,%esi
 		jge    jump_831bb
@@ -83317,8 +83341,8 @@ triangle_route_do_bak:
 		lea    0x0(,%ebx,4),%edx
 		mov    heap(%eax),%ecx
 		mov    heap(%edx),%esi
-		mov    tree_val(,%ecx,4),%ebp
-		cmp    tree_val(,%esi,4),%ebp
+		mov    EXPORT_SYMBOL(tree_val)(,%ecx,4),%ebp
+		cmp    EXPORT_SYMBOL(tree_val)(,%esi,4),%ebp
 		jg     jump_832b9
 		mov    heap(%eax),%esi
 		mov    heap(%edx),%ecx
@@ -83337,15 +83361,15 @@ triangle_route_do_bak:
 		mov    %eax,%edx
 		shl    $0x2,%ecx
 		xor    %ebp,%edx
-		mov    tree_val(%ecx),%edi
+		mov    EXPORT_SYMBOL(tree_val)(%ecx),%edi
 		mov    heap(,%edx,4),%esi
 		mov    (%esp),%ebx
 		shl    $0x2,%esi
 		shl    $0x2,%ebx
-		cmp    tree_val(%esi),%edi
+		cmp    EXPORT_SYMBOL(tree_val)(%esi),%edi
 		jge    jump_83277
 		mov    heap(%ebx),%ebx
-		cmp    tree_val(,%ebx,4),%edi
+		cmp    EXPORT_SYMBOL(tree_val)(,%ebx,4),%edi
 		jl     jump_83273
 		mov    (%esp),%eax
 	jump_83273:
@@ -83353,8 +83377,8 @@ triangle_route_do_bak:
 		jmp    jump_8328f
 	jump_83277:
 		mov    heap(%ebx),%ebx
-		mov    tree_val(%esi),%eax
-		cmp    tree_val(,%ebx,4),%eax
+		mov    EXPORT_SYMBOL(tree_val)(%esi),%eax
+		cmp    EXPORT_SYMBOL(tree_val)(,%ebx,4),%eax
 		jl     jump_8328f
 		mov    (%esp),%edx
 	jump_8328f:
@@ -83397,19 +83421,19 @@ triangle_route_do_bak:
 		lea    0x0(,%edx,4),%esi
 		shl    $0x2,%ebx
 		mov    heap(,%eax,8),%ecx
-		mov    tree_val(%ebx),%ebp
+		mov    EXPORT_SYMBOL(tree_val)(%ebx),%ebp
 		shl    $0x2,%ecx
-		cmp    tree_val(%ecx),%ebp
+		cmp    EXPORT_SYMBOL(tree_val)(%ecx),%ebp
 		jge    jump_83367
 		mov    heap(%esi),%ecx
-		cmp    tree_val(,%ecx,4),%ebp
+		cmp    EXPORT_SYMBOL(tree_val)(,%ecx,4),%ebp
 		jge    jump_8337e
 		mov    %eax,%edx
 		jmp    jump_8337e
 	jump_83367:
 		mov    heap(%esi),%esi
-		mov    tree_val(%ecx),%ebx
-		cmp    tree_val(,%esi,4),%ebx
+		mov    EXPORT_SYMBOL(tree_val)(%ecx),%ebx
+		cmp    EXPORT_SYMBOL(tree_val)(,%esi,4),%ebx
 		jge    jump_8337e
 		mov    %edi,%edx
 	jump_8337e:
@@ -83427,8 +83451,8 @@ triangle_route_do_bak:
 		lea    0x0(,%ebp,4),%eax
 		mov    heap(%ebx),%edx
 		mov    heap(%eax),%ecx
-		mov    tree_val(,%edx,4),%edx
-		cmp    tree_val(,%ecx,4),%edx
+		mov    EXPORT_SYMBOL(tree_val)(,%edx,4),%edx
+		cmp    EXPORT_SYMBOL(tree_val)(,%ecx,4),%edx
 		jl     jump_833e4
 		mov    heap(%eax),%edx
 		mov    heap(%ebx),%ecx
@@ -83452,7 +83476,7 @@ triangle_route_do_bak:
 		sar    $0x10,%ebx
 		cmp    $0xffffffff,%ebx
 		je     jump_833f3
-		mov    routeTags(%ebx),%dl
+		mov    EXPORT_SYMBOL(routeTags)(%ebx),%dl
 		cmp    tag_current,%dl
 		je     jump_833f3
 		mov    %ebx,%esi
@@ -83460,8 +83484,8 @@ triangle_route_do_bak:
 		add    %esi,%eax
 		testb  $0x8,0xe(%eax)
 		jne    jump_833f3
-		mov    tree_Ax8,%edi
-		mov    tree_Ay8,%edx
+		mov    EXPORT_SYMBOL(tree_Ax8),%edi
+		mov    EXPORT_SYMBOL(tree_Ay8),%edx
 		mov    %ebx,0x20(%esp)
 		mov    (%eax),%ax
 		sar    $0x8,%edx
@@ -83588,10 +83612,10 @@ triangle_route_do_bak:
 	jump_8358d:
 		mov    tag_current,%dl
 		mov    heap_end,%eax
-		mov    %dl,routeTags(%ebx)
+		mov    %dl,EXPORT_SYMBOL(routeTags)(%ebx)
 		mov    0x1c(%esp),%edx
-		mov    %ecx,tree_val(,%ebx,4)
-		mov    %edx,tree_dad(,%ebx,4)
+		mov    %ecx,EXPORT_SYMBOL(tree_val)(,%ebx,4)
+		mov    %edx,EXPORT_SYMBOL(tree_dad)(,%ebx,4)
 		cmp    $0x100,%eax
 		jge    jump_835c0
 		lea    0x1(%eax),%edx
@@ -83609,8 +83633,8 @@ triangle_route_do_bak:
 		lea    0x0(,%ebx,4),%edx
 		mov    heap(%eax),%esi
 		mov    heap(%edx),%ecx
-		mov    tree_val(,%esi,4),%edi
-		cmp    tree_val(,%ecx,4),%edi
+		mov    EXPORT_SYMBOL(tree_val)(,%esi,4),%edi
+		cmp    EXPORT_SYMBOL(tree_val)(,%ecx,4),%edi
 		jg     jump_833f3
 		mov    heap(%eax),%ecx
 		mov    heap(%edx),%esi
@@ -83627,15 +83651,15 @@ triangle_route_do_bak:
 		mov    %eax,%edx
 		shl    $0x2,%ebx
 		xor    $0x1,%dl
-		mov    tree_val(%ebx),%edi
+		mov    EXPORT_SYMBOL(tree_val)(%ebx),%edi
 		mov    heap(,%edx,4),%ecx
 		mov    0x8(%esp),%esi
 		shl    $0x2,%ecx
 		shl    $0x2,%esi
-		cmp    tree_val(%ecx),%edi
+		cmp    EXPORT_SYMBOL(tree_val)(%ecx),%edi
 		jge    jump_83677
 		mov    heap(%esi),%ecx
-		cmp    tree_val(,%ecx,4),%edi
+		cmp    EXPORT_SYMBOL(tree_val)(,%ecx,4),%edi
 		jl     jump_83673
 		mov    0x8(%esp),%eax
 	jump_83673:
@@ -83643,8 +83667,8 @@ triangle_route_do_bak:
 		jmp    jump_83690
 	jump_83677:
 		mov    heap(%esi),%eax
-		mov    tree_val(%ecx),%ebx
-		cmp    tree_val(,%eax,4),%ebx
+		mov    EXPORT_SYMBOL(tree_val)(%ecx),%ebx
+		cmp    EXPORT_SYMBOL(tree_val)(,%eax,4),%ebx
 		jl     jump_83690
 		mov    0x8(%esp),%edx
 	jump_83690:
@@ -83672,7 +83696,7 @@ triangle_route_do_bak:
 	jump_836de:
 		add    $0x4,%eax
 		inc    %ebx
-		mov    tree_dad(,%edx,4),%edx
+		mov    EXPORT_SYMBOL(tree_dad)(,%edx,4),%edx
 	jump_836e9:
 		mov    %edx,(%eax)
 		cmp    %edi,%edx
@@ -83706,25 +83730,25 @@ ma_triangle_route:
 		push   $fwd_path
 		mov    0x14(%esp),%ebx
 		push   %ebx
-		mov    tree_By8,%ecx
-		mov    tree_Ay8,%edx
+		mov    EXPORT_SYMBOL(tree_By8),%ecx
+		mov    EXPORT_SYMBOL(tree_Ay8),%edx
 		push   %edi
-		mov    tree_Ax8,%eax
-		mov    tree_Bx8,%ebx
+		mov    EXPORT_SYMBOL(tree_Ax8),%eax
+		mov    EXPORT_SYMBOL(tree_Bx8),%ebx
 		call   route_to_path
 		cmp    $0xffffffff,%eax
 		je     jump_8382a
-		mov    tree_Ax8,%edx
-		mov    tree_Ay8,%ebx
-		mov    tree_Bx8,%eax
+		mov    EXPORT_SYMBOL(tree_Ax8),%edx
+		mov    EXPORT_SYMBOL(tree_Ay8),%ebx
+		mov    EXPORT_SYMBOL(tree_Bx8),%eax
 		mov    %ebp,%ecx
-		mov    %eax,tree_Ax8
-		mov    %edx,tree_Bx8
-		mov    tree_By8,%eax
+		mov    %eax,EXPORT_SYMBOL(tree_Ax8)
+		mov    %edx,EXPORT_SYMBOL(tree_Bx8)
+		mov    EXPORT_SYMBOL(tree_By8),%eax
 		mov    %esi,%edx
-		mov    %eax,tree_Ay8
-		mov    %ebx,tree_By8
-		mov    $route_bak,%ebx
+		mov    %eax,EXPORT_SYMBOL(tree_Ay8)
+		mov    %ebx,EXPORT_SYMBOL(tree_By8)
+		mov    $EXPORT_SYMBOL(route_bak),%ebx
 		mov    0x8(%esp),%eax
 		call   triangle_route_do_bak
 		mov    %eax,%esi
@@ -83735,24 +83759,24 @@ ma_triangle_route:
 		push   %eax
 		push   $fwd_path
 		push   %esi
-		mov    tree_By8,%ecx
-		mov    tree_Bx8,%ebx
-		push   $route_bak
-		mov    tree_Ay8,%edx
-		mov    tree_Ax8,%eax
+		mov    EXPORT_SYMBOL(tree_By8),%ecx
+		mov    EXPORT_SYMBOL(tree_Bx8),%ebx
+		push   $EXPORT_SYMBOL(route_bak)
+		mov    EXPORT_SYMBOL(tree_Ay8),%edx
+		mov    EXPORT_SYMBOL(tree_Ax8),%eax
 		call   route_to_path
 		cmp    $0xffffffff,%eax
 		je     jump_8382a
 		mov    0x4(%esp),%ecx
-		mov    tree_Ax8,%eax
-		mov    tree_Bx8,%ebx
-		mov    tree_Ay8,%edx
-		mov    %ebx,tree_Ax8
-		mov    %eax,tree_Bx8
-		mov    tree_By8,%ebx
+		mov    EXPORT_SYMBOL(tree_Ax8),%eax
+		mov    EXPORT_SYMBOL(tree_Bx8),%ebx
+		mov    EXPORT_SYMBOL(tree_Ay8),%edx
+		mov    %ebx,EXPORT_SYMBOL(tree_Ax8)
+		mov    %eax,EXPORT_SYMBOL(tree_Bx8)
+		mov    EXPORT_SYMBOL(tree_By8),%ebx
 		mov    (%esp),%eax
-		mov    %ebx,tree_Ay8
-		mov    %edx,tree_By8
+		mov    %ebx,EXPORT_SYMBOL(tree_Ay8)
+		mov    %edx,EXPORT_SYMBOL(tree_By8)
 		cmp    %ecx,%eax
 		jge    jump_83808
 		mov    0xc(%esp),%eax
@@ -83764,7 +83788,7 @@ ma_triangle_route:
 		lea    0x0(,%esi,4),%eax
 	jump_83815:
 		add    $0x4,%edx
-		mov    route_bak(%eax),%ebx
+		mov    EXPORT_SYMBOL(route_bak)(%eax),%ebx
 		sub    $0x4,%eax
 		mov    %ebx,-0x4(%edx)
 		test   %eax,%eax
@@ -83801,7 +83825,7 @@ triangle_route_do_unkn3:	/* 0x083834 */
 		test   %eax,%eax
 		jne    jump_8388a
 		mov    $0x1f40,%ebx
-		mov    $routeTags,%eax
+		mov    $EXPORT_SYMBOL(routeTags),%eax
 		xor    %edx,%edx
 		call   ac_memset
 		movb   $0x1,tag_current
@@ -83809,11 +83833,11 @@ triangle_route_do_unkn3:	/* 0x083834 */
 		mov    0x10(%esp),%eax
 		mov    $0x1,%ecx
 		mov    %eax,%edx
-		mov    %ecx,tree_val(,%eax,4)
-		mov    %eax,tree_dad(,%eax,4)
+		mov    %ecx,EXPORT_SYMBOL(tree_val)(,%eax,4)
+		mov    %eax,EXPORT_SYMBOL(tree_dad)(,%eax,4)
 		mov    tag_current,%al
 		mov    heap_end,%esi
-		mov    %al,routeTags(%edx)
+		mov    %al,EXPORT_SYMBOL(routeTags)(%edx)
 		cmp    $0x100,%esi
 		jge    jump_838c5
 		lea    (%esi,%ecx,1),%edi
@@ -83831,8 +83855,8 @@ triangle_route_do_unkn3:	/* 0x083834 */
 		lea    0x0(,%ebx,4),%edx
 		mov    heap(%eax),%esi
 		mov    heap(%edx),%ecx
-		mov    tree_val(,%esi,4),%ebp
-		cmp    tree_val(,%ecx,4),%ebp
+		mov    EXPORT_SYMBOL(tree_val)(,%esi,4),%ebp
+		cmp    EXPORT_SYMBOL(tree_val)(,%ecx,4),%ebp
 		jg     jump_839c3
 		mov    heap(%eax),%ecx
 		mov    heap(%edx),%esi
@@ -83854,12 +83878,12 @@ triangle_route_do_unkn3:	/* 0x083834 */
 		mov    (%esp),%ecx
 		shl    $0x2,%edx
 		shl    $0x2,%esi
-		mov    tree_val(%edx),%edi
+		mov    EXPORT_SYMBOL(tree_val)(%edx),%edi
 		shl    $0x2,%ecx
-		cmp    tree_val(%esi),%edi
+		cmp    EXPORT_SYMBOL(tree_val)(%esi),%edi
 		jge    jump_8397d
 		mov    heap(%ecx),%ebx
-		cmp    tree_val(,%ebx,4),%edi
+		cmp    EXPORT_SYMBOL(tree_val)(,%ebx,4),%edi
 		jl     jump_83979
 		mov    (%esp),%eax
 	jump_83979:
@@ -83867,8 +83891,8 @@ triangle_route_do_unkn3:	/* 0x083834 */
 		jmp    jump_83999
 	jump_8397d:
 		mov    heap(%ecx),%edx
-		mov    tree_val(%esi),%eax
-		cmp    tree_val(,%edx,4),%eax
+		mov    EXPORT_SYMBOL(tree_val)(%esi),%eax
+		cmp    EXPORT_SYMBOL(tree_val)(,%edx,4),%eax
 		jge    jump_83996
 		mov    %ebx,%edx
 		jmp    jump_83999
@@ -83914,20 +83938,20 @@ triangle_route_do_unkn3:	/* 0x083834 */
 		lea    0x0(,%edx,4),%esi
 		shl    $0x2,%edi
 		mov    heap(,%eax,8),%ebx
-		mov    tree_val(%edi),%ebp
+		mov    EXPORT_SYMBOL(tree_val)(%edi),%ebp
 		shl    $0x2,%ebx
-		cmp    tree_val(%ebx),%ebp
+		cmp    EXPORT_SYMBOL(tree_val)(%ebx),%ebp
 		jge    jump_83a73
 		mov    heap(%esi),%ecx
 		mov    %ebp,%ebx
-		cmp    tree_val(,%ecx,4),%ebx
+		cmp    EXPORT_SYMBOL(tree_val)(,%ecx,4),%ebx
 		jge    jump_83a8a
 		mov    %eax,%edx
 		jmp    jump_83a8a
 	jump_83a73:
 		mov    heap(%esi),%esi
-		mov    tree_val(%ebx),%ebx
-		cmp    tree_val(,%esi,4),%ebx
+		mov    EXPORT_SYMBOL(tree_val)(%ebx),%ebx
+		cmp    EXPORT_SYMBOL(tree_val)(,%esi,4),%ebx
 		jge    jump_83a8a
 		mov    %ecx,%edx
 	jump_83a8a:
@@ -83945,8 +83969,8 @@ triangle_route_do_unkn3:	/* 0x083834 */
 		lea    0x0(,%ebp,4),%eax
 		mov    heap(%edi),%edx
 		mov    heap(%eax),%ebx
-		mov    tree_val(,%edx,4),%edx
-		cmp    tree_val(,%ebx,4),%edx
+		mov    EXPORT_SYMBOL(tree_val)(,%edx,4),%edx
+		cmp    EXPORT_SYMBOL(tree_val)(,%ebx,4),%edx
 		jl     jump_83af0
 		mov    heap(%eax),%edx
 		mov    heap(%edi),%ebx
@@ -83982,19 +84006,19 @@ triangle_route_do_unkn3:	/* 0x083834 */
 		lea    0x0(,%edx,4),%ecx
 		shl    $0x2,%ebx
 		mov    heap(,%eax,8),%esi
-		mov    tree_val(%ebx),%ebp
+		mov    EXPORT_SYMBOL(tree_val)(%ebx),%ebp
 		shl    $0x2,%esi
-		cmp    tree_val(%esi),%ebp
+		cmp    EXPORT_SYMBOL(tree_val)(%esi),%ebp
 		jge    jump_83b9e
 		mov    heap(%ecx),%ecx
-		cmp    tree_val(,%ecx,4),%ebp
+		cmp    EXPORT_SYMBOL(tree_val)(,%ecx,4),%ebp
 		jge    jump_83bb5
 		mov    %eax,%edx
 		jmp    jump_83bb5
 	jump_83b9e:
 		mov    heap(%ecx),%ecx
-		mov    tree_val(%esi),%ebx
-		cmp    tree_val(,%ecx,4),%ebx
+		mov    EXPORT_SYMBOL(tree_val)(%esi),%ebx
+		cmp    EXPORT_SYMBOL(tree_val)(,%ecx,4),%ebx
 		jge    jump_83bb5
 		mov    %edi,%edx
 	jump_83bb5:
@@ -84012,8 +84036,8 @@ triangle_route_do_unkn3:	/* 0x083834 */
 		lea    0x0(,%ebp,4),%eax
 		mov    heap(%ebx),%edx
 		mov    heap(%eax),%ecx
-		mov    tree_val(,%edx,4),%edx
-		cmp    tree_val(,%ecx,4),%edx
+		mov    EXPORT_SYMBOL(tree_val)(,%edx,4),%edx
+		cmp    EXPORT_SYMBOL(tree_val)(,%ecx,4),%edx
 		jl     jump_83c21
 		mov    heap(%eax),%edx
 		mov    heap(%ebx),%ecx
@@ -84055,7 +84079,7 @@ triangle_route_do_unkn3:	/* 0x083834 */
 		shl    %cl,%edi
 		test   %edi,%esi
 		je     jump_83c3a
-		mov    routeTags(%ebx),%cl
+		mov    EXPORT_SYMBOL(routeTags)(%ebx),%cl
 		cmp    tag_current,%cl
 		je     jump_83c3a
 		mov    0xb(%eax),%eax
@@ -84065,8 +84089,8 @@ triangle_route_do_unkn3:	/* 0x083834 */
 		and    $0xff,%eax
 		mov    %eax,0x24(%esp)
 		je     jump_83c3a
-		mov    tree_Ax8,%edi
-		mov    tree_Ay8,%ebp
+		mov    EXPORT_SYMBOL(tree_Ax8),%edi
+		mov    EXPORT_SYMBOL(tree_Ay8),%ebp
 		mov    %ebx,0x28(%esp)
 		mov    %ebx,%esi
 		sar    $0x8,%edi
@@ -84197,12 +84221,12 @@ triangle_route_do_unkn3:	/* 0x083834 */
 		sar    $0x3,%edx
 		add    %ecx,%edx
 	jump_83e14:
-		mov    %edx,tree_val(,%ebx,4)
+		mov    %edx,EXPORT_SYMBOL(tree_val)(,%ebx,4)
 		mov    tag_current,%dl
-		mov    %dl,routeTags(%ebx)
+		mov    %dl,EXPORT_SYMBOL(routeTags)(%ebx)
 		mov    0x20(%esp),%edx
 		mov    heap_end,%eax
-		mov    %edx,tree_dad(,%ebx,4)
+		mov    %edx,EXPORT_SYMBOL(tree_dad)(,%ebx,4)
 		cmp    $0x100,%eax
 		jge    jump_83e47
 		lea    0x1(%eax),%edx
@@ -84220,8 +84244,8 @@ triangle_route_do_unkn3:	/* 0x083834 */
 		lea    0x0(,%ebx,4),%edx
 		mov    heap(%eax),%esi
 		mov    heap(%edx),%ecx
-		mov    tree_val(,%esi,4),%edi
-		cmp    tree_val(,%ecx,4),%edi
+		mov    EXPORT_SYMBOL(tree_val)(,%esi,4),%edi
+		cmp    EXPORT_SYMBOL(tree_val)(,%ecx,4),%edi
 		jg     jump_83c3a
 		mov    heap(%eax),%ecx
 		mov    heap(%edx),%esi
@@ -84240,15 +84264,15 @@ triangle_route_do_unkn3:	/* 0x083834 */
 		mov    %eax,%edx
 		shl    $0x2,%ebx
 		xor    %ebp,%edx
-		mov    tree_val(%ebx),%edi
+		mov    EXPORT_SYMBOL(tree_val)(%ebx),%edi
 		mov    heap(,%edx,4),%esi
 		mov    0x8(%esp),%ecx
 		shl    $0x2,%esi
 		shl    $0x2,%ecx
-		cmp    tree_val(%esi),%edi
+		cmp    EXPORT_SYMBOL(tree_val)(%esi),%edi
 		jge    jump_83f02
 		mov    heap(%ecx),%ecx
-		cmp    tree_val(,%ecx,4),%edi
+		cmp    EXPORT_SYMBOL(tree_val)(,%ecx,4),%edi
 		jl     jump_83efe
 		mov    0x8(%esp),%eax
 	jump_83efe:
@@ -84256,8 +84280,8 @@ triangle_route_do_unkn3:	/* 0x083834 */
 		jmp    jump_83f1b
 	jump_83f02:
 		mov    heap(%ecx),%ebx
-		mov    tree_val(%esi),%eax
-		cmp    tree_val(,%ebx,4),%eax
+		mov    EXPORT_SYMBOL(tree_val)(%esi),%eax
+		cmp    EXPORT_SYMBOL(tree_val)(,%ebx,4),%eax
 		jl     jump_83f1b
 		mov    0x8(%esp),%edx
 	jump_83f1b:
@@ -84293,7 +84317,7 @@ triangle_route_do_unkn3:	/* 0x083834 */
 	jump_83f88:
 		add    $0x4,%eax
 		inc    %ebx
-		mov    tree_dad(,%edx,4),%edx
+		mov    EXPORT_SYMBOL(tree_dad)(,%edx,4),%edx
 	jump_83f93:
 		mov    %edx,(%eax)
 		cmp    %ebp,%edx
@@ -84329,7 +84353,7 @@ triangle_route_do_unkn4:	/* 0x083FA4 */
 		test   %eax,%eax
 		jne    jump_83ffa
 		mov    $0x1f40,%ebx
-		mov    $routeTags,%eax
+		mov    $EXPORT_SYMBOL(routeTags),%eax
 		xor    %edx,%edx
 		call   ac_memset
 		movb   $0x1,tag_current
@@ -84337,11 +84361,11 @@ triangle_route_do_unkn4:	/* 0x083FA4 */
 		mov    0x10(%esp),%eax
 		mov    $0x1,%ecx
 		mov    %eax,%edx
-		mov    %ecx,tree_val(,%eax,4)
-		mov    %eax,tree_dad(,%eax,4)
+		mov    %ecx,EXPORT_SYMBOL(tree_val)(,%eax,4)
+		mov    %eax,EXPORT_SYMBOL(tree_dad)(,%eax,4)
 		mov    tag_current,%al
 		mov    heap_end,%esi
-		mov    %al,routeTags(%edx)
+		mov    %al,EXPORT_SYMBOL(routeTags)(%edx)
 		cmp    $0x100,%esi
 		jge    jump_84035
 		lea    (%esi,%ecx,1),%edi
@@ -84359,8 +84383,8 @@ triangle_route_do_unkn4:	/* 0x083FA4 */
 		lea    0x0(,%ebx,4),%edx
 		mov    heap(%eax),%esi
 		mov    heap(%edx),%ecx
-		mov    tree_val(,%esi,4),%ebp
-		cmp    tree_val(,%ecx,4),%ebp
+		mov    EXPORT_SYMBOL(tree_val)(,%esi,4),%ebp
+		cmp    EXPORT_SYMBOL(tree_val)(,%ecx,4),%ebp
 		jg     jump_8412a
 		mov    heap(%edx),%ecx
 		mov    %esi,heap(%edx)
@@ -84379,13 +84403,13 @@ triangle_route_do_unkn4:	/* 0x083FA4 */
 		shl    $0x2,%ecx
 		mov    %edx,(%esp)
 		mov    heap(,%ebx,4),%esi
-		mov    tree_val(%ecx),%edi
+		mov    EXPORT_SYMBOL(tree_val)(%ecx),%edi
 		shl    $0x2,%esi
 		shl    $0x2,%edx
-		cmp    tree_val(%esi),%edi
+		cmp    EXPORT_SYMBOL(tree_val)(%esi),%edi
 		jge    jump_840e4
 		mov    heap(%edx),%ebx
-		cmp    tree_val(,%ebx,4),%edi
+		cmp    EXPORT_SYMBOL(tree_val)(,%ebx,4),%edi
 		jl     jump_840e0
 		mov    (%esp),%eax
 	jump_840e0:
@@ -84393,8 +84417,8 @@ triangle_route_do_unkn4:	/* 0x083FA4 */
 		jmp    jump_84100
 	jump_840e4:
 		mov    heap(%edx),%eax
-		mov    tree_val(%esi),%edx
-		cmp    tree_val(,%eax,4),%edx
+		mov    EXPORT_SYMBOL(tree_val)(%esi),%edx
+		cmp    EXPORT_SYMBOL(tree_val)(,%eax,4),%edx
 		jge    jump_840fd
 		mov    %ebx,%edx
 		jmp    jump_84100
@@ -84440,19 +84464,19 @@ triangle_route_do_unkn4:	/* 0x083FA4 */
 		lea    0x0(,%edx,4),%edi
 		shl    $0x2,%ebx
 		mov    heap(,%eax,8),%esi
-		mov    tree_val(%ebx),%ebp
+		mov    EXPORT_SYMBOL(tree_val)(%ebx),%ebp
 		shl    $0x2,%esi
-		cmp    tree_val(%esi),%ebp
+		cmp    EXPORT_SYMBOL(tree_val)(%esi),%ebp
 		jge    jump_841d8
 		mov    heap(%edi),%ecx
-		cmp    tree_val(,%ecx,4),%ebp
+		cmp    EXPORT_SYMBOL(tree_val)(,%ecx,4),%ebp
 		jge    jump_841ef
 		mov    %eax,%edx
 		jmp    jump_841ef
 	jump_841d8:
 		mov    heap(%edi),%edi
-		mov    tree_val(%esi),%ebx
-		cmp    tree_val(,%edi,4),%ebx
+		mov    EXPORT_SYMBOL(tree_val)(%esi),%ebx
+		cmp    EXPORT_SYMBOL(tree_val)(,%edi,4),%ebx
 		jge    jump_841ef
 		mov    %ecx,%edx
 	jump_841ef:
@@ -84470,8 +84494,8 @@ triangle_route_do_unkn4:	/* 0x083FA4 */
 		lea    0x0(,%edi,4),%eax
 		mov    heap(%ebx),%edx
 		mov    heap(%eax),%ecx
-		mov    tree_val(,%edx,4),%edx
-		cmp    tree_val(,%ecx,4),%edx
+		mov    EXPORT_SYMBOL(tree_val)(,%edx,4),%edx
+		cmp    EXPORT_SYMBOL(tree_val)(,%ecx,4),%edx
 		jl     jump_84255
 		mov    heap(%eax),%edx
 		mov    heap(%ebx),%ecx
@@ -84507,20 +84531,20 @@ triangle_route_do_unkn4:	/* 0x083FA4 */
 		lea    0x0(,%edx,4),%ebx
 		shl    $0x2,%edi
 		mov    heap(,%eax,8),%ecx
-		mov    tree_val(%edi),%ebp
+		mov    EXPORT_SYMBOL(tree_val)(%edi),%ebp
 		shl    $0x2,%ecx
-		cmp    tree_val(%ecx),%ebp
+		cmp    EXPORT_SYMBOL(tree_val)(%ecx),%ebp
 		jge    jump_84306
 		mov    heap(%ebx),%ecx
 		mov    %ebp,%ebx
-		cmp    tree_val(,%ecx,4),%ebx
+		cmp    EXPORT_SYMBOL(tree_val)(,%ecx,4),%ebx
 		jge    jump_8431d
 		mov    %eax,%edx
 		jmp    jump_8431d
 	jump_84306:
 		mov    heap(%ebx),%ebx
-		mov    tree_val(%ecx),%ecx
-		cmp    tree_val(,%ebx,4),%ecx
+		mov    EXPORT_SYMBOL(tree_val)(%ecx),%ecx
+		cmp    EXPORT_SYMBOL(tree_val)(,%ebx,4),%ecx
 		jge    jump_8431d
 		mov    %esi,%edx
 	jump_8431d:
@@ -84538,8 +84562,8 @@ triangle_route_do_unkn4:	/* 0x083FA4 */
 		lea    0x0(,%ebp,4),%eax
 		mov    heap(%edi),%edx
 		mov    heap(%eax),%ebx
-		mov    tree_val(,%edx,4),%edx
-		cmp    tree_val(,%ebx,4),%edx
+		mov    EXPORT_SYMBOL(tree_val)(,%edx,4),%edx
+		cmp    EXPORT_SYMBOL(tree_val)(,%ebx,4),%edx
 		jl     jump_84389
 		mov    heap(%eax),%edx
 		mov    heap(%edi),%ebx
@@ -84582,7 +84606,7 @@ triangle_route_do_unkn4:	/* 0x083FA4 */
 		test   %eax,%ebx
 		je     jump_843a0
 		mov    tag_current,%bl
-		cmp    routeTags(%esi),%bl
+		cmp    EXPORT_SYMBOL(routeTags)(%esi),%bl
 		je     jump_843a0
 		mov    %esi,%ecx
 		shl    $0x4,%ecx
@@ -84598,13 +84622,13 @@ triangle_route_do_unkn4:	/* 0x083FA4 */
 		mov    (%edx),%ax
 		mov    EXPORT_SYMBOL(triangulation)+0x38,%edx
 		shl    $0x3,%eax
-		mov    tree_Ax8,%ebp
+		mov    EXPORT_SYMBOL(tree_Ax8),%ebp
 		add    %edx,%eax
 		sar    $0x8,%ebp
 		mov    (%eax),%ebx
 		mov    %ebp,%eax
 		sub    %ebx,%eax
-		mov    tree_Ay8,%edi
+		mov    EXPORT_SYMBOL(tree_Ay8),%edi
 		cltd
 		xor    %edx,%eax
 		sub    %edx,%eax
@@ -84724,11 +84748,11 @@ triangle_route_do_unkn4:	/* 0x083FA4 */
 		sar    $0x3,%edx
 		add    %ebx,%edx
 	jump_84571:
-		mov    %edx,tree_val(,%esi,4)
+		mov    %edx,EXPORT_SYMBOL(tree_val)(,%esi,4)
 		mov    tag_current,%dl
-		mov    %dl,routeTags(%esi)
+		mov    %dl,EXPORT_SYMBOL(routeTags)(%esi)
 		mov    0x20(%esp),%edx
-		mov    %edx,tree_dad(,%esi,4)
+		mov    %edx,EXPORT_SYMBOL(tree_dad)(,%esi,4)
 		mov    heap_end,%edx
 		cmp    $0x100,%edx
 		jge    jump_845a6
@@ -84747,8 +84771,8 @@ triangle_route_do_unkn4:	/* 0x083FA4 */
 		lea    0x0(,%ebx,4),%edx
 		mov    heap(%eax),%esi
 		mov    heap(%edx),%ecx
-		mov    tree_val(,%esi,4),%edi
-		cmp    tree_val(,%ecx,4),%edi
+		mov    EXPORT_SYMBOL(tree_val)(,%esi,4),%edi
+		cmp    EXPORT_SYMBOL(tree_val)(,%ecx,4),%edi
 		jg     jump_843a0
 		mov    heap(%eax),%ecx
 		mov    heap(%edx),%esi
@@ -84767,15 +84791,15 @@ triangle_route_do_unkn4:	/* 0x083FA4 */
 		mov    %eax,%edx
 		shl    $0x2,%ebx
 		xor    %ebp,%edx
-		mov    tree_val(%ebx),%edi
+		mov    EXPORT_SYMBOL(tree_val)(%ebx),%edi
 		mov    heap(,%edx,4),%esi
 		mov    0x8(%esp),%ecx
 		shl    $0x2,%esi
 		shl    $0x2,%ecx
-		cmp    tree_val(%esi),%edi
+		cmp    EXPORT_SYMBOL(tree_val)(%esi),%edi
 		jge    jump_84661
 		mov    heap(%ecx),%ecx
-		cmp    tree_val(,%ecx,4),%edi
+		cmp    EXPORT_SYMBOL(tree_val)(,%ecx,4),%edi
 		jl     jump_8465d
 		mov    0x8(%esp),%eax
 	jump_8465d:
@@ -84783,8 +84807,8 @@ triangle_route_do_unkn4:	/* 0x083FA4 */
 		jmp    jump_8467a
 	jump_84661:
 		mov    heap(%ecx),%ebx
-		mov    tree_val(%esi),%eax
-		cmp    tree_val(,%ebx,4),%eax
+		mov    EXPORT_SYMBOL(tree_val)(%esi),%eax
+		cmp    EXPORT_SYMBOL(tree_val)(,%ebx,4),%eax
 		jl     jump_8467a
 		mov    0x8(%esp),%edx
 	jump_8467a:
@@ -84817,7 +84841,7 @@ triangle_route_do_unkn4:	/* 0x083FA4 */
 	jump_846e2:
 		add    $0x4,%eax
 		inc    %ebx
-		mov    tree_dad(,%edx,4),%edx
+		mov    EXPORT_SYMBOL(tree_dad)(,%edx,4),%edx
 	jump_846ed:
 		mov    %edx,(%eax)
 		cmp    %esi,%edx
@@ -84851,25 +84875,25 @@ ma_triangle_route_5:	/* 0x0846FC */
 		push   $fwd_path
 		mov    0x14(%esp),%ebx
 		push   %ebx
-		mov    tree_By8,%ecx
-		mov    tree_Ay8,%edx
+		mov    EXPORT_SYMBOL(tree_By8),%ecx
+		mov    EXPORT_SYMBOL(tree_Ay8),%edx
 		push   %edi
-		mov    tree_Ax8,%eax
-		mov    tree_Bx8,%ebx
+		mov    EXPORT_SYMBOL(tree_Ax8),%eax
+		mov    EXPORT_SYMBOL(tree_Bx8),%ebx
 		call   route_to_path
 		cmp    $0xffffffff,%eax
 		je     jump_8482e
-		mov    tree_Ax8,%edx
-		mov    tree_Ay8,%ebx
-		mov    tree_Bx8,%eax
+		mov    EXPORT_SYMBOL(tree_Ax8),%edx
+		mov    EXPORT_SYMBOL(tree_Ay8),%ebx
+		mov    EXPORT_SYMBOL(tree_Bx8),%eax
 		mov    %ebp,%ecx
-		mov    %eax,tree_Ax8
-		mov    %edx,tree_Bx8
-		mov    tree_By8,%eax
+		mov    %eax,EXPORT_SYMBOL(tree_Ax8)
+		mov    %edx,EXPORT_SYMBOL(tree_Bx8)
+		mov    EXPORT_SYMBOL(tree_By8),%eax
 		mov    %esi,%edx
-		mov    %eax,tree_Ay8
-		mov    %ebx,tree_By8
-		mov    $route_bak,%ebx
+		mov    %eax,EXPORT_SYMBOL(tree_Ay8)
+		mov    %ebx,EXPORT_SYMBOL(tree_By8)
+		mov    $EXPORT_SYMBOL(route_bak),%ebx
 		mov    0x8(%esp),%eax
 		call   triangle_route_do_unkn4
 		mov    %eax,%esi
@@ -84880,24 +84904,24 @@ ma_triangle_route_5:	/* 0x0846FC */
 		push   %eax
 		push   $fwd_path
 		push   %esi
-		mov    tree_By8,%ecx
-		mov    tree_Bx8,%ebx
-		push   $route_bak
-		mov    tree_Ay8,%edx
-		mov    tree_Ax8,%eax
+		mov    EXPORT_SYMBOL(tree_By8),%ecx
+		mov    EXPORT_SYMBOL(tree_Bx8),%ebx
+		push   $EXPORT_SYMBOL(route_bak)
+		mov    EXPORT_SYMBOL(tree_Ay8),%edx
+		mov    EXPORT_SYMBOL(tree_Ax8),%eax
 		call   route_to_path
 		cmp    $0xffffffff,%eax
 		je     jump_8482e
 		mov    0x4(%esp),%ecx
-		mov    tree_Ax8,%eax
-		mov    tree_Bx8,%ebx
-		mov    tree_Ay8,%edx
-		mov    %ebx,tree_Ax8
-		mov    %eax,tree_Bx8
-		mov    tree_By8,%ebx
+		mov    EXPORT_SYMBOL(tree_Ax8),%eax
+		mov    EXPORT_SYMBOL(tree_Bx8),%ebx
+		mov    EXPORT_SYMBOL(tree_Ay8),%edx
+		mov    %ebx,EXPORT_SYMBOL(tree_Ax8)
+		mov    %eax,EXPORT_SYMBOL(tree_Bx8)
+		mov    EXPORT_SYMBOL(tree_By8),%ebx
 		mov    (%esp),%eax
-		mov    %ebx,tree_Ay8
-		mov    %edx,tree_By8
+		mov    %ebx,EXPORT_SYMBOL(tree_Ay8)
+		mov    %edx,EXPORT_SYMBOL(tree_By8)
 		cmp    %ecx,%eax
 		jge    jump_8480c
 		mov    0xc(%esp),%eax
@@ -84909,7 +84933,7 @@ ma_triangle_route_5:	/* 0x0846FC */
 		lea    0x0(,%esi,4),%eax
 	jump_84819:
 		add    $0x4,%edx
-		mov    route_bak(%eax),%ebx
+		mov    EXPORT_SYMBOL(route_bak)(%eax),%ebx
 		sub    $0x4,%eax
 		mov    %ebx,-0x4(%edx)
 		test   %eax,%eax
@@ -84946,7 +84970,7 @@ triangle_route_do_unkn5:	/* 0x084924 */
 		test   %eax,%eax
 		jne    jump_8497a
 		mov    $0x1f40,%ebx
-		mov    $routeTags,%eax
+		mov    $EXPORT_SYMBOL(routeTags),%eax
 		xor    %edx,%edx
 		call   ac_memset
 		movb   $0x1,tag_current
@@ -84954,11 +84978,11 @@ triangle_route_do_unkn5:	/* 0x084924 */
 		mov    0x10(%esp),%eax
 		mov    $0x1,%ecx
 		mov    %eax,%edx
-		mov    %ecx,tree_val(,%eax,4)
-		mov    %eax,tree_dad(,%eax,4)
+		mov    %ecx,EXPORT_SYMBOL(tree_val)(,%eax,4)
+		mov    %eax,EXPORT_SYMBOL(tree_dad)(,%eax,4)
 		mov    tag_current,%al
 		mov    heap_end,%esi
-		mov    %al,routeTags(%edx)
+		mov    %al,EXPORT_SYMBOL(routeTags)(%edx)
 		cmp    $0x100,%esi
 		jge    jump_849b5
 		lea    (%esi,%ecx,1),%edi
@@ -84976,8 +85000,8 @@ triangle_route_do_unkn5:	/* 0x084924 */
 		lea    0x0(,%ebx,4),%edx
 		mov    heap(%eax),%esi
 		mov    heap(%edx),%ecx
-		mov    tree_val(,%esi,4),%ebp
-		cmp    tree_val(,%ecx,4),%ebp
+		mov    EXPORT_SYMBOL(tree_val)(,%esi,4),%ebp
+		cmp    EXPORT_SYMBOL(tree_val)(,%ecx,4),%ebp
 		jg     jump_84ab3
 		mov    heap(%eax),%ecx
 		mov    heap(%edx),%esi
@@ -84996,15 +85020,15 @@ triangle_route_do_unkn5:	/* 0x084924 */
 		shl    $0x2,%ecx
 		xor    %ebp,%esi
 		mov    %edx,(%esp)
-		mov    tree_val(%ecx),%edi
+		mov    EXPORT_SYMBOL(tree_val)(%ecx),%edi
 		mov    heap(,%esi,4),%edx
 		mov    (%esp),%ebx
 		shl    $0x2,%edx
 		shl    $0x2,%ebx
-		cmp    tree_val(%edx),%edi
+		cmp    EXPORT_SYMBOL(tree_val)(%edx),%edi
 		jge    jump_84a6d
 		mov    heap(%ebx),%edx
-		cmp    tree_val(,%edx,4),%edi
+		cmp    EXPORT_SYMBOL(tree_val)(,%edx,4),%edi
 		jl     jump_84a69
 		mov    (%esp),%eax
 	jump_84a69:
@@ -85012,8 +85036,8 @@ triangle_route_do_unkn5:	/* 0x084924 */
 		jmp    jump_84a89
 	jump_84a6d:
 		mov    heap(%ebx),%eax
-		mov    tree_val(%edx),%edx
-		cmp    tree_val(,%eax,4),%edx
+		mov    EXPORT_SYMBOL(tree_val)(%edx),%edx
+		cmp    EXPORT_SYMBOL(tree_val)(,%eax,4),%edx
 		jge    jump_84a86
 		mov    %esi,%edx
 		jmp    jump_84a89
@@ -85059,19 +85083,19 @@ triangle_route_do_unkn5:	/* 0x084924 */
 		lea    0x0(,%edx,4),%edi
 		shl    $0x2,%ecx
 		mov    heap(,%eax,8),%esi
-		mov    tree_val(%ecx),%ebp
+		mov    EXPORT_SYMBOL(tree_val)(%ecx),%ebp
 		shl    $0x2,%esi
-		cmp    tree_val(%esi),%ebp
+		cmp    EXPORT_SYMBOL(tree_val)(%esi),%ebp
 		jge    jump_84b61
 		mov    heap(%edi),%esi
-		cmp    tree_val(,%esi,4),%ebp
+		cmp    EXPORT_SYMBOL(tree_val)(,%esi,4),%ebp
 		jge    jump_84b78
 		mov    %eax,%edx
 		jmp    jump_84b78
 	jump_84b61:
 		mov    heap(%edi),%edi
-		mov    tree_val(%esi),%ecx
-		cmp    tree_val(,%edi,4),%ecx
+		mov    EXPORT_SYMBOL(tree_val)(%esi),%ecx
+		cmp    EXPORT_SYMBOL(tree_val)(,%edi,4),%ecx
 		jge    jump_84b78
 		mov    %ebx,%edx
 	jump_84b78:
@@ -85089,8 +85113,8 @@ triangle_route_do_unkn5:	/* 0x084924 */
 		lea    0x0(,%edi,4),%eax
 		mov    heap(%ecx),%edx
 		mov    heap(%eax),%ebx
-		mov    tree_val(,%edx,4),%edx
-		cmp    tree_val(,%ebx,4),%edx
+		mov    EXPORT_SYMBOL(tree_val)(,%edx,4),%edx
+		cmp    EXPORT_SYMBOL(tree_val)(,%ebx,4),%edx
 		jl     jump_84bde
 		mov    heap(%eax),%edx
 		mov    heap(%ecx),%ebx
@@ -85126,19 +85150,19 @@ triangle_route_do_unkn5:	/* 0x084924 */
 		lea    0x0(,%edx,4),%ebx
 		shl    $0x2,%edi
 		mov    heap(,%eax,8),%ecx
-		mov    tree_val(%edi),%ebp
+		mov    EXPORT_SYMBOL(tree_val)(%edi),%ebp
 		shl    $0x2,%ecx
-		cmp    tree_val(%ecx),%ebp
+		cmp    EXPORT_SYMBOL(tree_val)(%ecx),%ebp
 		jge    jump_84c8d
 		mov    heap(%ebx),%ebx
-		cmp    tree_val(,%ebx,4),%ebp
+		cmp    EXPORT_SYMBOL(tree_val)(,%ebx,4),%ebp
 		jge    jump_84ca4
 		mov    %eax,%edx
 		jmp    jump_84ca4
 	jump_84c8d:
 		mov    heap(%ebx),%edi
-		mov    tree_val(%ecx),%ebx
-		cmp    tree_val(,%edi,4),%ebx
+		mov    EXPORT_SYMBOL(tree_val)(%ecx),%ebx
+		cmp    EXPORT_SYMBOL(tree_val)(,%edi,4),%ebx
 		jge    jump_84ca4
 		mov    %esi,%edx
 	jump_84ca4:
@@ -85156,8 +85180,8 @@ triangle_route_do_unkn5:	/* 0x084924 */
 		lea    0x0(,%ebp,4),%eax
 		mov    heap(%edi),%edx
 		mov    heap(%eax),%ebx
-		mov    tree_val(,%edx,4),%edx
-		cmp    tree_val(,%ebx,4),%edx
+		mov    EXPORT_SYMBOL(tree_val)(,%edx,4),%edx
+		cmp    EXPORT_SYMBOL(tree_val)(,%ebx,4),%edx
 		jl     jump_84d10
 		mov    heap(%eax),%edx
 		mov    heap(%edi),%ebx
@@ -85201,7 +85225,7 @@ triangle_route_do_unkn5:	/* 0x084924 */
 		cmp    $0xffffffff,%ebx
 		je     jump_84d29
 		mov    tag_current,%cl
-		cmp    routeTags(%ebx),%cl
+		cmp    EXPORT_SYMBOL(routeTags)(%ebx),%cl
 		je     jump_84d29
 		mov    %ebx,%esi
 		shl    $0x4,%esi
@@ -85209,12 +85233,12 @@ triangle_route_do_unkn5:	/* 0x084924 */
 		mov    (%edx,%esi,1),%ax
 		lea    0x0(,%eax,8),%edx
 		mov    EXPORT_SYMBOL(triangulation)+0x38,%eax
-		mov    tree_Ax8,%edi
+		mov    EXPORT_SYMBOL(tree_Ax8),%edi
 		add    %edx,%eax
 		sar    $0x8,%edi
 		mov    (%eax),%ecx
 		mov    %edi,%eax
-		mov    tree_Ay8,%ebp
+		mov    EXPORT_SYMBOL(tree_Ay8),%ebp
 		sub    %ecx,%eax
 		mov    %ebx,0x24(%esp)
 		cltd
@@ -85330,10 +85354,10 @@ triangle_route_do_unkn5:	/* 0x084924 */
 	jump_84ed7:
 		mov    tag_current,%dl
 		mov    heap_end,%ebp
-		mov    %dl,routeTags(%ebx)
+		mov    %dl,EXPORT_SYMBOL(routeTags)(%ebx)
 		mov    0x20(%esp),%edx
-		mov    %ecx,tree_val(,%ebx,4)
-		mov    %edx,tree_dad(,%ebx,4)
+		mov    %ecx,EXPORT_SYMBOL(tree_val)(,%ebx,4)
+		mov    %edx,EXPORT_SYMBOL(tree_dad)(,%ebx,4)
 		cmp    $0x100,%ebp
 		jge    jump_84f0b
 		lea    0x1(%ebp),%eax
@@ -85351,8 +85375,8 @@ triangle_route_do_unkn5:	/* 0x084924 */
 		lea    0x0(,%ebx,4),%edx
 		mov    heap(%eax),%esi
 		mov    heap(%edx),%ecx
-		mov    tree_val(,%esi,4),%edi
-		cmp    tree_val(,%ecx,4),%edi
+		mov    EXPORT_SYMBOL(tree_val)(,%esi,4),%edi
+		cmp    EXPORT_SYMBOL(tree_val)(,%ecx,4),%edi
 		jg     jump_84d29
 		mov    heap(%eax),%ecx
 		mov    heap(%edx),%esi
@@ -85371,15 +85395,15 @@ triangle_route_do_unkn5:	/* 0x084924 */
 		mov    %eax,%edx
 		shl    $0x2,%esi
 		xor    %ebp,%edx
-		mov    tree_val(%esi),%edi
+		mov    EXPORT_SYMBOL(tree_val)(%esi),%edi
 		mov    heap(,%edx,4),%ecx
 		mov    0x8(%esp),%ebx
 		shl    $0x2,%ecx
 		shl    $0x2,%ebx
-		cmp    tree_val(%ecx),%edi
+		cmp    EXPORT_SYMBOL(tree_val)(%ecx),%edi
 		jge    jump_84fc6
 		mov    heap(%ebx),%ebx
-		cmp    tree_val(,%ebx,4),%edi
+		cmp    EXPORT_SYMBOL(tree_val)(,%ebx,4),%edi
 		jl     jump_84fc2
 		mov    0x8(%esp),%eax
 	jump_84fc2:
@@ -85387,8 +85411,8 @@ triangle_route_do_unkn5:	/* 0x084924 */
 		jmp    jump_84fdf
 	jump_84fc6:
 		mov    heap(%ebx),%eax
-		mov    tree_val(%ecx),%ebx
-		cmp    tree_val(,%eax,4),%ebx
+		mov    EXPORT_SYMBOL(tree_val)(%ecx),%ebx
+		cmp    EXPORT_SYMBOL(tree_val)(,%eax,4),%ebx
 		jl     jump_84fdf
 		mov    0x8(%esp),%edx
 	jump_84fdf:
@@ -85424,7 +85448,7 @@ triangle_route_do_unkn5:	/* 0x084924 */
 	jump_8504c:
 		add    $0x4,%eax
 		inc    %ebx
-		mov    tree_dad(,%edx,4),%edx
+		mov    EXPORT_SYMBOL(tree_dad)(,%edx,4),%edx
 	jump_85057:
 		mov    %edx,(%eax)
 		cmp    %ebp,%edx
@@ -85460,7 +85484,7 @@ triangle_route_do_unkn6:	/* 0x085068 */
 		test   %eax,%eax
 		jne    jump_850be
 		mov    $0x1f40,%ebx
-		mov    $routeTags,%eax
+		mov    $EXPORT_SYMBOL(routeTags),%eax
 		xor    %edx,%edx
 		call   ac_memset
 		movb   $0x1,tag_current
@@ -85468,11 +85492,11 @@ triangle_route_do_unkn6:	/* 0x085068 */
 		mov    0x10(%esp),%eax
 		mov    $0x1,%ecx
 		mov    %eax,%edx
-		mov    %ecx,tree_val(,%eax,4)
-		mov    %eax,tree_dad(,%eax,4)
+		mov    %ecx,EXPORT_SYMBOL(tree_val)(,%eax,4)
+		mov    %eax,EXPORT_SYMBOL(tree_dad)(,%eax,4)
 		mov    tag_current,%al
 		mov    heap_end,%esi
-		mov    %al,routeTags(%edx)
+		mov    %al,EXPORT_SYMBOL(routeTags)(%edx)
 		cmp    $0x100,%esi
 		jge    jump_850f9
 		lea    (%esi,%ecx,1),%edi
@@ -85490,8 +85514,8 @@ triangle_route_do_unkn6:	/* 0x085068 */
 		lea    0x0(,%ebx,4),%edx
 		mov    heap(%eax),%esi
 		mov    heap(%edx),%ecx
-		mov    tree_val(,%esi,4),%ebp
-		cmp    tree_val(,%ecx,4),%ebp
+		mov    EXPORT_SYMBOL(tree_val)(,%esi,4),%ebp
+		cmp    EXPORT_SYMBOL(tree_val)(,%ecx,4),%ebp
 		jg     jump_851f7
 		mov    heap(%eax),%ecx
 		mov    heap(%edx),%esi
@@ -85510,15 +85534,15 @@ triangle_route_do_unkn6:	/* 0x085068 */
 		shl    $0x2,%ecx
 		xor    %ebp,%esi
 		mov    %edx,(%esp)
-		mov    tree_val(%ecx),%edi
+		mov    EXPORT_SYMBOL(tree_val)(%ecx),%edi
 		mov    heap(,%esi,4),%edx
 		mov    (%esp),%ebx
 		shl    $0x2,%edx
 		shl    $0x2,%ebx
-		cmp    tree_val(%edx),%edi
+		cmp    EXPORT_SYMBOL(tree_val)(%edx),%edi
 		jge    jump_851b1
 		mov    heap(%ebx),%edx
-		cmp    tree_val(,%edx,4),%edi
+		cmp    EXPORT_SYMBOL(tree_val)(,%edx,4),%edi
 		jl     jump_851ad
 		mov    (%esp),%eax
 	jump_851ad:
@@ -85526,8 +85550,8 @@ triangle_route_do_unkn6:	/* 0x085068 */
 		jmp    jump_851cd
 	jump_851b1:
 		mov    heap(%ebx),%eax
-		mov    tree_val(%edx),%edx
-		cmp    tree_val(,%eax,4),%edx
+		mov    EXPORT_SYMBOL(tree_val)(%edx),%edx
+		cmp    EXPORT_SYMBOL(tree_val)(,%eax,4),%edx
 		jge    jump_851ca
 		mov    %esi,%edx
 		jmp    jump_851cd
@@ -85573,19 +85597,19 @@ triangle_route_do_unkn6:	/* 0x085068 */
 		lea    0x0(,%edx,4),%edi
 		shl    $0x2,%ecx
 		mov    heap(,%eax,8),%esi
-		mov    tree_val(%ecx),%ebp
+		mov    EXPORT_SYMBOL(tree_val)(%ecx),%ebp
 		shl    $0x2,%esi
-		cmp    tree_val(%esi),%ebp
+		cmp    EXPORT_SYMBOL(tree_val)(%esi),%ebp
 		jge    jump_852a5
 		mov    heap(%edi),%esi
-		cmp    tree_val(,%esi,4),%ebp
+		cmp    EXPORT_SYMBOL(tree_val)(,%esi,4),%ebp
 		jge    jump_852bc
 		mov    %eax,%edx
 		jmp    jump_852bc
 	jump_852a5:
 		mov    heap(%edi),%edi
-		mov    tree_val(%esi),%ecx
-		cmp    tree_val(,%edi,4),%ecx
+		mov    EXPORT_SYMBOL(tree_val)(%esi),%ecx
+		cmp    EXPORT_SYMBOL(tree_val)(,%edi,4),%ecx
 		jge    jump_852bc
 		mov    %ebx,%edx
 	jump_852bc:
@@ -85603,8 +85627,8 @@ triangle_route_do_unkn6:	/* 0x085068 */
 		lea    0x0(,%edi,4),%eax
 		mov    heap(%ecx),%edx
 		mov    heap(%eax),%ebx
-		mov    tree_val(,%edx,4),%edx
-		cmp    tree_val(,%ebx,4),%edx
+		mov    EXPORT_SYMBOL(tree_val)(,%edx,4),%edx
+		cmp    EXPORT_SYMBOL(tree_val)(,%ebx,4),%edx
 		jl     jump_85322
 		mov    heap(%eax),%edx
 		mov    heap(%ecx),%ebx
@@ -85640,19 +85664,19 @@ triangle_route_do_unkn6:	/* 0x085068 */
 		lea    0x0(,%edx,4),%ebx
 		shl    $0x2,%edi
 		mov    heap(,%eax,8),%ecx
-		mov    tree_val(%edi),%ebp
+		mov    EXPORT_SYMBOL(tree_val)(%edi),%ebp
 		shl    $0x2,%ecx
-		cmp    tree_val(%ecx),%ebp
+		cmp    EXPORT_SYMBOL(tree_val)(%ecx),%ebp
 		jge    jump_853d1
 		mov    heap(%ebx),%ebx
-		cmp    tree_val(,%ebx,4),%ebp
+		cmp    EXPORT_SYMBOL(tree_val)(,%ebx,4),%ebp
 		jge    jump_853e8
 		mov    %eax,%edx
 		jmp    jump_853e8
 	jump_853d1:
 		mov    heap(%ebx),%edi
-		mov    tree_val(%ecx),%ebx
-		cmp    tree_val(,%edi,4),%ebx
+		mov    EXPORT_SYMBOL(tree_val)(%ecx),%ebx
+		cmp    EXPORT_SYMBOL(tree_val)(,%edi,4),%ebx
 		jge    jump_853e8
 		mov    %esi,%edx
 	jump_853e8:
@@ -85670,8 +85694,8 @@ triangle_route_do_unkn6:	/* 0x085068 */
 		lea    0x0(,%ebp,4),%eax
 		mov    heap(%edi),%edx
 		mov    heap(%eax),%ebx
-		mov    tree_val(,%edx,4),%edx
-		cmp    tree_val(,%ebx,4),%edx
+		mov    EXPORT_SYMBOL(tree_val)(,%edx,4),%edx
+		cmp    EXPORT_SYMBOL(tree_val)(,%ebx,4),%edx
 		jl     jump_85454
 		mov    heap(%eax),%edx
 		mov    heap(%edi),%ebx
@@ -85715,7 +85739,7 @@ triangle_route_do_unkn6:	/* 0x085068 */
 		cmp    $0xffffffff,%ebx
 		je     jump_8546d
 		mov    tag_current,%cl
-		cmp    routeTags(%ebx),%cl
+		cmp    EXPORT_SYMBOL(routeTags)(%ebx),%cl
 		je     jump_8546d
 		mov    %ebx,%esi
 		shl    $0x4,%esi
@@ -85723,12 +85747,12 @@ triangle_route_do_unkn6:	/* 0x085068 */
 		mov    (%edx,%esi,1),%ax
 		lea    0x0(,%eax,8),%edx
 		mov    EXPORT_SYMBOL(triangulation)+0x38,%eax
-		mov    tree_Ax8,%edi
+		mov    EXPORT_SYMBOL(tree_Ax8),%edi
 		add    %edx,%eax
 		sar    $0x8,%edi
 		mov    (%eax),%ecx
 		mov    %edi,%eax
-		mov    tree_Ay8,%ebp
+		mov    EXPORT_SYMBOL(tree_Ay8),%ebp
 		sub    %ecx,%eax
 		mov    %ebx,0x24(%esp)
 		cltd
@@ -85844,10 +85868,10 @@ triangle_route_do_unkn6:	/* 0x085068 */
 	jump_8561b:
 		mov    tag_current,%dl
 		mov    heap_end,%ebp
-		mov    %dl,routeTags(%ebx)
+		mov    %dl,EXPORT_SYMBOL(routeTags)(%ebx)
 		mov    0x20(%esp),%edx
-		mov    %ecx,tree_val(,%ebx,4)
-		mov    %edx,tree_dad(,%ebx,4)
+		mov    %ecx,EXPORT_SYMBOL(tree_val)(,%ebx,4)
+		mov    %edx,EXPORT_SYMBOL(tree_dad)(,%ebx,4)
 		cmp    $0x100,%ebp
 		jge    jump_8564f
 		lea    0x1(%ebp),%eax
@@ -85865,8 +85889,8 @@ triangle_route_do_unkn6:	/* 0x085068 */
 		lea    0x0(,%ebx,4),%edx
 		mov    heap(%eax),%esi
 		mov    heap(%edx),%ecx
-		mov    tree_val(,%esi,4),%edi
-		cmp    tree_val(,%ecx,4),%edi
+		mov    EXPORT_SYMBOL(tree_val)(,%esi,4),%edi
+		cmp    EXPORT_SYMBOL(tree_val)(,%ecx,4),%edi
 		jg     jump_8546d
 		mov    heap(%eax),%ecx
 		mov    heap(%edx),%esi
@@ -85885,15 +85909,15 @@ triangle_route_do_unkn6:	/* 0x085068 */
 		mov    %eax,%edx
 		shl    $0x2,%esi
 		xor    %ebp,%edx
-		mov    tree_val(%esi),%edi
+		mov    EXPORT_SYMBOL(tree_val)(%esi),%edi
 		mov    heap(,%edx,4),%ecx
 		mov    0x8(%esp),%ebx
 		shl    $0x2,%ecx
 		shl    $0x2,%ebx
-		cmp    tree_val(%ecx),%edi
+		cmp    EXPORT_SYMBOL(tree_val)(%ecx),%edi
 		jge    jump_8570a
 		mov    heap(%ebx),%ebx
-		cmp    tree_val(,%ebx,4),%edi
+		cmp    EXPORT_SYMBOL(tree_val)(,%ebx,4),%edi
 		jl     jump_85706
 		mov    0x8(%esp),%eax
 	jump_85706:
@@ -85901,8 +85925,8 @@ triangle_route_do_unkn6:	/* 0x085068 */
 		jmp    jump_85723
 	jump_8570a:
 		mov    heap(%ebx),%eax
-		mov    tree_val(%ecx),%ebx
-		cmp    tree_val(,%eax,4),%ebx
+		mov    EXPORT_SYMBOL(tree_val)(%ecx),%ebx
+		cmp    EXPORT_SYMBOL(tree_val)(,%eax,4),%ebx
 		jl     jump_85723
 		mov    0x8(%esp),%edx
 	jump_85723:
@@ -85938,7 +85962,7 @@ triangle_route_do_unkn6:	/* 0x085068 */
 	jump_85790:
 		add    $0x4,%eax
 		inc    %ebx
-		mov    tree_dad(,%edx,4),%edx
+		mov    EXPORT_SYMBOL(tree_dad)(,%edx,4),%edx
 	jump_8579b:
 		mov    %edx,(%eax)
 		cmp    %ebp,%edx
@@ -85975,18 +85999,18 @@ triangle_route_do_unkn7:	/* 0x0857AC */
 		test   %eax,%eax
 		jne    jump_85804
 		mov    $0x1f40,%ebx
-		mov    $routeTags,%eax
+		mov    $EXPORT_SYMBOL(routeTags),%eax
 		call   ac_memset
 		movb   $0x1,tag_current
 	jump_85804:
 		mov    0x10(%esp),%eax
 		mov    $0x1,%esi
 		mov    %eax,%edx
-		mov    %esi,tree_val(,%eax,4)
-		mov    %eax,tree_dad(,%eax,4)
+		mov    %esi,EXPORT_SYMBOL(tree_val)(,%eax,4)
+		mov    %eax,EXPORT_SYMBOL(tree_dad)(,%eax,4)
 		mov    tag_current,%al
 		mov    heap_end,%edi
-		mov    %al,routeTags(%edx)
+		mov    %al,EXPORT_SYMBOL(routeTags)(%edx)
 		cmp    $0x100,%edi
 		jge    jump_8583f
 		lea    (%edi,%esi,1),%ebp
@@ -86004,8 +86028,8 @@ triangle_route_do_unkn7:	/* 0x0857AC */
 		lea    0x0(,%ebx,4),%edx
 		mov    heap(%eax),%esi
 		mov    heap(%edx),%ecx
-		mov    tree_val(,%esi,4),%edi
-		cmp    tree_val(,%ecx,4),%edi
+		mov    EXPORT_SYMBOL(tree_val)(,%esi,4),%edi
+		cmp    EXPORT_SYMBOL(tree_val)(,%ecx,4),%edi
 		jg     jump_85939
 		mov    heap(%eax),%ecx
 		mov    heap(%edx),%esi
@@ -86024,15 +86048,15 @@ triangle_route_do_unkn7:	/* 0x0857AC */
 		mov    %eax,%edx
 		shl    $0x2,%ebx
 		xor    %ebp,%edx
-		mov    tree_val(%ebx),%edi
+		mov    EXPORT_SYMBOL(tree_val)(%ebx),%edi
 		mov    heap(,%edx,4),%esi
 		mov    (%esp),%ecx
 		shl    $0x2,%esi
 		shl    $0x2,%ecx
-		cmp    tree_val(%esi),%edi
+		cmp    EXPORT_SYMBOL(tree_val)(%esi),%edi
 		jge    jump_858f7
 		mov    heap(%ecx),%edx
-		cmp    tree_val(,%edx,4),%edi
+		cmp    EXPORT_SYMBOL(tree_val)(,%edx,4),%edi
 		jl     jump_858f3
 		mov    (%esp),%eax
 	jump_858f3:
@@ -86040,8 +86064,8 @@ triangle_route_do_unkn7:	/* 0x0857AC */
 		jmp    jump_8590f
 	jump_858f7:
 		mov    heap(%ecx),%ebx
-		mov    tree_val(%esi),%eax
-		cmp    tree_val(,%ebx,4),%eax
+		mov    EXPORT_SYMBOL(tree_val)(%esi),%eax
+		cmp    EXPORT_SYMBOL(tree_val)(,%ebx,4),%eax
 		jl     jump_8590f
 		mov    (%esp),%edx
 	jump_8590f:
@@ -86068,13 +86092,13 @@ triangle_route_do_unkn7:	/* 0x0857AC */
 		cmpl   $0x0,0x30(%esp)
 		jne    jump_85edc
 		mov    0x2c(%esp),%eax
-		mov    tree_dad(%eax),%eax
+		mov    EXPORT_SYMBOL(tree_dad)(%eax),%eax
 		mov    %eax,0x28(%esp)
 		mov    tag_current,%al
 		mov    $0x1e,%esi
 		inc    %al
 		mov    $0xffffffff,%edi
-		mov    %al,routeTags(%edx)
+		mov    %al,EXPORT_SYMBOL(routeTags)(%edx)
 		mov    heap_end,%edx
 		mov    %esi,0x30(%esp)
 		mov    $0x1,%eax
@@ -86097,20 +86121,20 @@ triangle_route_do_unkn7:	/* 0x0857AC */
 		lea    0x0(,%edx,4),%esi
 		shl    $0x2,%ebx
 		mov    heap(,%eax,8),%edi
-		mov    tree_val(%ebx),%ebp
+		mov    EXPORT_SYMBOL(tree_val)(%ebx),%ebp
 		shl    $0x2,%edi
-		cmp    tree_val(%edi),%ebp
+		cmp    EXPORT_SYMBOL(tree_val)(%edi),%ebp
 		jge    jump_85a1c
 		mov    heap(%esi),%ecx
 		mov    %ebp,%ebx
-		cmp    tree_val(,%ecx,4),%ebx
+		cmp    EXPORT_SYMBOL(tree_val)(,%ecx,4),%ebx
 		jge    jump_85a33
 		mov    %eax,%edx
 		jmp    jump_85a33
 	jump_85a1c:
 		mov    heap(%esi),%esi
-		mov    tree_val(%edi),%ebx
-		cmp    tree_val(,%esi,4),%ebx
+		mov    EXPORT_SYMBOL(tree_val)(%edi),%ebx
+		cmp    EXPORT_SYMBOL(tree_val)(,%esi,4),%ebx
 		jge    jump_85a33
 		mov    %ecx,%edx
 	jump_85a33:
@@ -86128,8 +86152,8 @@ triangle_route_do_unkn7:	/* 0x0857AC */
 		lea    0x0(,%edi,4),%eax
 		mov    heap(%ebx),%edx
 		mov    heap(%eax),%ecx
-		mov    tree_val(,%edx,4),%edx
-		cmp    tree_val(,%ecx,4),%edx
+		mov    EXPORT_SYMBOL(tree_val)(,%edx,4),%edx
+		cmp    EXPORT_SYMBOL(tree_val)(,%ecx,4),%edx
 		jl     jump_85944
 		mov    heap(%eax),%edx
 		mov    heap(%ebx),%ecx
@@ -86146,7 +86170,7 @@ triangle_route_do_unkn7:	/* 0x0857AC */
 		jne    jump_85ad2
 		mov    0x2c(%esp),%edx
 		mov    0x28(%esp),%eax
-		mov    %eax,tree_dad(%edx)
+		mov    %eax,EXPORT_SYMBOL(tree_dad)(%edx)
 		jmp    jump_85edc
 	jump_85ad2:
 		mov    data_1c30c0,%eax
@@ -86173,19 +86197,19 @@ triangle_route_do_unkn7:	/* 0x0857AC */
 		lea    0x0(,%edx,4),%edi
 		shl    $0x2,%ecx
 		mov    heap(,%eax,8),%esi
-		mov    tree_val(%ecx),%ebp
+		mov    EXPORT_SYMBOL(tree_val)(%ecx),%ebp
 		shl    $0x2,%esi
-		cmp    tree_val(%esi),%ebp
+		cmp    EXPORT_SYMBOL(tree_val)(%esi),%ebp
 		jge    jump_85b6b
 		mov    heap(%edi),%esi
-		cmp    tree_val(,%esi,4),%ebp
+		cmp    EXPORT_SYMBOL(tree_val)(,%esi,4),%ebp
 		jge    jump_85b82
 		mov    %eax,%edx
 		jmp    jump_85b82
 	jump_85b6b:
 		mov    heap(%edi),%edi
-		mov    tree_val(%esi),%ecx
-		cmp    tree_val(,%edi,4),%ecx
+		mov    EXPORT_SYMBOL(tree_val)(%esi),%ecx
+		cmp    EXPORT_SYMBOL(tree_val)(,%edi,4),%ecx
 		jge    jump_85b82
 		mov    %ebx,%edx
 	jump_85b82:
@@ -86203,8 +86227,8 @@ triangle_route_do_unkn7:	/* 0x0857AC */
 		lea    0x0(,%esi,4),%eax
 		mov    heap(%ecx),%edx
 		mov    heap(%eax),%ebx
-		mov    tree_val(,%edx,4),%edx
-		cmp    tree_val(,%ebx,4),%edx
+		mov    EXPORT_SYMBOL(tree_val)(,%edx,4),%edx
+		cmp    EXPORT_SYMBOL(tree_val)(,%ebx,4),%edx
 		jl     jump_85be8
 		mov    heap(%eax),%edx
 		mov    heap(%ecx),%ebx
@@ -86242,11 +86266,11 @@ triangle_route_do_unkn7:	/* 0x0857AC */
 		sar    $0x10,%ebx
 		cmp    $0xffffffff,%ebx
 		je     jump_85bff
-		mov    routeTags(%ebx),%dl
+		mov    EXPORT_SYMBOL(routeTags)(%ebx),%dl
 		cmp    tag_current,%dl
 		je     jump_85bff
-		mov    tree_Ax8,%ebp
-		mov    tree_Ay8,%edi
+		mov    EXPORT_SYMBOL(tree_Ax8),%ebp
+		mov    EXPORT_SYMBOL(tree_Ay8),%edi
 		mov    %ebx,0x1c(%esp)
 		mov    %ebx,%esi
 		sar    $0x8,%ebp
@@ -86370,10 +86394,10 @@ triangle_route_do_unkn7:	/* 0x0857AC */
 	jump_85daa:
 		mov    tag_current,%dl
 		mov    heap_end,%eax
-		mov    %dl,routeTags(%ebx)
+		mov    %dl,EXPORT_SYMBOL(routeTags)(%ebx)
 		mov    0x18(%esp),%edx
-		mov    %ecx,tree_val(,%ebx,4)
-		mov    %edx,tree_dad(,%ebx,4)
+		mov    %ecx,EXPORT_SYMBOL(tree_val)(,%ebx,4)
+		mov    %edx,EXPORT_SYMBOL(tree_dad)(,%ebx,4)
 		cmp    $0x100,%eax
 		jge    jump_85ddd
 		lea    0x1(%eax),%edx
@@ -86391,8 +86415,8 @@ triangle_route_do_unkn7:	/* 0x0857AC */
 		lea    0x0(,%ebx,4),%edx
 		mov    heap(%eax),%esi
 		mov    heap(%edx),%ecx
-		mov    tree_val(,%esi,4),%edi
-		cmp    tree_val(,%ecx,4),%edi
+		mov    EXPORT_SYMBOL(tree_val)(,%esi,4),%edi
+		cmp    EXPORT_SYMBOL(tree_val)(,%ecx,4),%edi
 		jg     jump_85bff
 		mov    heap(%eax),%ecx
 		mov    heap(%edx),%esi
@@ -86412,13 +86436,13 @@ triangle_route_do_unkn7:	/* 0x0857AC */
 		mov    heap(,%eax,4),%edx
 		shl    $0x2,%ebx
 		shl    $0x2,%edx
-		mov    tree_val(%ebx),%ebp
-		mov    tree_val(%edx),%edi
+		mov    EXPORT_SYMBOL(tree_val)(%ebx),%ebp
+		mov    EXPORT_SYMBOL(tree_val)(%edx),%edi
 		shl    $0x2,%esi
 		cmp    %ebp,%edi
 		jge    jump_85e96
 		mov    heap(%esi),%ebx
-		cmp    tree_val(,%ebx,4),%edi
+		cmp    EXPORT_SYMBOL(tree_val)(,%ebx,4),%edi
 		jl     jump_85e92
 		mov    0x8(%esp),%eax
 	jump_85e92:
@@ -86426,7 +86450,7 @@ triangle_route_do_unkn7:	/* 0x0857AC */
 		jmp    jump_85ead
 	jump_85e96:
 		mov    heap(%esi),%edx
-		cmp    tree_val(,%edx,4),%ebp
+		cmp    EXPORT_SYMBOL(tree_val)(,%edx,4),%ebp
 		jge    jump_85ea9
 		mov    %ecx,%edx
 		jmp    jump_85ead
@@ -86457,7 +86481,7 @@ triangle_route_do_unkn7:	/* 0x0857AC */
 	jump_85efb:
 		add    $0x4,%edx
 		inc    %ebx
-		mov    tree_dad(,%eax,4),%eax
+		mov    EXPORT_SYMBOL(tree_dad)(,%eax,4),%eax
 	jump_85f06:
 		mov    %eax,(%edx)
 		cmp    %esi,%eax
@@ -86482,15 +86506,15 @@ ma_triangle_route_3:	/* 0x085F18 */
 		mov    %edx,%ebp
 		mov    %ebx,%esi
 		mov    %ecx,%edi
-		mov    tree_Ax8,%ebx
-		mov    tree_Bx8,%edx
-		mov    tree_Ay8,%eax
-		mov    %edx,tree_Ax8
-		mov    %ebx,tree_Bx8
-		mov    tree_By8,%edx
-		mov    $route_bak,%ebx
-		mov    %edx,tree_Ay8
-		mov    %eax,tree_By8
+		mov    EXPORT_SYMBOL(tree_Ax8),%ebx
+		mov    EXPORT_SYMBOL(tree_Bx8),%edx
+		mov    EXPORT_SYMBOL(tree_Ay8),%eax
+		mov    %edx,EXPORT_SYMBOL(tree_Ax8)
+		mov    %ebx,EXPORT_SYMBOL(tree_Bx8)
+		mov    EXPORT_SYMBOL(tree_By8),%edx
+		mov    $EXPORT_SYMBOL(route_bak),%ebx
+		mov    %edx,EXPORT_SYMBOL(tree_Ay8)
+		mov    %eax,EXPORT_SYMBOL(tree_By8)
 		mov    0x8(%esp),%edx
 		mov    %ebp,%eax
 		call   triangle_route_do_unkn6
@@ -86504,24 +86528,24 @@ ma_triangle_route_3:	/* 0x085F18 */
 		push   %edx
 		push   $fwd_path
 		push   %eax
-		mov    tree_By8,%ecx
-		mov    tree_Bx8,%ebx
-		push   $route_bak
-		mov    tree_Ay8,%edx
-		mov    tree_Ax8,%eax
+		mov    EXPORT_SYMBOL(tree_By8),%ecx
+		mov    EXPORT_SYMBOL(tree_Bx8),%ebx
+		push   $EXPORT_SYMBOL(route_bak)
+		mov    EXPORT_SYMBOL(tree_Ay8),%edx
+		mov    EXPORT_SYMBOL(tree_Ax8),%eax
 		call   route_to_path
 		cmp    $0xffffffff,%eax
 		je     jump_86061
-		mov    tree_Ax8,%ebx
-		mov    tree_Ay8,%edx
-		mov    tree_Bx8,%eax
+		mov    EXPORT_SYMBOL(tree_Ax8),%ebx
+		mov    EXPORT_SYMBOL(tree_Ay8),%edx
+		mov    EXPORT_SYMBOL(tree_Bx8),%eax
 		mov    %edi,%ecx
-		mov    %eax,tree_Ax8
-		mov    %ebx,tree_Bx8
-		mov    tree_By8,%eax
+		mov    %eax,EXPORT_SYMBOL(tree_Ax8)
+		mov    %ebx,EXPORT_SYMBOL(tree_Bx8)
+		mov    EXPORT_SYMBOL(tree_By8),%eax
 		mov    %esi,%ebx
-		mov    %eax,tree_Ay8
-		mov    %edx,tree_By8
+		mov    %eax,EXPORT_SYMBOL(tree_Ay8)
+		mov    %edx,EXPORT_SYMBOL(tree_By8)
 		mov    0x8(%esp),%eax
 		mov    %ebp,%edx
 		call   triangle_route_do_unkn5
@@ -86535,11 +86559,11 @@ ma_triangle_route_3:	/* 0x085F18 */
 		push   %edx
 		push   $fwd_path
 		push   %eax
-		mov    tree_By8,%ecx
-		mov    tree_Bx8,%ebx
+		mov    EXPORT_SYMBOL(tree_By8),%ecx
+		mov    EXPORT_SYMBOL(tree_Bx8),%ebx
 		push   %esi
-		mov    tree_Ay8,%edx
-		mov    tree_Ax8,%eax
+		mov    EXPORT_SYMBOL(tree_Ay8),%edx
+		mov    EXPORT_SYMBOL(tree_Ax8),%eax
 		call   route_to_path
 		cmp    $0xffffffff,%eax
 		je     jump_86061
@@ -86561,7 +86585,7 @@ ma_triangle_route_3:	/* 0x085F18 */
 		lea    0x0(,%ecx,4),%eax
 	jump_8604a:
 		add    $0x4,%edx
-		mov    route_bak(%eax),%ebx
+		mov    EXPORT_SYMBOL(route_bak)(%eax),%ebx
 		sub    $0x4,%eax
 		mov    %ebx,-0x4(%edx)
 		test   %eax,%eax
@@ -86586,16 +86610,16 @@ ma_triangle_route_4:	/* 0x086068 */
 		mov    %eax,%esi
 		mov    %ebx,%edi
 		mov    %edx,%eax
-		mov    tree_Ax8,%ebx
-		mov    tree_Bx8,%edx
-		mov    tree_Ay8,%ebp
-		mov    %edx,tree_Ax8
-		mov    %ebx,tree_Bx8
-		mov    tree_By8,%edx
-		mov    $route_bak,%ebx
-		mov    %edx,tree_Ay8
+		mov    EXPORT_SYMBOL(tree_Ax8),%ebx
+		mov    EXPORT_SYMBOL(tree_Bx8),%edx
+		mov    EXPORT_SYMBOL(tree_Ay8),%ebp
+		mov    %edx,EXPORT_SYMBOL(tree_Ax8)
+		mov    %ebx,EXPORT_SYMBOL(tree_Bx8)
+		mov    EXPORT_SYMBOL(tree_By8),%edx
+		mov    $EXPORT_SYMBOL(route_bak),%ebx
+		mov    %edx,EXPORT_SYMBOL(tree_Ay8)
 		mov    %esi,%edx
-		mov    %ebp,tree_By8
+		mov    %ebp,EXPORT_SYMBOL(tree_By8)
 		call   triangle_route_do_unkn7
 		mov    %eax,%esi
 		mov    %eax,%ebp
@@ -86605,29 +86629,29 @@ ma_triangle_route_4:	/* 0x086068 */
 		push   %eax
 		push   $fwd_path
 		push   %esi
-		mov    tree_By8,%ecx
-		mov    tree_Bx8,%ebx
-		push   $route_bak
-		mov    tree_Ay8,%edx
-		mov    tree_Ax8,%eax
+		mov    EXPORT_SYMBOL(tree_By8),%ecx
+		mov    EXPORT_SYMBOL(tree_Bx8),%ebx
+		push   $EXPORT_SYMBOL(route_bak)
+		mov    EXPORT_SYMBOL(tree_Ay8),%edx
+		mov    EXPORT_SYMBOL(tree_Ax8),%eax
 		call   route_to_path
 		cmp    $0xffffffff,%eax
 		je     jump_8613c
-		mov    tree_Ax8,%eax
-		mov    tree_Bx8,%edx
-		mov    tree_Ay8,%ebx
-		mov    %edx,tree_Ax8
-		mov    tree_By8,%edx
-		mov    %eax,tree_Bx8
-		mov    %edx,tree_Ay8
-		mov    %ebx,tree_By8
+		mov    EXPORT_SYMBOL(tree_Ax8),%eax
+		mov    EXPORT_SYMBOL(tree_Bx8),%edx
+		mov    EXPORT_SYMBOL(tree_Ay8),%ebx
+		mov    %edx,EXPORT_SYMBOL(tree_Ax8)
+		mov    EXPORT_SYMBOL(tree_By8),%edx
+		mov    %eax,EXPORT_SYMBOL(tree_Bx8)
+		mov    %edx,EXPORT_SYMBOL(tree_Ay8)
+		mov    %ebx,EXPORT_SYMBOL(tree_By8)
 		test   %esi,%esi
 		jl     jump_8613a
 		mov    %edi,%edx
 		lea    0x0(,%esi,4),%eax
 	jump_86127:
 		add    $0x4,%edx
-		mov    route_bak(%eax),%ebx
+		mov    EXPORT_SYMBOL(route_bak)(%eax),%ebx
 		sub    $0x4,%eax
 		mov    %ebx,-0x4(%edx)
 		test   %eax,%eax
@@ -87590,25 +87614,25 @@ path_init8_thing:	/* 0x086E0C */
 		xor    %eax,%eax
 		call   ac_navi_onscreen_debug
 		mov    0x1c(%esp),%eax
-		mov    %edx,tree_Ax8
+		mov    %edx,EXPORT_SYMBOL(tree_Ax8)
 		movl   $0x0,0x10(%esi)
-		mov    %ebx,tree_Ay8
+		mov    %ebx,EXPORT_SYMBOL(tree_Ay8)
 		mov    %edx,(%esi)
-		mov    %ecx,tree_Bx8
+		mov    %ecx,EXPORT_SYMBOL(tree_Bx8)
 		mov    %ebx,0x4(%esi)
 		mov    $0xffffffff,%edx
-		mov    %eax,tree_By8
+		mov    %eax,EXPORT_SYMBOL(tree_By8)
 		mov    %eax,0xc(%esi)
-		mov    %edx,tree_routelen
+		mov    %edx,EXPORT_SYMBOL(tree_routelen)
 		mov    %ebp,%eax
 		mov    %ebx,%edx
 		mov    %ecx,0x8(%esi)
 		call   ac_triangle_findSE8
 		mov    0x1c(%esp),%edx
-		mov    %eax,tree_triA
+		mov    %eax,EXPORT_SYMBOL(tree_triA)
 		mov    %ecx,%eax
 		call   ac_triangle_findSE8
-		mov    tree_triA,%ebx
+		mov    EXPORT_SYMBOL(tree_triA),%ebx
 		# Fix for invalid mem access - bail out if result is negative (-1 means error)
 		test   %ebx, %ebx
 		jns    jump_86e7a
@@ -87619,25 +87643,25 @@ jump_86e7a:
 		shl    $0x4,%ebx
 		mov    0xb(%edx,%ebx,1),%ebx
 		sar    $0x18,%ebx
-		mov    %ebx,tree_altA
+		mov    %ebx,EXPORT_SYMBOL(tree_altA)
 		mov    %eax,%ebx
 		shl    $0x4,%ebx
 		mov    0xb(%edx,%ebx,1),%edx
-		mov    %eax,tree_triB
+		mov    %eax,EXPORT_SYMBOL(tree_triB)
 		sar    $0x18,%edx
-		mov    tree_triA,%ebx
-		mov    %edx,tree_altB
+		mov    EXPORT_SYMBOL(tree_triA),%ebx
+		mov    %edx,EXPORT_SYMBOL(tree_altB)
 		cmp    $0xffffffff,%ebx
 		je     jump_86ef8
 		cmp    $0xffffffff,%eax
 		je     jump_86ef8
-		mov    $tree_routecost,%ecx
+		mov    $EXPORT_SYMBOL(tree_routecost),%ecx
 		mov    %ebx,0x4(%esp)
 		mov    %eax,%edx
-		mov    $tree_route,%ebx
+		mov    $EXPORT_SYMBOL(tree_route),%ebx
 		mov    0x4(%esp),%eax
 		call   ma_triangle_route_3
-		mov    %eax,tree_routelen
+		mov    %eax,EXPORT_SYMBOL(tree_routelen)
 		cmp    $0xffffffff,%eax
 		je     jump_86ef8
 		mov    %esp,%edx
@@ -87646,7 +87670,7 @@ jump_86e7a:
 		push   %eax
 		mov    0x28(%esp),%ecx
 		mov    %edi,%ebx
-		push   $tree_route
+		push   $EXPORT_SYMBOL(tree_route)
 		mov    0x18(%esp),%edx
 		mov    %ebp,%eax
 		call   route_to_path
@@ -87683,26 +87707,26 @@ path_init8_wide:
 		add    $0x18,%esp
 		xor    %eax,%eax
 		call   ac_navi_onscreen_debug
-		mov    %ebx,tree_Ax8
+		mov    %ebx,EXPORT_SYMBOL(tree_Ax8)
 		movl   $0x0,0x10(%ebp)
-		mov    %esi,tree_Ay8
+		mov    %esi,EXPORT_SYMBOL(tree_Ay8)
 		mov    %ebx,0x0(%ebp)
-		mov    %ecx,tree_Bx8
+		mov    %ecx,EXPORT_SYMBOL(tree_Bx8)
 		mov    %esi,0x4(%ebp)
-		mov    %edx,tree_By8
+		mov    %edx,EXPORT_SYMBOL(tree_By8)
 		mov    %ecx,0x8(%ebp)
 		mov    %ebx,%eax
 		mov    %edx,0xc(%ebp)
 		mov    $0xffffffff,%ecx
 		mov    %esi,%edx
-		mov    %ecx,tree_routelen
+		mov    %ecx,EXPORT_SYMBOL(tree_routelen)
 		call   ac_triangle_findSE8
 		mov    0x5c(%esp),%edx
-		mov    %eax,tree_triA
+		mov    %eax,EXPORT_SYMBOL(tree_triA)
 		mov    %edi,%eax
 		call   ac_triangle_findSE8
-		mov    tree_triA,%edx
-		mov    %eax,tree_triB
+		mov    EXPORT_SYMBOL(tree_triA),%edx
+		mov    %eax,EXPORT_SYMBOL(tree_triB)
 		test   %edx,%edx
 		jl     jump_8701e
 		test   %eax,%eax
@@ -87712,24 +87736,24 @@ path_init8_wide:
 		shl    $0x4,%ebx
 		mov    0xb(%edx,%ebx,1),%ebx
 		sar    $0x18,%ebx
-		mov    %ebx,tree_altA
+		mov    %ebx,EXPORT_SYMBOL(tree_altA)
 		mov    %eax,%ebx
 		shl    $0x4,%ebx
 		mov    0xb(%edx,%ebx,1),%edx
 		sar    $0x18,%edx
-		mov    tree_triA,%ebx
-		mov    %edx,tree_altB
+		mov    EXPORT_SYMBOL(tree_triA),%ebx
+		mov    %edx,EXPORT_SYMBOL(tree_altB)
 		cmp    %ecx,%ebx
 		je     jump_8701e
 		cmp    %ecx,%eax
 		je     jump_8701e
-		mov    $tree_routecost,%ecx
+		mov    $EXPORT_SYMBOL(tree_routecost),%ecx
 		mov    %ebx,0x44(%esp)
 		mov    %eax,%edx
-		mov    $tree_route,%ebx
+		mov    $EXPORT_SYMBOL(tree_route),%ebx
 		mov    0x44(%esp),%eax
 		call   ma_triangle_route
-		mov    %eax,tree_routelen
+		mov    %eax,EXPORT_SYMBOL(tree_routelen)
 		cmp    $0xffffffff,%eax
 		je     jump_8701e
 		lea    0x40(%esp),%edx
@@ -87738,7 +87762,7 @@ path_init8_wide:
 		push   %eax
 		mov    0x68(%esp),%ecx
 		mov    %edi,%ebx
-		push   $tree_route
+		push   $EXPORT_SYMBOL(tree_route)
 		mov    %esi,%edx
 		mov    0x58(%esp),%eax
 		call   route_to_path
@@ -87762,49 +87786,49 @@ path_init8_tank:	/* 0x087028 */
 		mov    %edx,%ebp
 		mov    %ebx,0x8(%esp)
 		mov    %ecx,%edi
-		mov    %edx,tree_Ax8
+		mov    %edx,EXPORT_SYMBOL(tree_Ax8)
 		mov    %edx,(%eax)
-		mov    %ebx,tree_Ay8
+		mov    %ebx,EXPORT_SYMBOL(tree_Ay8)
 		mov    %ebx,0x4(%eax)
-		mov    %ecx,tree_Bx8
+		mov    %ecx,EXPORT_SYMBOL(tree_Bx8)
 		mov    %ecx,0x8(%eax)
 		mov    0x1c(%esp),%eax
 		mov    $0xffffffff,%edx
-		mov    %eax,tree_By8
-		mov    %edx,tree_routelen
+		mov    %eax,EXPORT_SYMBOL(tree_By8)
+		mov    %edx,EXPORT_SYMBOL(tree_routelen)
 		mov    %eax,0xc(%esi)
 		mov    %ebx,%edx
 		mov    %ebp,%eax
 		movl   $0x0,0x10(%esi)
 		call   ac_triangle_findSE8
 		mov    0x1c(%esp),%edx
-		mov    %eax,tree_triA
+		mov    %eax,EXPORT_SYMBOL(tree_triA)
 		mov    %ecx,%eax
 		call   ac_triangle_findSE8
-		mov    tree_triA,%ebx
+		mov    EXPORT_SYMBOL(tree_triA),%ebx
 		mov    EXPORT_SYMBOL(triangulation)+0x20,%edx
 		shl    $0x4,%ebx
 		mov    0xb(%edx,%ebx,1),%ebx
 		sar    $0x18,%ebx
-		mov    %ebx,tree_altA
+		mov    %ebx,EXPORT_SYMBOL(tree_altA)
 		mov    %eax,%ebx
 		shl    $0x4,%ebx
 		mov    0xb(%edx,%ebx,1),%edx
-		mov    %eax,tree_triB
+		mov    %eax,EXPORT_SYMBOL(tree_triB)
 		sar    $0x18,%edx
-		mov    tree_triA,%ebx
-		mov    %edx,tree_altB
+		mov    EXPORT_SYMBOL(tree_triA),%ebx
+		mov    %edx,EXPORT_SYMBOL(tree_altB)
 		cmp    $0xffffffff,%ebx
 		je     jump_8710d
 		cmp    $0xffffffff,%eax
 		je     jump_8710d
-		mov    $tree_routecost,%ecx
+		mov    $EXPORT_SYMBOL(tree_routecost),%ecx
 		mov    %ebx,0x4(%esp)
 		mov    %eax,%edx
-		mov    $tree_route,%ebx
+		mov    $EXPORT_SYMBOL(tree_route),%ebx
 		mov    0x4(%esp),%eax
 		call   ma_triangle_route_5
-		mov    %eax,tree_routelen
+		mov    %eax,EXPORT_SYMBOL(tree_routelen)
 		cmp    $0xffffffff,%eax
 		je     jump_8710d
 		mov    %esp,%edx
@@ -87813,7 +87837,7 @@ path_init8_tank:	/* 0x087028 */
 		push   %eax
 		mov    0x28(%esp),%ecx
 		mov    %edi,%ebx
-		push   $tree_route
+		push   $EXPORT_SYMBOL(tree_route)
 		mov    0x18(%esp),%edx
 		mov    %ebp,%eax
 		call   route_to_path
@@ -87840,48 +87864,48 @@ GLOBAL_FUNC(ASM_path_init8_unkn3)	/* 0x087118 */
 		xor    %eax,%eax
 		call   ac_navi_onscreen_debug
 		mov    0x1c(%esp),%eax
-		mov    %edx,tree_Ax8
+		mov    %edx,EXPORT_SYMBOL(tree_Ax8)
 		movl   $0x0,0x10(%esi)
-		mov    %ebx,tree_Ay8
+		mov    %ebx,EXPORT_SYMBOL(tree_Ay8)
 		mov    %edx,(%esi)
-		mov    %ecx,tree_Bx8
+		mov    %ecx,EXPORT_SYMBOL(tree_Bx8)
 		mov    %ebx,0x4(%esi)
 		mov    $0xffffffff,%edx
-		mov    %eax,tree_By8
+		mov    %eax,EXPORT_SYMBOL(tree_By8)
 		mov    %eax,0xc(%esi)
-		mov    %edx,tree_routelen
+		mov    %edx,EXPORT_SYMBOL(tree_routelen)
 		mov    %ebp,%eax
 		mov    %ebx,%edx
 		mov    %ecx,0x8(%esi)
 		call   ac_triangle_findSE8
 		mov    0x1c(%esp),%edx
-		mov    %eax,tree_triA
+		mov    %eax,EXPORT_SYMBOL(tree_triA)
 		mov    %ecx,%eax
 		call   ac_triangle_findSE8
-		mov    tree_triA,%ebx
+		mov    EXPORT_SYMBOL(tree_triA),%ebx
 		mov    EXPORT_SYMBOL(triangulation)+0x20,%edx
 		shl    $0x4,%ebx
 		mov    0xb(%edx,%ebx,1),%ebx
 		sar    $0x18,%ebx
-		mov    %ebx,tree_altA
+		mov    %ebx,EXPORT_SYMBOL(tree_altA)
 		mov    %eax,%ebx
 		shl    $0x4,%ebx
 		mov    0xb(%edx,%ebx,1),%edx
-		mov    %eax,tree_triB
+		mov    %eax,EXPORT_SYMBOL(tree_triB)
 		sar    $0x18,%edx
-		mov    tree_triA,%ebx
-		mov    %edx,tree_altB
+		mov    EXPORT_SYMBOL(tree_triA),%ebx
+		mov    %edx,EXPORT_SYMBOL(tree_altB)
 		cmp    $0xffffffff,%ebx
 		je     jump_87204
 		cmp    $0xffffffff,%eax
 		je     jump_87204
-		mov    $tree_routecost,%ecx
+		mov    $EXPORT_SYMBOL(tree_routecost),%ecx
 		mov    %ebx,0x4(%esp)
 		mov    %eax,%edx
-		mov    $tree_route,%ebx
+		mov    $EXPORT_SYMBOL(tree_route),%ebx
 		mov    0x4(%esp),%eax
 		call   ma_triangle_route_4
-		mov    %eax,tree_routelen
+		mov    %eax,EXPORT_SYMBOL(tree_routelen)
 		cmp    $0xffffffff,%eax
 		je     jump_87204
 		mov    %esp,%edx
@@ -87890,7 +87914,7 @@ GLOBAL_FUNC(ASM_path_init8_unkn3)	/* 0x087118 */
 		push   %eax
 		mov    0x28(%esp),%ecx
 		mov    %edi,%ebx
-		push   $tree_route
+		push   $EXPORT_SYMBOL(tree_route)
 		mov    0x18(%esp),%edx
 		mov    %ebp,%eax
 		call   route_to_path
@@ -87919,17 +87943,17 @@ tri_path_init8:	/* 0x08723C */
 		mov    $0xffffffff,%edx
 		call   ac_navi_onscreen_debug
 		mov    0x1c(%esp),%eax
-		mov    %ecx,tree_Ax8
+		mov    %ecx,EXPORT_SYMBOL(tree_Ax8)
 		mov    %eax,0x4(%ebx)
 		mov    0x24(%esp),%eax
-		mov    %ebp,tree_Bx8
+		mov    %ebp,EXPORT_SYMBOL(tree_Bx8)
 		mov    %eax,0xc(%ebx)
 		mov    0x1c(%esp),%eax
-		mov    %edx,tree_routelen
-		mov    %eax,tree_Ay8
+		mov    %edx,EXPORT_SYMBOL(tree_routelen)
+		mov    %eax,EXPORT_SYMBOL(tree_Ay8)
 		mov    0x24(%esp),%eax
 		movl   $0x0,0x10(%ebx)
-		mov    %eax,tree_By8
+		mov    %eax,EXPORT_SYMBOL(tree_By8)
 		mov    0x2(%esp),%eax
 		mov    %ecx,(%ebx)
 		sar    $0x10,%eax
@@ -87942,7 +87966,7 @@ tri_path_init8:	/* 0x08723C */
 	jump_872b4:
 		mov    0x6(%esp),%edx
 		sar    $0x10,%edx
-		mov    %eax,tree_triA
+		mov    %eax,EXPORT_SYMBOL(tree_triA)
 		cmp    $0xffffffff,%edx
 		jne    jump_872d2
 		mov    0x24(%esp),%edx
@@ -87953,28 +87977,28 @@ tri_path_init8:	/* 0x08723C */
 		je     jump_8734d
 		mov    %eax,%edx
 	jump_872d2:
-		mov    tree_triA,%ebx
+		mov    EXPORT_SYMBOL(tree_triA),%ebx
 		mov    EXPORT_SYMBOL(triangulation)+0x20,%eax # triangulation[0].Triangles
 		shl    $0x4,%ebx
 		mov    0xb(%ebx,%eax,1),%ebx
 		sar    $0x18,%ebx
-		mov    %ebx,tree_altA
+		mov    %ebx,EXPORT_SYMBOL(tree_altA)
 		mov    %edx,%ebx
 		shl    $0x4,%ebx
 		mov    0xb(%ebx,%eax,1),%eax
-		mov    %edx,tree_triB
+		mov    %edx,EXPORT_SYMBOL(tree_triB)
 		sar    $0x18,%eax
-		mov    tree_triA,%ebx
-		mov    %eax,tree_altB
+		mov    EXPORT_SYMBOL(tree_triA),%ebx
+		mov    %eax,EXPORT_SYMBOL(tree_altB)
 		cmp    $0xffffffff,%ebx
 		je     jump_8734d
 		cmp    $0xffffffff,%edx
 		je     jump_8734d
-		mov    $tree_routecost,%ecx
+		mov    $EXPORT_SYMBOL(tree_routecost),%ecx
 		mov    %ebx,%eax
-		mov    $tree_route,%ebx
+		mov    $EXPORT_SYMBOL(tree_route),%ebx
 		call   ma_triangle_route_3
-		mov    %eax,tree_routelen
+		mov    %eax,EXPORT_SYMBOL(tree_routelen)
 		cmp    $0xffffffff,%eax
 		je     jump_8734d
 		mov    %esp,%edx
@@ -87983,7 +88007,7 @@ tri_path_init8:	/* 0x08723C */
 		push   %eax
 		mov    0x30(%esp),%ecx
 		mov    %ebp,%ebx
-		push   $tree_route
+		push   $EXPORT_SYMBOL(tree_route)
 		mov    0x2c(%esp),%edx
 		mov    %edi,%eax
 		call   route_to_path
@@ -131409,9 +131433,8 @@ paQdataSavegam_5:	/* 0x15330C */
 paQdataSavegam_6:	/* 0x153310 */
 		.long   aQdataSavegam_6
 
-master_glare:	/* 0x153774 */
+GLOBAL (master_glare)	/* 0x153774 */
 		.byte	0x0
-data_153775:
 		.ascii  "\x01\x01\x02\x03\x01\x04\x02\x06"
 		.ascii  "\x02\x00\x00\x08\x02\x0a\x02\x0c"
 		.ascii  "\x04\x10\x02\x12\x01\x13\x02\x15"
@@ -132660,92 +132683,7 @@ GLOBAL (triangulation_initied)	/* 0x1AAE38 */
 		.long	0x0
 data_1aae3c:
 		.fill   0xc
-/* long Ex[]
- */
-GLOBAL (Ex)	/* 0x1AAE48 */
-		.long	0x0
-		.fill   0x18c
-/* long Ey[]
- */
-GLOBAL (Ey)	/* 0x1AAFD8 */
-		.long	0x0
-		.fill   0x18c
-/* long ixE;
- */
-GLOBAL (ixE)
-		.long	0x0
-GLOBAL (thin_wall_x1)	/* 0x1AB16C */
-		.long	0x0
-GLOBAL (thin_wall_y1)	/* 0x1AB170 */
-		.long	0x0
-GLOBAL (thin_wall_x2)	/* 0x1AB174 */
-		.long	0x0
-GLOBAL (thin_wall_y2)	/* 0x1AB178 */
-		.long	0x0
-/* long tree_dad[8000]
- */
-tree_dad:	/* 0x1AB17C */
-		.fill   0x7d00
-/* long tree_val[8000]
- */
-tree_val:	/* 0x1B2E7C */
-		.fill   0x7d00
-/* uint8_t routeTags[8000]
- */
-GLOBAL (routeTags)
-		.fill   0x1f40
-/* long tree_Ax8;
- */
-tree_Ax8:
-		.long	0x0
-/* long tree_Ay8;
- */
-tree_Ay8:
-		.long	0x0
-/* long tree_Bx8;
- */
-tree_Bx8:
-		.long	0x0
-/* long tree_By8;
- */
-tree_By8:
-		.long	0x0
-/* long tree_altA;
- */
-tree_altA:
-		.long	0x0
-/* long tree_altB;
- */
-tree_altB:
-		.long	0x0
-/* long tree_triA;
- */
-tree_triA:
-		.long	0x0
-/* long tree_triB;
- */
-tree_triB:
-		.long	0x0
-/* long tree_CentreDest;
- */
-tree_CentreDest:
-		.long	0x0
-/* long tree_routelen;
- */
-tree_routelen:
-		.long	0x0
-/* long tree_routecost;
- */
-tree_routecost:
-		.long	0x0
-/* long tree_route[3000];
- */
-tree_route:
-		.fill   0x2ee0
-/* long route_bak[3000];
- */
-route_bak:
-		.fill   0x2ee0
+
 /* Path fwd_path;
  */
 fwd_path:
