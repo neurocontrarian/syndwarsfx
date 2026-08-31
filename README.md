@@ -381,7 +381,7 @@ folders with data for 64-bit building.
 Go to the `syndwarsfx` folder, and generate build scripts from templates using autotools:
 
 ```
-autoreconf -ivf --include=/mingw32/share/aclocal/
+PATH="/mingw32/bin:$PATH" autoreconf -ivf --include=/mingw32/share/aclocal/
 ```
 
 Next, proceed with the build steps; we will do that in a separate folder.
