@@ -9679,63 +9679,6 @@ calc_object_height:	/* 0x04230C */
 
 
 /*----------------------------------------------------------------*/
-draw_purple_rect:	/* 0x042574 */
-/*----------------------------------------------------------------*/
-		push   %esi
-		push   %edi
-		push   %ebp
-		sub    $0x4,%esp
-		mov    %eax,%edi
-		mov    %edx,%esi
-		mov    EXPORT_SYMBOL(lbDisplay)+96,%ah # lbDisplay__DrawFlags
-		and    $0xef,%ah
-		lea    (%edi,%ebx,1),%ebp
-		mov    %ah,EXPORT_SYMBOL(lbDisplay)+96 # lbDisplay__DrawFlags
-		lea    (%edx,%ecx,1),%eax
-		sub    $0x2,%ebp
-		sub    $0x2,%eax
-		mov    0x14(%esp),%dl
-		mov    %eax,(%esp)
-		test   %dl,%dl
-		jne    jump_425c2
-		push   $0x10
-		mov    %esi,%edx
-		mov    %edi,%eax
-		call   ac_LbDrawBox
-		push   $0xe
-		mov    %esi,%ecx
-		mov    %ebp,%ebx
-		mov    %esi,%edx
-		mov    %edi,%eax
-		call   ac_LbDrawLine
-		push   $0xe
-		jmp    jump_425de
-	jump_425c2:
-		push   $0xe
-		mov    %esi,%edx
-		mov    %edi,%eax
-		call   ac_LbDrawBox
-		push   $0xc
-		mov    %esi,%ecx
-		mov    %ebp,%ebx
-		mov    %esi,%edx
-		mov    %edi,%eax
-		call   ac_LbDrawLine
-		push   $0xc
-	jump_425de:
-		mov    0x4(%esp),%ecx
-		mov    %edi,%ebx
-		mov    %esi,%edx
-		mov    %edi,%eax
-		call   ac_LbDrawLine
-		add    $0x4,%esp
-		pop    %ebp
-		pop    %edi
-		pop    %esi
-		ret    $0x4
-
-
-/*----------------------------------------------------------------*/
 GLOBAL_FUNC(ASM_point_unkn_func_03)	/* 0x042864 */
 /*----------------------------------------------------------------*/
 		push   %ebx

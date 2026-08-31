@@ -73,6 +73,7 @@
 #include "ssampply.h"
 #include "matrix.h"
 #include "dos.h"
+#include "drawshape.h"
 #include "drawtext.h"
 #include "enginbckt.h"
 #include "engindrwlstm_wrp.h"
@@ -6665,25 +6666,6 @@ void draw_game(void)
         LOGERR("DisplayMode %d empty\n", (int)ingame.DisplayMode);
         break;
     }
-}
-
-/** Draws simple purple rect directly, without drawlists.
- */
-void draw_purple_rect(int x, int y, int w, int h, ubyte active)
-{
-    TbPixel col1, col2;
-
-    lbDisplay.DrawFlags &= ~Lb_SPRITE_OUTLINE;
-    if (active) {
-        col1 = 0x0E;
-        col2 = 0x0C;
-    } else {
-        col1 = 0x10;
-        col2 = 0x0E;
-    }
-    LbDrawBox(x, y, w, h, col1);
-    LbDrawLine(x, y, x + w - 2, y, col2);
-    LbDrawLine(x, y, x, y + h - 2, col2);
 }
 
 ubyte critical_action_input(void)
