@@ -305,7 +305,7 @@ void lvdraw_do_objects(int cor_z_beg, uint ranges_x_len, struct Range *ranges_x)
             if (objtng > 0)
             {
                 p_objtng = &things[objtng];
-                if (p_objtng->U.UObject.DrawTurn != gameturn)
+                if (p_objtng->U.UObject.DrawTurn != draw_frame)
                     draw_thing_object(p_objtng);
             }
         }
