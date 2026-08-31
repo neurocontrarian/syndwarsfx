@@ -13,6 +13,7 @@
 #include "display.h"
 #include "guitext.h"
 #include "game.h"
+#include "game_speed.h"
 #include "game_data.h"
 #include "game_options.h"
 #include "game_save.h"
@@ -45,6 +46,7 @@ enum ConfigCmd {
     ConfCmd_ResMenu,
     ConfCmd_ResFMVVidHi,
     ConfCmd_ResFMVidLo,
+    ConfCmd_FramesPerTurn,
 };
 
 const struct TbNamedEnum conf_file_cmnds[] = {
@@ -63,6 +65,7 @@ const struct TbNamedEnum conf_file_cmnds[] = {
   {"ResMenu",	ConfCmd_ResMenu},
   {"ResFMVVidHi",ConfCmd_ResFMVVidHi},
   {"ResFMVidLo",ConfCmd_ResFMVidLo},
+  {"FramesPerTurn",ConfCmd_FramesPerTurn},
   {NULL,		0},
 };
 
@@ -526,6 +529,22 @@ void read_conf_file(void)
                 break;
             }
             break;
+        case ConfCmd_FramesPerTurn:
+            {
+                long nframes;
+
+                if (LbIniValueGetLongInt(&parser, &nframes) <= 0) {
+                    CONFWRNLOG("Couldn't read \"%s\" command parameter.", COMMAND_TEXT(cmd_num));
+                    break;
+                }
+                if ((nframes < 1) || (nframes > 8)) {
+                    CONFWRNLOG("Value of \"%s\" is outside of the 1..8 range.", COMMAND_TEXT(cmd_num));
+                    break;
+                }
+                render_frames_per_turn = nframes;
+                CONFDBGLOG("Frames per game turn set to %d", (int)nframes);
+            }
+            break;
         case 0: // comment
             break;
         case -1: // end of buffer
@@ -564,6 +583,7 @@ main (int argc, char **argv)
         return 1;
 
     read_conf_file();
+    render_frames_per_turn_init();
     setup_language_file_names();
 
     display_set_full_screen(cmdln_fullscreen);

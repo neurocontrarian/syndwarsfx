@@ -380,6 +380,11 @@ short panel_state_to_player_agent(ushort panstate)
     return -1;
 }
 
+/** How much faster the objective text scrolls than it did back when one drawn
+ * frame was one game turn. Four keeps the speed the game settled on at four
+ * frames per turn; raise it to scroll faster, lower it to slow it down. */
+#define SCANNER_TEXT_SCROLL_RATE 4
+
 void SCANNER_move_objective_info(int width, int height, int end_pos)
 {
     PlayerInfo *p_locplayer;
@@ -391,24 +396,34 @@ void SCANNER_move_objective_info(int width, int height, int end_pos)
           scanner_unkn370 = -20;
       if (end_pos > lbDisplay.PhysicalScreenWidth - 16)
           scanner_unkn370 = 10;
-      if (scanner_unkn370 > 0)
+      // The chat scroller counts frames, so it only advances on the frame
+      // which carries the turn forward; that keeps its original pace whatever
+      // the number of frames drawn per turn
+      if (frame_advances_state)
       {
-          scanner_unkn370--;
-          scanner_unkn3CC -= 1 * height / 9;
-      }
-      if (scanner_unkn370 < 0)
-      {
-          scanner_unkn370++;
-          scanner_unkn3CC += 1 * height / 9;
-          if (scanner_unkn3CC > 0)
-              scanner_unkn3CC = 0;
+          if (scanner_unkn370 > 0)
+          {
+              scanner_unkn370--;
+              scanner_unkn3CC -= 1 * height / 9;
+          }
+          if (scanner_unkn370 < 0)
+          {
+              scanner_unkn370++;
+              scanner_unkn3CC += 1 * height / 9;
+              if (scanner_unkn3CC > 0)
+                  scanner_unkn3CC = 0;
+          }
       }
     }
     else
     {
         if (end_pos < 0)
             scanner_unkn3CC = width;
-        scanner_unkn3CC -= 2 * height / 9;
+        // The step is divided by the number of frames drawn per turn, so the
+        // text keeps the same speed whatever that number is, while moving in
+        // smaller and more frequent steps when there are more frames.
+        scanner_unkn3CC -= SCANNER_TEXT_SCROLL_RATE * 2 * height
+          / (9 * render_frames_per_turn);
     }
 }
 
@@ -478,7 +493,10 @@ void draw_objective_info_text(int scr_x, int scr_y, int width, int height)
 
     LbScreenLoadGraphicsWindow(&bkpwnd);
 
-    SCANNER_move_objective_info(width, height, end_pos);
+    // Only on the frame which carries the turn forward, otherwise the text
+    // scrolls as many times faster as there are frames drawn per turn
+    if (frame_advances_state)
+        SCANNER_move_objective_info(width, height, end_pos);
 }
 
 void draw_players_chat(void)

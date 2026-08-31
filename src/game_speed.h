@@ -49,6 +49,28 @@ extern ushort fifties_per_gameturn;
  * turns per second. */
 extern ushort game_num_fps;
 
+/** Amount of frames drawn per game turn. A value of 1 means one drawn frame
+ * per game turn, which is the original behaviour. */
+extern ushort render_frames_per_turn;
+
+/** How many frames the turn being played is actually going to draw. Equal to
+ * render_frames_per_turn while the in-mission view is on screen, and 1
+ * everywhere else, so that menus and other screens keep a full length turn. */
+extern ushort render_frames_this_turn;
+
+void render_frames_per_turn_init(void);
+
+/** Starts a drawn frame: advances drawturn, and moves the animation clock by
+ * the share of the game turn this frame stands for. Frames are numbered from
+ * 0 within the turn; the last one lands the clock exactly on the next turn,
+ * so that a turn always adds up to one whatever the amount of frames. */
+void render_clock_next_frame(ushort frame, ushort nframes);
+
+/** Whether the frame being drawn is the one which also carries the game turn
+ * forward. False for the extra frames drawn within a turn, so that anything
+ * animated from within the drawing code keeps its original pace. */
+extern TbBool frame_advances_state;
+
 /**
  * Handles game speed control inputs.
  * @return Returns true if packet was created, false otherwise.

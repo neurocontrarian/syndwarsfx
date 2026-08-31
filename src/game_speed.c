@@ -19,8 +19,10 @@
 #include "game_speed.h"
 
 #include <assert.h>
+#include <stdlib.h>
 #include "bfkeybd.h"
 #include "bftime.h"
+#include "enginprops.h"
 #include "game.h"
 #include "keyboard.h"
 #include "swlog.h"
@@ -35,6 +37,51 @@ GameTurn drawturn = 1;
 ushort game_num_fps = 16;
 
 ushort fifties_per_gameturn = 3;
+
+ushort render_frames_per_turn = 1;
+
+ushort render_frames_this_turn = 1;
+
+void render_clock_next_frame(ushort frame, ushort nframes)
+{
+    ulong beg, end;
+
+    if (nframes < 1)
+        nframes = 1;
+    if (frame >= nframes)
+        frame = nframes - 1;
+
+    drawturn++;
+
+    // Kept as a difference of two divisions rather than a single step, so
+    // that the remainder is not lost and a turn adds up to exactly one
+    beg = (256 * (ulong)frame) / nframes;
+    end = (256 * (ulong)(frame + 1)) / nframes;
+    render_anim_subturn += end - beg;
+    while (render_anim_subturn >= 256) {
+        render_anim_subturn -= 256;
+        render_anim_turn++;
+    }
+}
+
+TbBool frame_advances_state = true;
+
+void render_frames_per_turn_init(void)
+{
+    const char *env;
+    int n;
+
+    env = getenv("SWFX_FRAMES_PER_TURN");
+    if (env == NULL)
+        return;
+    n = atoi(env);
+    if ((n < 1) || (n > 8)) {
+        LOGERR("SWFX_FRAMES_PER_TURN=%s outside of the 1..8 range, ignored", env);
+        return;
+    }
+    render_frames_per_turn = n;
+    LOGSYNC_F("drawing %d frames per game turn", n);
+}
 
 /******************************************************************************/
 
@@ -93,18 +140,43 @@ ubyte get_speed_control_inputs(void)
 void wait_next_gameturn(void)
 {
     static TbClockMSec last_loop_time = 0;
+    static ushort subframe = 0;
+    static ushort last_nframes = 1;
+
     TbClockMSec curr_time = LbTimerClock();
     TbClockMSec sleep_end;
+    TbClockMSec turn_len, period;
+    ushort nframes;
+
+    nframes = render_frames_this_turn;
+    if (nframes < 1)
+        nframes = 1;
+    // The pace changed, ie. a mission was left for a menu; restart the split
+    // so that the frames of a turn keep adding up to one turn
+    if (nframes != last_nframes) {
+        subframe = 0;
+        last_nframes = nframes;
+    }
+    turn_len = 1000/game_num_fps;
+    // Spread the turn over its frames without losing the division remainder,
+    // so that a turn still lasts exactly as long as it used to
+    period = (turn_len * (subframe + 1)) / nframes - (turn_len * subframe) / nframes;
+    subframe++;
+    if (subframe >= nframes)
+        subframe = 0;
+    if (period < 1)
+        period = 1;
 
     if (frameskip == 0)
-        sleep_end = last_loop_time + 1000/game_num_fps;
+        sleep_end = last_loop_time + period;
     else
         sleep_end = curr_time;
     // If we missed the normal sleep target (ie. there was a slowdown), reset the value and do not sleep
-    if ((sleep_end < curr_time) || (sleep_end > curr_time + 1000/game_num_fps)) {
+    if ((sleep_end < curr_time) || (sleep_end > curr_time + turn_len)) {
         LOGNO("missed FPS target, last frame time %ld too far from current %ld",
           (ulong)sleep_end, (ulong)curr_time);
         sleep_end = curr_time;
+        subframe = 0;
     }
     LbSleepUntil(sleep_end);
     last_loop_time = sleep_end;
