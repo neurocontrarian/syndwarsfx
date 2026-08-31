@@ -216,6 +216,12 @@ TbScreenCoord LbScreenHeight(void)
 TbResult LbScreenSetup(TbScreenMode mode, TbScreenCoord width, TbScreenCoord height,
     ubyte *palette)
 {
+    if ((width > MAX_SUPPORTED_SCREEN_WIDTH) || (height > MAX_SUPPORTED_SCREEN_HEIGHT)) {
+        LOGWARN("requested work screen size exceeds static limit, %dx%d > %dx%d",
+          (int)width, (int)height,
+          (int)MAX_SUPPORTED_SCREEN_WIDTH, (int)MAX_SUPPORTED_SCREEN_HEIGHT);
+    }
+
     return LbScreenSetupAnyMode(mode, width, height, palette);
 }
 
