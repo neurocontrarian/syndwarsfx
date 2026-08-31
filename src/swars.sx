@@ -617,7 +617,7 @@ GLOBAL_FUNC(ASM_unkn_truce_groups)	/* 0x010CA0 */
 		push   %ebp
 		sub    $0xb8,%esp
 		lea    0x8c(%esp),%edi
-		mov    $data_152e38,%esi
+		mov    $EXPORT_SYMBOL(dword_152E38),%esi
 		movsl  %ds:(%esi),%es:(%edi)
 		movsl  %ds:(%esi),%es:(%edi)
 		movsl  %ds:(%esi),%es:(%edi)
@@ -131355,7 +131355,7 @@ data_ea128:
 
 .data
 
-data_152e38:
+GLOBAL (dword_152E38)	/* 0x152E38 */
 		.ascii  "\xff\xff\xff\xff\xff\xff\xff\xff"
 		.ascii  "\xff\xff\xff\xff\xff\xff\xff\xff"
 		.ascii  "\xff\xff\xff\xff"

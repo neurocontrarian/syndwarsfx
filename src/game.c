@@ -222,6 +222,8 @@ ulong stored_level3d_inuse;
 extern int data_1c8428;
 const char *primvehobj_fname = "qdata/primveh.obj";
 
+extern s32 dword_152E38[5]; // = {-1, -1, -1, -1, -1,};
+
 extern short word_1C6E08;
 extern short word_1C6E0A;
 
@@ -2421,10 +2423,63 @@ void init_engine(void)
         :  :  : "eax" );
 }
 
+void net_player_colors_reassign(void)
+{
+    s32 npcolors[5];
+    ubyte incolors[8];
+    ushort plyr;
+    ushort incol_idx;
+
+    //TODO would probalny make more sense to memset with -1, as the source is never written to
+    LbMemoryCopy(npcolors, dword_152E38, sizeof(npcolors));
+    incolors[0] = colour_lookup[ColLU_GREEN];
+    incolors[1] = colour_lookup[ColLU_RED];
+    incolors[2] = colour_lookup[ColLU_WHITE];
+    incolors[3] = colour_lookup[ColLU_PINK];
+    incolors[4] = colour_lookup[ColLU_CYAN];
+    incolors[5] = colour_lookup[ColLU_YELLOW];
+    incolors[6] = colour_lookup[ColLU_GREYMD];
+    incolors[7] = colour_lookup[ColLU_BLACK];
+
+    incol_idx = 0;
+    for (plyr = 0; plyr < PLAYERS_LIMIT; plyr++)
+    {
+        ubyte v12;
+        TbPixel c;
+
+        if (((1 << plyr) & ingame.InNetGame_UNSURE) == 0)
+            continue;
+
+        v12 = byte_1C5C28[plyr];
+        if (v12 == 0)
+        {
+            c = incolors[incol_idx];
+            net_player_colours[plyr] = c;
+            incol_idx++;
+        }
+        else if (npcolors[v12] == -1)
+        {
+            c = incolors[incol_idx];
+            net_player_colours[plyr] = c;
+            npcolors[v12] = c;
+            incol_idx++;
+        }
+        else
+        {
+            c = npcolors[v12];
+            net_player_colours[plyr] = c;
+        }
+    }
+}
+
 void unkn_truce_groups(void)
 {
+#if 0
     asm volatile ("call ASM_unkn_truce_groups\n"
         :  :  : "eax" );
+#endif
+    unkn_truce_groups_sub1();
+    net_player_colors_reassign();
 }
 
 void blind_progress_game(ulong nturns)
