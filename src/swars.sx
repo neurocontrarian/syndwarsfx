@@ -130061,8 +130061,8 @@ GLOBAL_FUNC(ASM_net_grpaint_draw_op)	/* 0x0CCF28 */
 		movswl %si,%ecx
 		mov    0x24(%esp),%al
 		movswl %di,%ebx
-		mov    data_1ddbde(,%eax,2),%edx
-		mov    data_1ddbce(,%eax,2),%eax
+		mov    EXPORT_SYMBOL(word_1DDBE0)-0x2(,%eax,2),%edx
+		mov    EXPORT_SYMBOL(word_1DDBD0)-0x2(,%eax,2),%eax
 		sar    $0x10,%edx
 		sar    $0x10,%eax
 		call   ac_LbDrawLine
@@ -130077,8 +130077,8 @@ GLOBAL_FUNC(ASM_net_grpaint_draw_op)	/* 0x0CCF28 */
 	jump_cd009:
 		xor    %eax,%eax
 		mov    0x20(%esp),%al
-		mov    %di,data_1ddbd0(,%eax,2)
-		mov    %si,data_1ddbe0(,%eax,2)
+		mov    %di,EXPORT_SYMBOL(word_1DDBD0)(,%eax,2)
+		mov    %si,EXPORT_SYMBOL(word_1DDBE0)(,%eax,2)
 		add    $0x10,%esp
 		pop    %ebp
 		pop    %edi
@@ -133632,9 +133632,7 @@ data_1ddbcd:
 		.byte	0x0
 data_1ddbce:
 		.short  0x0
-data_1ddbd0:
-		.fill   0xe
-data_1ddbde:
-		.short  0x0
-data_1ddbe0:
+GLOBAL (word_1DDBD0)	/* 0x1DDBD0 */
+		.fill   0x10
+GLOBAL (word_1DDBE0)	/* 0x1DDBE0 */
 		.fill   0x10

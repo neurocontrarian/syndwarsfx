@@ -22,6 +22,7 @@
 
 #include "bffont.h"
 #include "bfkeybd.h"
+#include "bfline.h"
 #include "bfmemut.h"
 #include "bfscrcopy.h"
 #include "bfsprite.h"
@@ -92,6 +93,9 @@ extern char byte_1811E2[16];
 TbClockMSec sessionlist_last_update[MONITORED_SESSIONS_COUNT] = {0};
 extern ubyte byte_1C6D48;
 extern struct TbNetworkSessionList unkstruct04_arr[MONITORED_SESSIONS_COUNT];
+
+extern ushort word_1DDBD0[8];
+extern ushort word_1DDBE0[8];
 
 ubyte do_net_protocol_option(ubyte click);
 ubyte ac_do_net_unkn40(ubyte click);
@@ -984,12 +988,36 @@ void purple_unkn4_data_to_screen(void)
         lbDisplay.GraphicsScreenHeight);
 }
 
-void net_grpaint_draw_op(short scr_x2, short scr_y2, ubyte colno, sbyte op, ubyte a5)
+void net_grpaint_draw_op(short scr_x2, short scr_y2, ubyte colno, sbyte op, ubyte plyr)
 {
+#if 0
     asm volatile (
       "push %4\n"
       "call ASM_net_grpaint_draw_op\n"
-        : : "a" (scr_x2), "d" (scr_y2), "b" (colno), "c" (op), "g" (a5));
+        : : "a" (scr_x2), "d" (scr_y2), "b" (colno), "c" (op), "g" (plyr));
+#endif
+    struct ScreenBufBkp bkp;
+
+    switch (op)
+    {
+    case 0:
+        dword_1C6DE4[255 * scr_y2 + scr_x2] = byte_155170[colno];
+        break;
+    case 1:
+        screen_switch_to_custom_buffer(&bkp, dword_1C6DE4, 255, 96);
+        LbDrawLine(word_1DDBD0[plyr], word_1DDBE0[plyr],
+          scr_x2, scr_y2, byte_155170[colno]);
+        screen_load_backup_buffer(&bkp);
+        break;
+    case 2:
+        // no extra action
+        break;
+    default:
+        LOGERR("unexpected op=%d", (int)op);
+        break;
+    }
+    word_1DDBD0[plyr] = scr_x2;
+    word_1DDBE0[plyr] = scr_y2;
 }
 
 void net_grpaint_clear_op(void)
