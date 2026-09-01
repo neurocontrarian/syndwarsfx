@@ -211,6 +211,7 @@ enum VehWorkPlaceFlags {
 };
 
 struct Thing;
+struct unkn_mech_struc7;
 
 /** Stores configuration for a state of a vehicle.
  */
@@ -222,6 +223,10 @@ struct VehStateConfig
 
 #pragma pack()
 /******************************************************************************/
+
+extern struct unkn_mech_struc7 *unkn_mech_stct7; // = NULL;
+extern void *dword_177750;
+
 void init_mech(void);
 void mech_unkn_func_02(void);
 void mech_unkn_func_09(ThingIdx thing);

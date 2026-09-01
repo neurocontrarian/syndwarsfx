@@ -233,9 +233,6 @@ extern long data_1ddb68;
 
 extern ubyte debug_hud_collision;
 
-extern void *dword_177750;
-extern void *unkn_mech_arr7;
-
 extern long mech_unkn_dw_1DC880;
 extern long mech_unkn_dw_1DC884;
 extern long mech_unkn_dw_1DC888;

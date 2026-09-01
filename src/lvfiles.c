@@ -1602,9 +1602,9 @@ void load_mad_pc_buffer(ubyte *mad_ptr, long rdsize)
     }
 
     if (mad_ptr - (ubyte *)dword_177750 >= 100000)
-        unkn_mech_arr7 = mad_ptr;
+        unkn_mech_stct7 = (struct unkn_mech_struc7 *)mad_ptr;
     else
-        unkn_mech_arr7 = dword_177750 + 100000;
+        unkn_mech_stct7 = (struct unkn_mech_struc7 *)((ubyte *)dword_177750 + 100000);
 }
 
 TbResult load_map_dat(ushort mapno)
