@@ -400,8 +400,6 @@ void draw_frame_scaled_alpha(int scr_x, int scr_y, ushort frm,
     p_frm = &frame[frm];
     assert(p_frm < frame_end);
     lbSpriteReMapPtr = &pixmap.fade_table[256 * alpha];
-    //TODO would probably make more sense to set the ghost ptr somewhere during game setup
-    render_ghost = &pixmap.ghost_table[0*PALETTE_8b_COLORS];
 
     pos_x = 99999;
     pos_y = 99999;
