@@ -103,9 +103,10 @@ int shpoint_compute_coord_y(struct ShEnginePoint *p_sp, struct MyMapElement *p_m
     }
     else if ((p_mapel->Flags & 0x10) == 0)
     {
-        // The uniform rise and fall which map009 applies to every floor tile
-        // marked as floating is left out: only the water surface below moves.
         elcr_y = 8 * p_mapel->Alt;
+        if ((p_mapel->Flags & 0x40) != 0)
+            elcr_y += anim_between_turns(waft_table[render_anim_turn & 0x1F],
+              waft_table[(render_anim_turn + 1) & 0x1F]);
         p_sp->ReflShade = 0;
     }
     else

@@ -240,6 +240,9 @@ void draw_pers_e_graphic(struct Thing *p_thing,
     bri = byte_152EF0[p_thing->SubType] + intensity;
     br_inc = person_shield_glow_brightness(p_thing);
 
+    if ((render_floor_flags & RendFlrF_WobblyTerrain) != 0)
+        cor_dy += waft_between_turns(render_anim_turn) >> 3;
+
     transform_shpoint(&sp, cor_dx, 8 * cor_dy - 8 * engn_yc, cor_dz);
 
     scr_depth = sp.Depth - ((radius * overall_scale) >> 8);
@@ -765,6 +768,9 @@ int draw_rot_object(int cor_dx, int cor_dy, int cor_dz,
     // Matrix for anything other than rocket shall respect the allocated entries counter
     assert((p_thing->U.UObject.MatrixIndex < next_local_mat) || (p_thing->Type == TT_ROCKET));
 
+    if ((render_floor_flags & RendFlrF_WobblyTerrain) != 0)
+        cor_dy += waft_between_turns(render_anim_turn);
+
     object_points_clear_flags(point_object);
 
     compute_normals_light_ratio(point_object->OffsetX, point_object->OffsetY,
@@ -820,6 +826,9 @@ short draw_object_faces(int cor_dx, int cor_dy, int cor_dz,
     short faces_num;
 
     depth_shift = point_object->field_1E;
+
+    if ((point_object->field_1C & 0x0100) != 0 && ((doflags & DrwObjF_NoWobblyElevation) == 0))
+        cor_dy += waft_between_turns(render_anim_turn);
 
     bckt_max = 0;
 
