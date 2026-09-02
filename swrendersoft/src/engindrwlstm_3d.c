@@ -116,9 +116,6 @@ void enlist_draw_frame_graphic(int x, int y, int z, ushort frame,
     struct SortSprite *p_sspr;
     int scr_depth;
 
-    if ((render_floor_flags & RendFlrF_WobblyTerrain) != 0)
-        y += waft_between_turns(render_anim_turn) >> 3;
-
     transform_shpoint(&sp, x, 8 * y - 8 * engn_yc, z);
 
     scr_depth = sp.Depth - ((radius * overall_scale) >> 8) + depth_shift;
@@ -143,9 +140,6 @@ void enlist_draw_frame_graphic_scale(int x, int y, int z, ushort frame,
     struct ShEnginePoint sp;
     struct SortSprite *p_sspr;
     int scr_depth;
-
-    if ((render_floor_flags & RendFlrF_WobblyTerrain) != 0)
-        y += waft_between_turns(render_anim_turn) >> 3;
 
     transform_shpoint(&sp, x, 8 * y - 8 * engn_yc, z);
 
@@ -261,8 +255,6 @@ void enlist_draw_fire_flames(ushort flame_beg)
         cor_dy = p_flame->y - engn_yc;
         cor_dz = p_flame->z - engn_zc;
 
-        if ((render_floor_flags & RendFlrF_WobblyTerrain) != 0)
-            cor_dy += waft_between_turns(render_anim_turn);
 
         transform_shpoint(&sp, cor_dx, cor_dy - 8 * engn_yc, cor_dz);
 
@@ -412,9 +404,6 @@ void enlist_draw_number(int x, int y, int z, short scr_dx, short scr_dy,
     struct SortSprite *p_sspr;
     int scr_depth;
 
-    if ((render_floor_flags & RendFlrF_WobblyTerrain) != 0)
-        y += waft_between_turns(render_anim_turn) >> 3;
-
     transform_shpoint(&sp, x, 8 * y - 8 * engn_yc, z);
 
     scr_depth = sp.Depth - ((radius * overall_scale) >> 8);
@@ -439,9 +428,6 @@ void enlist_draw_text(int x, int y, int z, short scr_dx, short scr_dy,
     struct ShEnginePoint sp;
     struct SortSprite *p_sspr;
     int scr_depth;
-
-    if ((render_floor_flags & RendFlrF_WobblyTerrain) != 0)
-        y += waft_between_turns(render_anim_turn) >> 3;
 
     transform_shpoint(&sp, x, 8 * y - 8 * engn_yc, z);
 
