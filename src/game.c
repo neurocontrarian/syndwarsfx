@@ -1943,7 +1943,7 @@ static void camera_frame_begin(ushort frame)
     cam_frm_save_z = engn_zc;
     cam_frm_save_angle = engn_anglexz;
 
-    if (render_frames_per_turn <= 1)
+    if (render_frames_this_turn <= 1)
         return;
     if (ingame.DisplayMode != DpM_ENGINEPLY)
         return;
@@ -1955,8 +1955,8 @@ static void camera_frame_begin(ushort frame)
     // rotation for that turn.
     if ((abs(dx) <= CAM_FRM_JUMP_DIST) && (abs(dz) <= CAM_FRM_JUMP_DIST))
     {
-        engn_xc = cam_frm_prev_x + dx * (frame + 1) / render_frames_per_turn;
-        engn_zc = cam_frm_prev_z + dz * (frame + 1) / render_frames_per_turn;
+        engn_xc = cam_frm_prev_x + dx * (frame + 1) / render_frames_this_turn;
+        engn_zc = cam_frm_prev_z + dz * (frame + 1) / render_frames_this_turn;
     }
 
     // engn_anglexz is a free running accumulator, never masked anywhere in the
@@ -1968,7 +1968,7 @@ static void camera_frame_begin(ushort frame)
     if (labs(dangle) < CAM_FRM_ANGLE_FULL / 2)
     {
         engn_anglexz = cam_frm_prev_angle
-          + dangle * (frame + 1) / render_frames_per_turn;
+          + dangle * (frame + 1) / render_frames_this_turn;
         camera_update_angle_derived();
     }
 }
@@ -2096,9 +2096,9 @@ static void tng_frm_shift(ThingIdx index, long *p_x, long *p_y, long *p_z,
     p_saved->Z = *p_z;
     tng_frm_saved_count++;
 
-    *p_x = p_curr->X - dx * back / render_frames_per_turn;
-    *p_y = p_curr->Y - dy * back / render_frames_per_turn;
-    *p_z = p_curr->Z - dz * back / render_frames_per_turn;
+    *p_x = p_curr->X - dx * back / render_frames_this_turn;
+    *p_y = p_curr->Y - dy * back / render_frames_this_turn;
+    *p_z = p_curr->Z - dz * back / render_frames_this_turn;
 }
 
 /** Moves every active thing to where it should be for the given frame of the
@@ -2118,12 +2118,12 @@ static void things_frame_begin(ushort frame)
     ushort back;
 
     tng_frm_saved_count = 0;
-    if (render_frames_per_turn <= 1)
+    if (render_frames_this_turn <= 1)
         return;
     if (ingame.DisplayMode != DpM_ENGINEPLY)
         return;
     // How many frames short of the real position this frame stands
-    back = render_frames_per_turn - 1 - frame;
+    back = render_frames_this_turn - 1 - frame;
 
     remain = things_used;
     for (thing = things_used_head; thing > 0; thing = nxthing)
@@ -2414,7 +2414,7 @@ void init_outro(void)
     outro_unkn02 = 0;
     outro_unkn03 = 0;
     gameturn = 0;
-    render_anim_turn = gameturn;
+    render_clock_set_turn(gameturn);
 
     screen_animate_draw_outro_text();
     // Sleep for up to 10 seconds
@@ -2458,7 +2458,7 @@ void init_outro(void)
         }
 
         gameturn++;
-        render_anim_turn = gameturn;
+        render_clock_set_turn(gameturn);
         traffic_unkn_func_01();
         process_engine_unk1();
         process_sound_heap();
@@ -6615,7 +6615,7 @@ void show_load_and_prep_mission(void)
         }
         debug_trace_place(19);
     }
-    render_anim_turn = gameturn;
+    render_clock_set_turn(gameturn);
 
     // Set up remaining graphics data and controls
     if (start_into_mission)
@@ -7458,22 +7458,27 @@ void game_process_orbital_station_explode(void)
 }
 
 /** Draws the frames which follow the first one within a game turn. */
+/** Amount of extra frames the previous turn managed to draw. */
+static ushort extra_frames_drawn = 0;
+
 static void render_extra_frames(void)
 {
     ushort frame;
 
-    if (render_frames_per_turn <= 1)
+    extra_frames_drawn = 0;
+    if (render_frames_this_turn <= 1)
         return;
     if (ingame.DisplayMode != DpM_ENGINEPLY)
         return;
     if (skip_redraw_this_turn())
         return;
 
-    for (frame = 1; frame < render_frames_per_turn; frame++)
+    for (frame = 1; frame < render_frames_this_turn; frame++)
     {
         // Out of time within this turn - drop the rest of the extra frames
-        if (!render_extra_frame_fits(frame, render_frames_per_turn))
+        if (!render_extra_frame_fits(frame, render_frames_this_turn))
             break;
+        extra_frames_drawn++;
         render_clock_next_frame(frame, render_frames_this_turn);
         process_engine_frame(false, frame);
         game_update();
@@ -7483,6 +7488,8 @@ static void render_extra_frames(void)
 
 void game_process(void)
 {
+    static ushort asked_frames_last_turn = 1;
+
     debug_multicolor_sprite(193);
     LOGDBG("WSCREEN 0x%p", (void *)lbDisplay.WScreen);
 
@@ -7516,7 +7523,18 @@ void game_process(void)
         // screen runs render_frames_per_turn times too fast. Decided before
         // the first frame, because that frame is one of the several.
         if ((ingame.DisplayMode == DpM_ENGINEPLY) && !skip_redraw_this_turn())
+        {
             render_frames_this_turn = render_frames_per_turn;
+            // Asking for frames the machine cannot draw is worse than not
+            // asking: the single frame drawn would sit early within the turn,
+            // holding the picture back without making it any smoother. Once a
+            // turn has dropped all of them, ask for one frame, and try the
+            // full amount again every sixteen turns.
+            if ((asked_frames_last_turn > 1) && (extra_frames_drawn == 0)
+              && ((gameturn & 0x0F) != 0))
+                render_frames_this_turn = 1;
+            asked_frames_last_turn = render_frames_this_turn;
+        }
         draw_game();
         debug_trace_turn_bound(gameturn);
         load_packet();

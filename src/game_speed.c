@@ -42,9 +42,19 @@ ushort render_frames_per_turn = 1;
 
 ushort render_frames_this_turn = 1;
 
+/** End of the current animation turn, in 1/256th of a turn. */
+static ulong anim_turn_end = 0;
+
+void render_clock_set_turn(ulong turn)
+{
+    anim_turn_end = turn << 8;
+    render_anim_turn = turn;
+    render_anim_subturn = 0;
+}
+
 void render_clock_next_frame(ushort frame, ushort nframes)
 {
-    ulong beg, end;
+    ulong clock;
 
     if (nframes < 1)
         nframes = 1;
@@ -52,16 +62,16 @@ void render_clock_next_frame(ushort frame, ushort nframes)
         frame = nframes - 1;
 
     drawturn++;
+    if (frame == 0)
+        anim_turn_end += 256;
 
-    // Kept as a difference of two divisions rather than a single step, so
-    // that the remainder is not lost and a turn adds up to exactly one
-    beg = (256 * (ulong)frame) / nframes;
-    end = (256 * (ulong)(frame + 1)) / nframes;
-    render_anim_subturn += end - beg;
-    while (render_anim_subturn >= 256) {
-        render_anim_subturn -= 256;
-        render_anim_turn++;
-    }
+    // Where this frame stands within the turn, the last one landing exactly
+    // on it. Set from the turn rather than added up frame by frame: a frame
+    // which had to be dropped for lack of time then costs no animation time,
+    // and the pace stays the same whatever gets drawn.
+    clock = anim_turn_end - 256 + (256 * (ulong)(frame + 1)) / nframes;
+    render_anim_turn = clock >> 8;
+    render_anim_subturn = clock & 0xFF;
 }
 
 TbBool frame_advances_state = true;

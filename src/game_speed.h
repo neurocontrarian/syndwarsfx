@@ -66,6 +66,9 @@ void render_frames_per_turn_init(void);
  * so that a turn always adds up to one whatever the amount of frames. */
 void render_clock_next_frame(ushort frame, ushort nframes);
 
+/** Sets the animation clock to the given turn, on a mission starting. */
+void render_clock_set_turn(ulong turn);
+
 /** Records the moment a game turn started, for render_extra_frame_fits(). */
 void render_turn_begins(void);
 
