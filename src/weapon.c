@@ -1501,14 +1501,29 @@ int bul_path_end(int x1, int y1, int z1, int *x2, int *y2, int *z2,
   int radius, struct Thing *p_owner, ubyte *status)
 {
     int ret;
+    // The five arguments which go on the stack are gathered first, and pushed
+    // through a register holding the address of that array. A "g" operand may
+    // be placed relative to the stack pointer, and each push moves it, so
+    // pushing straight from the operands reads the wrong slot from the second
+    // push on - which is what an optimised build does.
+    int stkargs[5];
+
+    stkargs[0] = (int)(intptr_t)y2;
+    stkargs[1] = (int)(intptr_t)z2;
+    stkargs[2] = radius;
+    stkargs[3] = (int)(intptr_t)p_owner;
+    stkargs[4] = (int)(intptr_t)status;
+
     asm volatile (
-      "push %9\n"
-      "push %8\n"
-      "push %7\n"
-      "push %6\n"
-      "push %5\n"
+      "push 16(%5)\n"
+      "push 12(%5)\n"
+      "push 8(%5)\n"
+      "push 4(%5)\n"
+      "push 0(%5)\n"
       "call ASM_bul_path_end\n"
-        : "=r" (ret) : "a" (x1), "d" (y1), "b" (z1), "c" (x2), "g" (y2), "g" (z2), "g" (radius), "g" (p_owner), "g" (status));
+        : "=a" (ret)
+        : "0" (x1), "d" (y1), "b" (z1), "c" (x2), "r" (stkargs)
+        : "cc", "memory");
     return ret;
 }
 
