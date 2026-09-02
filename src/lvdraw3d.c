@@ -31,6 +31,7 @@
 #include "enginfloor.h"
 #include "enginlights.h"
 #include "enginpeff.h"
+#include "enginprops.h"
 #include "engintrns.h"
 #include "engintxtrmap.h"
 #include "enginzoom.h"
@@ -84,7 +85,7 @@ int shpoint_compute_coord_y(struct ShEnginePoint *p_sp, struct MyMapElement *p_m
     {
         elcr_y = 8 * p_mapel->Alt;
         if ((p_mapel->Flags & 0x40) != 0)
-            elcr_y += waft_table[gameturn & 0x1F];
+            elcr_y += waft_table[render_anim_turn & 0x1F];
         p_sp->ReflShade = 0;
     }
     else
@@ -93,9 +94,9 @@ int shpoint_compute_coord_y(struct ShEnginePoint *p_sp, struct MyMapElement *p_m
 
         elcr_y = 8 * p_mapel->Alt;
         dvfactor = 140 + ((bw_rotl32(0x5D3BA6C3, elcr_z >> 8) ^ bw_rotr32(0xA7B4D8AC, elcr_x >> 8)) & 0x7F);
-        wobble = (waft_table2[(gameturn + (elcr_x >> 7)) & 0x1F]
-             + waft_table2[(gameturn + (elcr_z >> 7)) & 0x1F]
-             + waft_table2[(32 * gameturn / dvfactor) & 0x1F]) >> 3;
+        wobble = (waft_table2[(render_anim_turn + (elcr_x >> 7)) & 0x1F]
+             + waft_table2[(render_anim_turn + (elcr_z >> 7)) & 0x1F]
+             + waft_table2[(32 * render_anim_turn / dvfactor) & 0x1F]) >> 3;
         elcr_y += mag * wobble;
         p_sp->ReflShade = (wobble + 32) << 9;
     }
@@ -306,7 +307,7 @@ void lvdraw_do_objects(int cor_z_beg, uint ranges_x_len, struct Range *ranges_x)
             if (objtng > 0)
             {
                 p_objtng = &things[objtng];
-                if (p_objtng->U.UObject.DrawTurn != gameturn)
+                if (p_objtng->U.UObject.DrawTurn != drawturn)
                     draw_thing_object(p_objtng);
             }
         }
