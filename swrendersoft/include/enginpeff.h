@@ -68,6 +68,15 @@ extern const short waft_table2[32];
  */
 extern const short waft_table[33];
 
+/** Value of waft_table between the given animation turn and the next one.
+ *
+ * Everything which bobs on a wobbly terrain map moves by one table entry per
+ * animation turn. When several frames are drawn within a turn, this places it
+ * where it should be for the frame instead of leaving it still until the turn
+ * ends. With one frame per turn the value is the one the table holds.
+ */
+int waft_between_turns(uint anim_turn);
+
 void scene_post_effect_prepare(void);
 void scene_post_effect_for_bucket(short bckt);
 
