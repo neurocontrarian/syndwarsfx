@@ -137,6 +137,28 @@ ubyte get_speed_control_inputs(void)
     return did_inp;
 }
 
+static TbClockMSec turn_beg_time = 0;
+
+void render_turn_begins(void)
+{
+    turn_beg_time = LbTimerClock();
+}
+
+TbBool render_extra_frame_fits(ushort frame, ushort nframes)
+{
+    TbClockMSec turn_len, due;
+
+    if (nframes < 2)
+        return false;
+    turn_len = 1000 / game_num_fps;
+    // The moment this frame was supposed to be drawn at. Being past it means
+    // the machine cannot draw that many frames within a turn, and drawing it
+    // anyway would push the whole turn late - the simulation would run slow
+    // rather than the picture being less smooth.
+    due = turn_beg_time + (turn_len * (TbClockMSec)frame) / nframes;
+    return LbTimerClock() <= due;
+}
+
 void wait_next_gameturn(void)
 {
     static TbClockMSec last_loop_time = 0;

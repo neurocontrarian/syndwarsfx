@@ -66,6 +66,15 @@ void render_frames_per_turn_init(void);
  * so that a turn always adds up to one whatever the amount of frames. */
 void render_clock_next_frame(ushort frame, ushort nframes);
 
+/** Records the moment a game turn started, for render_extra_frame_fits(). */
+void render_turn_begins(void);
+
+/** Whether there is still room within the current game turn to draw the given
+ * extra frame. Extra frames are there to smooth the picture; when the machine
+ * cannot produce them in time they are dropped, so that the game keeps its
+ * turn rate instead of playing in slow motion. */
+TbBool render_extra_frame_fits(ushort frame, ushort nframes);
+
 /** Whether the frame being drawn is the one which also carries the game turn
  * forward. False for the extra frames drawn within a turn, so that anything
  * animated from within the drawing code keeps its original pace. */

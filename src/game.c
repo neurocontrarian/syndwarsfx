@@ -7471,6 +7471,9 @@ static void render_extra_frames(void)
 
     for (frame = 1; frame < render_frames_per_turn; frame++)
     {
+        // Out of time within this turn - drop the rest of the extra frames
+        if (!render_extra_frame_fits(frame, render_frames_per_turn))
+            break;
         render_clock_next_frame(frame, render_frames_this_turn);
         process_engine_frame(false, frame);
         game_update();
@@ -7485,6 +7488,7 @@ void game_process(void)
 
     while ( !exit_game )
     {
+        render_turn_begins();
         render_frames_this_turn = 1;
         process_sound_heap();
         navi2_unkn_counter -= 2;
