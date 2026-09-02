@@ -36,6 +36,7 @@
 #include "engincam.h"
 #include "engincolour.h"
 #include "enginpeff.h"
+#include "enginprops.h"
 #include "engintxtrmap.h"
 #include "render_gpoly.h"
 
@@ -1599,8 +1600,8 @@ void draw_transparent_slant_bar(short x, short y, ushort w, ushort h)
     point3.pp.X = (x - sh_x);
 
     // The shield bar is animated, even if it's not possible to see
-    waftx = waft_table[(gameturn >> 3) & 31];
-    wafty = waft_table[(gameturn + 16) & 31];
+    waftx = waft_table[(render_anim_turn >> 3) & 31];
+    wafty = waft_table[(render_anim_turn + 16) & 31];
     tmx = ((waftx + 30) >> 1);
     tmy = ((wafty + 30) >> 3) + 64;
     point1.pp.U = tmx << 16;

@@ -1184,7 +1184,6 @@ void process_things(void)
 #endif
     build_same_type_headers();
     ingame.fld_unkC4B = 0;
-    animate_textures();
     unkn_update_lights();
     unkn_full_update_lights();
 

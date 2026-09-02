@@ -1714,7 +1714,7 @@ void engine_draw_things(int pos_beg_x, int pos_beg_z, int rend_beg_x, int rend_b
                         struct Thing *p_thing;
                         p_thing = &things[thing];
                         if ((p_thing->Type == TT_BUILDING)
-                         && (p_thing->U.UObject.DrawTurn != gameturn)) {
+                         && (p_thing->U.UObject.DrawTurn != drawturn)) {
                             draw_thing_object(p_thing);
                         }
                     }
@@ -1752,7 +1752,7 @@ void engine_draw_things(int pos_beg_x, int pos_beg_z, int rend_beg_x, int rend_b
                         struct Thing *p_thing;
                         p_thing = &things[thing];
                         if ((p_thing->Type == TT_BUILDING)
-                          && (p_thing->U.UObject.DrawTurn != gameturn)
+                          && (p_thing->U.UObject.DrawTurn != drawturn)
                           && (p_thing->U.UObject.BHeight > 1400)) {
                             draw_thing_object(p_thing);
                         }
@@ -1766,7 +1766,7 @@ void engine_draw_things(int pos_beg_x, int pos_beg_z, int rend_beg_x, int rend_b
                         struct Thing *p_thing;
                         p_thing = &things[thing];
                         if ( p_thing->Type == TT_BUILDING
-                          && (p_thing->U.UObject.DrawTurn != gameturn)
+                          && (p_thing->U.UObject.DrawTurn != drawturn)
                           && (p_thing->U.UObject.BHeight > 1400)) {
                             thing = draw_thing_object(p_thing);
                             continue;
@@ -1961,7 +1961,6 @@ void process_engine_unk3(void)
     {
         clear_super_quick_lights();
     }
-    process_explode();
     assert(vec_tmap[1] != NULL);
     vec_map = vec_tmap[1];
     face_transp_tinted_surface_col = deep_radar_surface_col;
@@ -1984,6 +1983,11 @@ void process_engine_unk3(void)
         reset_drawlist();
         ingame.NextRocket = 0;
     }
+
+    // Which frame of an animated texture is on screen is not part of the game
+    // state - no simulation code reads it. Advanced here, after the frame was
+    // enlisted, it keeps the pace it had within process_things().
+    animate_textures();
 }
 
 void process_sound_heap(void)
@@ -6768,6 +6772,11 @@ void show_game_screen(void)
 
 void draw_game(void)
 {
+    // One more frame is about to be drawn. The counters the drawing uses
+    // advance here, so that they follow the frames and not the game turns.
+    drawturn++;
+    render_anim_turn++;
+
     switch (ingame.DisplayMode)
     {
     case DpM_UNKN_1:
@@ -7161,6 +7170,12 @@ void game_process(void)
         }
         input();
         update_tick_time();
+        // Faces thrown by an explosion can hit people once they land, so they
+        // are world state and progress with the world - not from within the
+        // renderer, where this used to be called from.
+        if ((ingame.DisplayMode == DpM_ENGINEPLY)
+          && ((ingame.Flags & TngF_ProgressAction) != 0))
+            process_explode();
         draw_game();
         debug_trace_turn_bound(gameturn);
         load_packet();
@@ -7192,7 +7207,6 @@ void game_process(void)
         update_unkn_changing_colors();
         game_process_orbital_station_explode();
         gameturn++;
-        render_anim_turn = gameturn;
         scene_post_effect_prepare();
     }
     PacketRecord_Close();
