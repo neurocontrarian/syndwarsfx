@@ -768,7 +768,9 @@ int draw_rot_object(int cor_dx, int cor_dy, int cor_dz,
     // Matrix for anything other than rocket shall respect the allocated entries counter
     assert((p_thing->U.UObject.MatrixIndex < next_local_mat) || (p_thing->Type == TT_ROCKET));
 
-    if ((render_floor_flags & RendFlrF_WobblyTerrain) != 0)
+    // A building stands on the ground, it does not float on it
+    if (((render_floor_flags & RendFlrF_WobblyTerrain) != 0)
+      && (p_thing->Type != TT_BUILDING))
         cor_dy += waft_between_turns(render_anim_turn);
 
     object_points_clear_flags(point_object);
@@ -948,6 +950,10 @@ short draw_object(int sh_x, int sh_y, int sh_z,
         doflags &= ~DrwObjF_StartBelowWindow;
 
     if (word_1552F8 == 5)
+        doflags |= DrwObjF_NoWobblyElevation;
+
+    // A building stands on the ground, it does not float on it
+    if (things[point_object->ThingNo].Type == TT_BUILDING)
         doflags |= DrwObjF_NoWobblyElevation;
 
     return draw_object_faces(cor_dx, cor_dy, cor_dz, point_object, doflags);

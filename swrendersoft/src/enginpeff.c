@@ -63,15 +63,6 @@ ushort word_1A7330[1000];
 ubyte byte_1A7B00[1000];
 ubyte byte_1A7EE8[9004];
 
-int waft_between_turns(uint anim_turn)
-{
-    int v0, v1;
-
-    v0 = waft_table[anim_turn & 0x1F];
-    v1 = waft_table[(anim_turn + 1) & 0x1F];
-    return v0 + ((v1 - v0) * (int)render_anim_subturn) / 256;
-}
-
 void scene_post_effect_rain_init(void)
 {
     uint i;

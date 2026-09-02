@@ -21,6 +21,8 @@
 
 #include "bftypes.h"
 
+#include "enginprops.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -74,8 +76,18 @@ extern const short waft_table[33];
  * animation turn. When several frames are drawn within a turn, this places it
  * where it should be for the frame instead of leaving it still until the turn
  * ends. With one frame per turn the value is the one the table holds.
+ *
+ * Inline on purpose: its callers sit next to inline assembly, and a call
+ * there would move registers around for no gain.
  */
-int waft_between_turns(uint anim_turn);
+static inline int waft_between_turns(uint anim_turn)
+{
+    int v0, v1;
+
+    v0 = waft_table[anim_turn & 0x1F];
+    v1 = waft_table[(anim_turn + 1) & 0x1F];
+    return v0 + ((v1 - v0) * (int)render_anim_subturn) / 256;
+}
 
 void scene_post_effect_prepare(void);
 void scene_post_effect_for_bucket(short bckt);
