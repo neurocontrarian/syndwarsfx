@@ -85,8 +85,9 @@ void render_frames_per_turn_init(void)
     if (env == NULL)
         return;
     n = atoi(env);
-    if ((n < 1) || (n > 8)) {
-        LOGERR("SWFX_FRAMES_PER_TURN=%s outside of the 1..8 range, ignored", env);
+    if ((n < 1) || (n > FRAMES_PER_TURN_MAX)) {
+        LOGERR("SWFX_FRAMES_PER_TURN=%s outside of the 1..%d range, ignored",
+          env, (int)FRAMES_PER_TURN_MAX);
         return;
     }
     render_frames_per_turn = n;

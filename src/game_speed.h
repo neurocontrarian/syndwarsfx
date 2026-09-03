@@ -49,6 +49,11 @@ extern ushort fifties_per_gameturn;
  * turns per second. */
 extern ushort game_num_fps;
 
+/** Highest amount of frames per game turn which can be asked for. Ten is
+ * 160 frames a second, which no machine tried comes near; the bound is there
+ * to catch a mistyped setting, not to express a limit of the drawing. */
+#define FRAMES_PER_TURN_MAX 10
+
 /** Amount of frames drawn per game turn. A value of 1 means one drawn frame
  * per game turn, which is the original behaviour. */
 extern ushort render_frames_per_turn;

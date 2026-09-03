@@ -537,8 +537,9 @@ void read_conf_file(void)
                     CONFWRNLOG("Couldn't read \"%s\" command parameter.", COMMAND_TEXT(cmd_num));
                     break;
                 }
-                if ((nframes < 1) || (nframes > 8)) {
-                    CONFWRNLOG("Value of \"%s\" is outside of the 1..8 range.", COMMAND_TEXT(cmd_num));
+                if ((nframes < 1) || (nframes > FRAMES_PER_TURN_MAX)) {
+                    CONFWRNLOG("Value of \"%s\" is outside of the 1..%d range.",
+                      COMMAND_TEXT(cmd_num), (int)FRAMES_PER_TURN_MAX);
                     break;
                 }
                 render_frames_per_turn = nframes;
