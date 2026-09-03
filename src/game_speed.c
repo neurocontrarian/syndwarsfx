@@ -169,8 +169,40 @@ TbBool render_extra_frame_fits(ushort frame, ushort nframes)
     return LbTimerClock() <= due;
 }
 
+/** Reports the actual pace once per second, so that the game turn rate can
+ * be checked against the drawn frame rate. Called once per drawn frame. */
+static void cadence_sample(void)
+{
+    static TbClockMSec last_report = 0;
+    static ulong last_turn = 0;
+    static ulong frames = 0;
+    TbClockMSec now, elapsed;
+    ulong turns;
+
+    now = LbTimerClock();
+    if (last_report == 0) {
+        last_report = now;
+        last_turn = gameturn;
+        frames = 0;
+        return;
+    }
+    frames++;
+    elapsed = now - last_report;
+    if (elapsed < 1000)
+        return;
+    turns = gameturn - last_turn;
+    LOGSYNC_F("%lu tours/s, %lu images/s (%lu tours et %lu images en %lu ms)",
+      (ulong)(turns * 1000 / elapsed), (ulong)(frames * 1000 / elapsed),
+      (ulong)turns, (ulong)frames, (ulong)elapsed);
+    last_report = now;
+    last_turn = gameturn;
+    frames = 0;
+}
+
 void wait_next_gameturn(void)
 {
+    cadence_sample();
+
     static TbClockMSec last_loop_time = 0;
     static ushort subframe = 0;
     static ushort last_nframes = 1;

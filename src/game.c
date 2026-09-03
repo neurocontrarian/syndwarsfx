@@ -7489,6 +7489,7 @@ static void render_extra_frames(void)
 void game_process(void)
 {
     static ushort asked_frames_last_turn = 1;
+    static ushort starved_turns = 0;
 
     debug_multicolor_sprite(193);
     LOGDBG("WSCREEN 0x%p", (void *)lbDisplay.WScreen);
@@ -7527,11 +7528,15 @@ void game_process(void)
             render_frames_this_turn = render_frames_per_turn;
             // Asking for frames the machine cannot draw is worse than not
             // asking: the single frame drawn would sit early within the turn,
-            // holding the picture back without making it any smoother. Once a
-            // turn has dropped all of them, ask for one frame, and try the
-            // full amount again every sixteen turns.
-            if ((asked_frames_last_turn > 1) && (extra_frames_drawn == 0)
-              && ((gameturn & 0x0F) != 0))
+            // holding the picture back without making it any smoother. But
+            // backing off on one bad turn makes the pace uneven, which shows
+            // more than a steady lower rate; so it takes four starved turns in
+            // a row, and the full amount is tried again only every 256 turns.
+            if ((asked_frames_last_turn > 1) && (extra_frames_drawn == 0))
+                starved_turns++;
+            else
+                starved_turns = 0;
+            if ((starved_turns >= 4) && ((gameturn & 0xFF) != 0))
                 render_frames_this_turn = 1;
             asked_frames_last_turn = render_frames_this_turn;
         }
