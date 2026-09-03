@@ -149,26 +149,51 @@ ubyte get_speed_control_inputs(void)
 
 static TbClockMSec turn_beg_time = 0;
 
+/** How long the game turn which just ended really took, sleeps included. */
+static TbClockMSec last_turn_len = 0;
+
 void render_turn_begins(void)
 {
-    turn_beg_time = LbTimerClock();
+    TbClockMSec now;
+
+    now = LbTimerClock();
+    if (turn_beg_time != 0)
+        last_turn_len = now - turn_beg_time;
+    turn_beg_time = now;
 }
 
-TbBool render_extra_frame_fits(ushort frame, ushort nframes)
+TbBool render_turn_overran(void)
 {
-    TbClockMSec turn_len, due;
+    TbClockMSec turn_len;
 
-    if (nframes < 2)
+    if (last_turn_len == 0)
         return false;
     turn_len = 1000 / game_num_fps;
-    // The moment by which this frame has to be done, that is the end of its
-    // share of the turn - not the moment it was due to start. The wait which
-    // paces the game sleeps until exactly that start, so comparing against it
-    // was always just too late, and every extra frame was dropped however
-    // fast the machine was. Being past the end of the share is what says the
-    // machine cannot draw that many frames within a turn.
-    due = turn_beg_time + (turn_len * (TbClockMSec)(frame + 1)) / nframes;
-    return LbTimerClock() <= due;
+    // The pacing wait is what makes a turn last its full length: it is done
+    // once per frame the turn is meant to draw, and sleeps out whatever time
+    // that frame did not use. So a turn which drew fast enough comes out at
+    // exactly one turn length, and one which came out longer is one the
+    // machine could not draw within a turn - it has no way of catching that
+    // time back, and the world simply runs late.
+    //
+    // Asking each frame in turn whether it still fits, before drawing it,
+    // cannot see this: a frame which overruns its share by a little is always
+    // started in time and always finishes late.
+    return last_turn_len > turn_len + turn_len / 16;
+}
+
+TbBool render_extra_frame_fits(void)
+{
+    TbClockMSec turn_len;
+
+    turn_len = 1000 / game_num_fps;
+    // A coarse guard only. How many frames this machine keeps up with is
+    // decided from one turn to the next, in game_process(); dropping a frame
+    // here moves the frames of this turn to other places within it, which is
+    // seen as the picture jerking, so it is done only once the turn has
+    // already run out - a single unusually heavy frame, not a machine which
+    // is simply a little too slow.
+    return LbTimerClock() < turn_beg_time + turn_len;
 }
 
 /** Reports the actual pace once per second, so that the game turn rate can

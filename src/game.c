@@ -7469,43 +7469,20 @@ void game_process_orbital_station_explode(void)
 }
 
 /** Draws the frames which follow the first one within a game turn. */
-/** Amount of extra frames the previous turn managed to draw. */
-static ushort extra_frames_drawn = 0;
-
-/** Turns in a row which had time left for the frames the setting asks for. */
-static ushort turns_with_room = 0;
-
 static void render_extra_frames(void)
 {
     ushort frame;
 
-    extra_frames_drawn = 0;
     if (ingame.DisplayMode != DpM_ENGINEPLY)
         return;
     if (skip_redraw_this_turn())
         return;
 
-    if (render_frames_this_turn <= 1)
-    {
-        // Backed off, so nothing more is drawn. The time the single frame of
-        // this turn took is looked at though: if it left room for the frames
-        // the setting asks for, that is counted. Asking for them again to
-        // find out would cost a visible jump; looking at the clock costs
-        // nothing.
-        if ((render_frames_per_turn > 1)
-          && render_extra_frame_fits(1, render_frames_per_turn))
-            turns_with_room++;
-        else
-            turns_with_room = 0;
-        return;
-    }
-
     for (frame = 1; frame < render_frames_this_turn; frame++)
     {
         // Out of time within this turn - drop the rest of the extra frames
-        if (!render_extra_frame_fits(frame, render_frames_this_turn))
+        if (!render_extra_frame_fits())
             break;
-        extra_frames_drawn++;
         render_clock_next_frame(frame, render_frames_this_turn);
         process_engine_frame(false, frame);
         game_update();
@@ -7522,8 +7499,15 @@ static void render_extra_frames(void)
 
 void game_process(void)
 {
-    static ushort asked_frames_last_turn = 1;
-    static ushort frames_backed_off = 0;
+    /** Frames per turn the machine is currently keeping up with. Walks between
+     * 1 and render_frames_per_turn one step at a time. */
+    static ushort frames_held = 1;
+    /** Turns without an overrun before one more frame is tried again. */
+    static ushort recover_turns = 16;
+    /** Turns without an overrun so far. */
+    static ushort good_turns = 0;
+    /** Whether the turn before this one drew the in-mission view. */
+    static TbBool drawing_last_turn = false;
 
     debug_multicolor_sprite(193);
     LOGDBG("WSCREEN 0x%p", (void *)lbDisplay.WScreen);
@@ -7558,29 +7542,47 @@ void game_process(void)
         // the first frame, because that frame is one of the several.
         if ((ingame.DisplayMode == DpM_ENGINEPLY) && !skip_redraw_this_turn())
         {
-            render_frames_this_turn = render_frames_per_turn;
-            // Asking for frames the machine cannot draw is worse than not
-            // asking: the single frame drawn would sit early within the turn,
-            // holding the picture back without making it any smoother. But
-            // it backs off as soon as one turn came up short, and stays
-            // backed off. A turn which asks for two frames and draws one
-            // places that frame halfway through the turn, while a turn which
-            // draws both ends on the real position; alternating between the
-            // two makes the whole picture jump back and forth. The full
-            // amount is tried again every 256 turns.
-            if ((asked_frames_last_turn > 1) && (extra_frames_drawn == 0)) {
-                frames_backed_off = 1;
-                turns_with_room = 0;
+            if (!drawing_last_turn)
+            {
+                // Coming from a menu, a briefing or a load. The turn which
+                // just passed says nothing about how fast this view draws, so
+                // start from what the setting asks for and find out.
+                frames_held = render_frames_per_turn;
+                recover_turns = 16;
+                good_turns = 0;
             }
-            // Sixteen turns in a row with time to spare - a second of it -
-            // before asking for the full amount again
-            if (turns_with_room >= 16) {
-                frames_backed_off = 0;
-                turns_with_room = 0;
+            else if (render_turn_overran())
+            {
+                // Give up one frame rather than dropping straight to one. A
+                // machine which cannot hold four frames within a turn usually
+                // holds three, and three is much closer to four than to one.
+                if (frames_held > 1) {
+                    frames_held--;
+                    LOGSYNC_F("down to %d frames per turn", (int)frames_held);
+                    // Each failed attempt at one more frame waits longer
+                    // before the next, so a machine sitting just under a
+                    // level stops crossing it back and forth every second.
+                    if (recover_turns <= 256)
+                        recover_turns *= 4;
+                }
+                good_turns = 0;
             }
-            if (frames_backed_off)
-                render_frames_this_turn = 1;
-            asked_frames_last_turn = render_frames_this_turn;
+            else
+            {
+                good_turns++;
+                if ((good_turns >= recover_turns)
+                  && (frames_held < render_frames_per_turn)) {
+                    frames_held++;
+                    good_turns = 0;
+                    LOGSYNC_F("up to %d frames per turn", (int)frames_held);
+                }
+            }
+            render_frames_this_turn = frames_held;
+            drawing_last_turn = true;
+        }
+        else
+        {
+            drawing_last_turn = false;
         }
         draw_game();
         debug_trace_turn_bound(gameturn);
