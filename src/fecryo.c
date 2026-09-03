@@ -191,7 +191,9 @@ void update_cybmod_name_text(void)
 
 TbBool cybmod_has_display_anim(ubyte mod)
 {
-    return (1 << (mod - 1) < 0x1000);
+    if (mod < 1) // No mod selected
+        return false;
+    return ((1 << (mod - 1)) < 0x1000);
 }
 
 void cryo_display_box_redraw(struct ScreenTextBox *p_box)
