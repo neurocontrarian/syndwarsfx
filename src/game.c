@@ -7506,6 +7506,13 @@ void game_process(void)
     static ushort recover_turns = 16;
     /** Turns without an overrun so far. */
     static ushort good_turns = 0;
+    /** Turns which overran in a row. */
+    static ushort bad_turns = 0;
+    /** Turns to let pass before measuring anything, on entering the view. */
+    static ushort warmup_turns = 0;
+    /** Whether the level being held is one just taken on, so that giving it
+     * up again counts as that attempt having failed. */
+    static TbBool tried_one_more = false;
     /** Whether the turn before this one drew the in-mission view. */
     static TbBool drawing_last_turn = false;
 
@@ -7544,37 +7551,63 @@ void game_process(void)
         {
             if (!drawing_last_turn)
             {
-                // Coming from a menu, a briefing or a load. The turn which
-                // just passed says nothing about how fast this view draws, so
-                // start from what the setting asks for and find out.
+                // Coming from a menu, a briefing or a load. Start from what
+                // the setting asks for, and let a couple of seconds pass
+                // before believing anything the machine does: the opening
+                // turns of a mission are long whatever is drawn, with the
+                // caches cold and the map being paged in.
                 frames_held = render_frames_per_turn;
                 recover_turns = 16;
                 good_turns = 0;
+                bad_turns = 0;
+                warmup_turns = 32;
+                tried_one_more = false;
+            }
+            else if (warmup_turns > 0)
+            {
+                warmup_turns--;
             }
             else if (render_turn_overran())
             {
-                // Give up one frame rather than dropping straight to one. A
-                // machine which cannot hold four frames within a turn usually
-                // holds three, and three is much closer to four than to one.
-                if (frames_held > 1) {
+                // One long turn is a hitch - an explosion, a file being read,
+                // the window manager. Two in a row is the machine saying it
+                // cannot hold this many frames.
+                bad_turns++;
+                if ((bad_turns >= 2) && (frames_held > 1))
+                {
+                    // Give up one frame rather than dropping straight to one.
+                    // A machine which cannot hold four frames within a turn
+                    // usually holds three, and three is much closer to four
+                    // than to one.
                     frames_held--;
                     LOGSYNC_F("down to %d frames per turn", (int)frames_held);
-                    // Each failed attempt at one more frame waits longer
-                    // before the next, so a machine sitting just under a
-                    // level stops crossing it back and forth every second.
-                    if (recover_turns <= 256)
+                    // Waiting longer before the next attempt is meant for a
+                    // machine sitting just under a level, so that it stops
+                    // crossing it back and forth. Only an attempt at one more
+                    // frame which did not hold counts: walking down to the
+                    // level the machine can take must not push that wait up.
+                    if (tried_one_more && (recover_turns <= 256))
                         recover_turns *= 4;
+                    bad_turns = 0;
+                    tried_one_more = false;
                 }
                 good_turns = 0;
             }
             else
             {
+                bad_turns = 0;
                 good_turns++;
                 if ((good_turns >= recover_turns)
                   && (frames_held < render_frames_per_turn)) {
                     frames_held++;
                     good_turns = 0;
+                    tried_one_more = true;
                     LOGSYNC_F("up to %d frames per turn", (int)frames_held);
+                }
+                else if (good_turns > 2) {
+                    // The level has held for a while now; giving it up later
+                    // is a hitch or a heavier scene, not that attempt failing.
+                    tried_one_more = false;
                 }
             }
             render_frames_this_turn = frames_held;
