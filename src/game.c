@@ -2263,7 +2263,11 @@ void process_engine_frame(TbBool advance, ushort frame)
         }
     }
 
-    if (word_1552F8 != 36 && !byte_1C8444)
+    // Only the frame which carries the turn clears the lights. They are
+    // applied once per turn, from process_things(), and read by the floor
+    // drawing; clearing them after every frame left the extra frames of a
+    // turn drawing an unlit floor, one frame lit and the next not.
+    if (advance && (word_1552F8 != 36) && !byte_1C8444)
     {
         clear_super_quick_lights();
     }
@@ -2296,8 +2300,10 @@ void process_engine_frame(TbBool advance, ushort frame)
 
     // Which frame of an animated texture is on screen is not part of the game
     // state - no simulation code reads it. Advanced here, after the frame was
-    // enlisted, it keeps the pace it had within process_things().
-    animate_textures();
+    // enlisted, it keeps the pace it had within process_things() - once per
+    // turn, not once per drawn frame.
+    if (advance)
+        animate_textures();
 }
 
 void process_engine_unk3(void)
