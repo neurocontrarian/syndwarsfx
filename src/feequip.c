@@ -906,7 +906,7 @@ void init_weapon_anim(ubyte weapon)
     } else {
         embanim_set_weapon_model_file(anislot, weapon);
     }
-    flic_unkn03(anislot);
+    embanim_reinit(anislot);
 }
 
 void weapon_flic_data_to_screen(void)
@@ -916,7 +916,7 @@ void weapon_flic_data_to_screen(void)
     ubyte anislot;
 
     anislot = AniSl_EQVIEW;
-    frame_buf = embanim_frame_buffer(anislot);
+    frame_buf = embanim_type_get_output_buffer(anislot);
 
     w = equip_display_box.Width - 8;
     h = w * 7 / 10;
@@ -986,7 +986,7 @@ void draw_display_box_content_wep(struct ScreenTextBox *p_box)
             // Mark that we should start animation frames the next time
             p_box->TextFadePos++;
         else
-            xdo_next_frame(AniSl_EQVIEW);
+            embanim_do_next_frame(AniSl_EQVIEW);
         draw_flic_purple_list(ac_weapon_flic_data_to_screen);
         break;
     }

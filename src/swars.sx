@@ -132468,8 +132468,6 @@ data_1aa67c:
 		.long	0x0
 data_1aa680:
 		.long	0x0
-GLOBAL (billboard_anim_no)	/* 0x1AA684 */
-		.byte	0x0
 		.align  4
 
 data_1aaa20:
@@ -132486,9 +132484,7 @@ data_1aaa54:
 		.long	0x0
 data_1aaa58:
 		.fill   0x30
-GLOBAL (byte_1AAA88)	/* 0x1AAA88 */
-		.byte  0x0
-		.align  2
+		.align  4
 data_1aaa8a:
 		.short  0x0
 GLOBAL (animations)	/* 0x1AAA8C */
@@ -132523,7 +132519,7 @@ data_1aaac4:
 		.fill   0x36
 data_1aaafa:
 		.fill   0x72
-GLOBAL (active_anim)	/* 0x1AAB6C */
+GLOBAL (ASM_active_anim)	/* 0x1AAB6C */
 		.fill   0x8
 GLOBAL (dword_1AAB74)	/* 0x1AAB74 */
 		.long	0x0

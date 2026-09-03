@@ -20,7 +20,6 @@
 #define EMBEDANIM_H
 
 #include "bftypes.h"
-#include "bfflic.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -42,16 +41,11 @@ enum AnimSlot {
 };
 
 /******************************************************************************/
-extern ubyte active_anim;
-
 uint embanim_current_frame_number(ubyte anislot);
-TbPixel *embanim_frame_buffer(ubyte anislot);
-
-void anim_show_draw_next_frame(struct Animation *p_anim);
 
 /** Decode and draw next frame of the animation.
  */
-int xdo_next_frame(ubyte anislot);
+int embanim_do_next_frame(ubyte anislot);
 
 /** Decode and draw previous frame of the animation.
  *
@@ -59,22 +53,27 @@ int xdo_next_frame(ubyte anislot);
  * decoding all frames from start - these files do not use
  * bi-directional FLIC format.
  */
-int xdo_prev_frame(ubyte anislot);
+int embanim_do_prev_frame(ubyte anislot);
 
-ubyte *anim_type_get_output_buffer(ubyte anislot);
+/** Retrieve pointer to output buffer of the animation at given slot.
+ */
+TbPixel *embanim_type_get_output_buffer(ubyte anislot);
 
-/** Clears output buffer of the animation at given slot.
+/** Clear output buffer of the animation at given slot.
  *
  * The animation must be opened, but its frame buffer
  * doesn't have to be set for this function to work.
  */
 void embanim_clear_output_buffer(ubyte anislot);
 
-void flic_unkn03(ubyte anislot);
+/** Finalize previous playback and initialize new animation at given slot.
+ */
+void embanim_reinit(ubyte anislot);
+
 void embanim_set_netscan_file(ubyte anislot, ubyte netno);
 void embanim_set_weapon_model_file(ubyte anislot, ubyte wtype);
 void embanim_set_cybmod_model_file(ubyte anislot, ubyte mtype);
-void embanim_set_cyborg_mod_file(ubyte anislot, ubyte part, ubyte stage);
+void embanim_set_cyborg_part_file(ubyte anislot, ubyte part, ubyte stage);
 
 /******************************************************************************/
 #ifdef __cplusplus

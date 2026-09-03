@@ -524,7 +524,7 @@ void cryo_cyborg_part_buf_blokey_static_load(ubyte *p_mods_arr, ubyte part)
     long len;
     short h, scanln;
 
-    p_scratch = anim_type_get_output_buffer(AniSl_SCRATCH);
+    p_scratch = embanim_type_get_output_buffer(AniSl_SCRATCH);
     p_partbuf = cryo_cyborg_part_buf_ptr(part);
 
     scanln = raw_file_scanline(equip_blokey_rect[part].Width);
@@ -557,7 +557,7 @@ void cryo_cyborg_part_buf_blokey_fli_frame_copy(ubyte part, ubyte anislot)
     h = equip_blokey_rect[part].Height;
 
     // Blit the current part image onto framebuf
-    p_flicbuf = anim_type_get_output_buffer(anislot);
+    p_flicbuf = embanim_type_get_output_buffer(anislot);
     p_partbuf = cryo_cyborg_part_buf_ptr(part);
     partbuf_scanln = raw_file_scanline(w);
 
@@ -673,8 +673,8 @@ void init_next_blokey_flic(void)
         }
         else if (!IsSamplePlaying(0, 134, 0))
         {
-            embanim_set_cyborg_mod_file(anislot, part, stage);
-            flic_unkn03(anislot);
+            embanim_set_cyborg_part_file(anislot, part, stage);
+            embanim_reinit(anislot);
             embanim_clear_output_buffer(anislot);
             play_sample_using_heap(0, 126, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 1u);
             current_frame = 0;
@@ -684,8 +684,8 @@ void init_next_blokey_flic(void)
         break;
     case ModDSt_OUT:
         anislot = AniSl_CYBORG_INOUT;
-        embanim_set_cyborg_mod_file(anislot, part, stage);
-        flic_unkn03(anislot);
+        embanim_set_cyborg_part_file(anislot, part, stage);
+        embanim_reinit(anislot);
         old_flic_mods[part] = 0;
         new_current_drawing_mod = part;
         mod_draw_states[part] |= ModDSt_ModAnimOut;
@@ -695,8 +695,8 @@ void init_next_blokey_flic(void)
         break;
     case ModDSt_IN:
         anislot = AniSl_CYBORG_INOUT;
-        embanim_set_cyborg_mod_file(anislot, part, stage);
-        flic_unkn03(anislot);
+        embanim_set_cyborg_part_file(anislot, part, stage);
+        embanim_reinit(anislot);
         embanim_clear_output_buffer(anislot);
         new_current_drawing_mod = part;
         mod_draw_states[part] |= ModDSt_ModAnimIn;
@@ -994,7 +994,7 @@ void draw_blokey_body_mods(void)
         {
             if ((mod_draw_states[part] & ModDSt_ModAnimIn) == 0)
                 continue;
-            done = xdo_next_frame(AniSl_CYBORG_INOUT);
+            done = embanim_do_next_frame(AniSl_CYBORG_INOUT);
             cryo_cyborg_part_buf_blokey_fli_frame_copy(part, AniSl_CYBORG_INOUT);
             still_playing = 1;
             if (done)
@@ -1016,7 +1016,7 @@ void draw_blokey_body_mods(void)
         {
             if ((mod_draw_states[part] & ModDSt_ModAnimOut) == 0)
                 continue;
-            done = xdo_prev_frame(AniSl_CYBORG_INOUT);
+            done = embanim_do_prev_frame(AniSl_CYBORG_INOUT);
             cryo_cyborg_part_buf_blokey_fli_frame_copy(part, AniSl_CYBORG_INOUT);
             still_playing = 1;
             if (done)
@@ -1038,7 +1038,7 @@ void draw_blokey_body_mods(void)
 
     if (!still_playing && (current_drawing_mod == ModDPt_BREATH))
     {
-        done = xdo_next_frame(AniSl_CYBORG_BRTH);
+        done = embanim_do_next_frame(AniSl_CYBORG_BRTH);
         cryo_cyborg_part_buf_blokey_fli_frame_copy(current_drawing_mod, AniSl_CYBORG_BRTH);
         draw_flic_purple_list(blokey_part_buf_breath_data_to_screen);
         still_playing = !done;
@@ -1392,7 +1392,7 @@ void draw_display_box_content_mod(struct ScreenTextBox *p_box)
             // Mark that we should start animation frames the next time
             p_box->TextFadePos++;
         else
-            xdo_next_frame(AniSl_EQVIEW);
+            embanim_do_next_frame(AniSl_EQVIEW);
         draw_flic_purple_list(ac_weapon_flic_data_to_screen);
         break;
     }

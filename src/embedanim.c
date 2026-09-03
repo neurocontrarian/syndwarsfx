@@ -41,9 +41,10 @@ ubyte byte_154BB4[] = {
   220, 224, 224, 222, 220, 220,
 };
 
-extern ubyte billboard_anim_no;
-extern ubyte byte_1AAA88;
+ubyte billboard_anim_no;
+TbBool anim_can_change_palette = false;
 
+ubyte active_anim;
 extern ubyte anim_slots[];
 extern struct Animation animations[2];
 
@@ -58,18 +59,7 @@ uint embanim_current_frame_number(ubyte anislot)
     return p_anim->FrameNumber;
 }
 
-TbPixel *embanim_frame_buffer(ubyte anislot)
-{
-    struct Animation *p_anim;
-    ulong k;
-
-    k = anim_slots[anislot];
-    p_anim = &animations[k];
-
-    return p_anim->FrameBuffer;
-}
-
-void anim_show_draw_next_frame(struct Animation *p_anim)
+static void embanim_show_draw_next_frame(struct Animation *p_anim)
 {
     ubyte pal_change;
 
@@ -79,13 +69,13 @@ void anim_show_draw_next_frame(struct Animation *p_anim)
     if (pal_change)
     {
         LbScreenWaitVbi();
-        if (byte_1AAA88) {
+        if (anim_can_change_palette) {
             LbPaletteSet(anim_palette);
         }
     }
 }
 
-int xdo_next_frame(ubyte anislot)
+int embanim_do_next_frame(ubyte anislot)
 {
     struct Animation *p_anim;
     ushort k;
@@ -107,18 +97,18 @@ int xdo_next_frame(ubyte anislot)
     {
         anim_flic_close(p_anim);
         if ((p_anim->Flags & 0x20) != 0) {
-            flic_unkn03(p_anim->Type);
+            embanim_reinit(p_anim->Type);
         }
         return 1;
     }
 
-    anim_show_prep_next_frame(p_anim, anim_type_get_output_buffer(p_anim->Type));
-    anim_show_draw_next_frame(p_anim);
+    anim_show_prep_next_frame(p_anim, embanim_type_get_output_buffer(p_anim->Type));
+    embanim_show_draw_next_frame(p_anim);
 
     return 0;
 }
 
-int xdo_prev_frame(ubyte anislot)
+int embanim_do_prev_frame(ubyte anislot)
 {
     struct Animation *p_anim;
     ubyte *p_frmbuf;
@@ -134,14 +124,14 @@ int xdo_prev_frame(ubyte anislot)
     else
         rq_frame = p_anim->FrameNumber - 1;
 
-    p_frmbuf = anim_type_get_output_buffer(p_anim->Type);
+    p_frmbuf = embanim_type_get_output_buffer(p_anim->Type);
 
     if (rq_frame == 0)
     {
         LbMemorySet(p_frmbuf, 0, p_anim->FLCFileHeader.Width * p_anim->FLCFileHeader.Height);
         anim_flic_close(p_anim);
         if ((p_anim->Flags & 0x20) != 0) {
-            flic_unkn03(p_anim->Type);
+            embanim_reinit(p_anim->Type);
         }
         return 1;
     }
@@ -149,11 +139,11 @@ int xdo_prev_frame(ubyte anislot)
     anim_flic_show_replay(p_anim);
     LbMemorySet(p_frmbuf, 0, p_anim->FLCFileHeader.Width * p_anim->FLCFileHeader.Height);
     anim_show_prep_next_frame(p_anim, p_frmbuf);
-    anim_show_draw_next_frame(p_anim);
+    embanim_show_draw_next_frame(p_anim);
     for (i = 1; i < rq_frame; i++)
     {
         anim_show_prep_next_frame(p_anim, NULL);
-        anim_show_draw_next_frame(p_anim);
+        embanim_show_draw_next_frame(p_anim);
     }
     return 0;
 }
@@ -182,7 +172,7 @@ void anim_show_FLI_LC_NP(void)
     anim_show_FLI_LC(p_anim);
 }
 
-ubyte *anim_type_get_output_buffer(ubyte anislot)
+ubyte *embanim_type_get_output_buffer(ubyte anislot)
 {
     switch (anislot)
     {
@@ -206,7 +196,7 @@ ubyte *anim_type_get_output_buffer(ubyte anislot)
     }
 }
 
-void anim_billboard_select_rand(void)
+static void embanim_billboard_select_rand(void)
 {
     ushort rnd;
 
@@ -221,14 +211,14 @@ void anim_billboard_select_rand(void)
         billboard_anim_no = 3;
 }
 
-void anim_billboard_select_next(void)
+static void embanim_billboard_select_next(void)
 {
     billboard_anim_no++;
     if (billboard_anim_no > 3)
         billboard_anim_no = 0;
 }
 
-void anim_billboard_broadcast_sound(void)
+static void embanim_billboard_broadcast_sound(void)
 {
     struct Thing *p_thing;
     ushort rnd;
@@ -257,7 +247,7 @@ void embanim_clear_output_buffer(ubyte anislot)
         ubyte *obuf;
         short h;
 
-        obuf = anim_type_get_output_buffer(p_anim->Type);
+        obuf = embanim_type_get_output_buffer(p_anim->Type);
 
         for (h = p_anim->FLCFileHeader.Height; h > 0; h--)
         {
@@ -267,10 +257,10 @@ void embanim_clear_output_buffer(ubyte anislot)
     }
 }
 
-void flic_unkn03(ubyte anislot)
+void embanim_reinit(ubyte anislot)
 {
     struct Animation *p_anim;
-    ubyte *frmbuf;
+    ubyte *p_frmbuf;
     PathInfo *pinfo;
     int k;
 
@@ -282,58 +272,58 @@ void flic_unkn03(ubyte anislot)
 
     anim_scratch = scratch_buf1;
     anim_flic_init(p_anim, anislot, 0x00);
-    frmbuf = anim_type_get_output_buffer(anislot);
+    p_frmbuf = embanim_type_get_output_buffer(anislot);
 
     switch (anislot)
     {
     case AniSl_BILLBOARD:
-        byte_1AAA88 = 0;
-        anim_flic_set_frame_buffer(p_anim, frmbuf, 0, 0, 0, 0x20);
-        anim_billboard_select_rand();
-        anim_billboard_broadcast_sound();
+        anim_can_change_palette = false;
+        anim_flic_set_frame_buffer(p_anim, p_frmbuf, 0, 0, 0, 0x20);
+        embanim_billboard_select_rand();
+        embanim_billboard_broadcast_sound();
         pinfo = &game_dirs[DirPlace_QData];
         anim_flic_set_fname(p_anim, "%s/%s-1%d.fli", pinfo->directory, "demo", (int)billboard_anim_no);
-        anim_billboard_select_next();
+        embanim_billboard_select_next();
         break;
     case AniSl_EQVIEW:
-        byte_1AAA88 = 0;
-        anim_flic_set_frame_buffer(p_anim, frmbuf, 0, 0, 0, 0x00);
+        anim_can_change_palette = false;
+        anim_flic_set_frame_buffer(p_anim, p_frmbuf, 0, 0, 0, 0x00);
         break;
     case AniSl_CYBORG_INOUT:
-        byte_1AAA88 = 0;
-        anim_flic_set_frame_buffer(p_anim, frmbuf, 0, 0, 0, 0x00);
+        anim_can_change_palette = false;
+        anim_flic_set_frame_buffer(p_anim, p_frmbuf, 0, 0, 0, 0x00);
         break;
     case AniSl_UNKN4:
-        byte_1AAA88 = 1;
-        anim_flic_set_frame_buffer(p_anim, frmbuf, 0, 0, 0, 0x02);
+        anim_can_change_palette = true;
+        anim_flic_set_frame_buffer(p_anim, p_frmbuf, 0, 0, 0, 0x02);
         pinfo = &game_dirs[DirPlace_Data];
         anim_flic_set_fname(p_anim, "%s/%s.fli", pinfo->directory, "intro");
         break;
     case AniSl_UNKN5:
-        byte_1AAA88 = 0;
-        anim_flic_set_frame_buffer(p_anim, frmbuf, 10, 30, 0, 0x02);
+        anim_can_change_palette = false;
+        anim_flic_set_frame_buffer(p_anim, p_frmbuf, 10, 30, 0, 0x02);
         pinfo = &game_dirs[DirPlace_Data];
         anim_flic_set_fname(p_anim, "%s/%s.fli", pinfo->directory, "mcomp");
         break;
     case AniSl_UNKN6:
-        byte_1AAA88 = 0;
-        anim_flic_set_frame_buffer(p_anim, frmbuf, 10, 30, 0, 0x02);
+        anim_can_change_palette = false;
+        anim_flic_set_frame_buffer(p_anim, p_frmbuf, 10, 30, 0, 0x02);
         pinfo = &game_dirs[DirPlace_Data];
         anim_flic_set_fname(p_anim, "%s/%s.fli", pinfo->directory, "mcomp");
         break;
     case AniSl_UNKN7:
-        byte_1AAA88 = 0;
-        anim_flic_set_frame_buffer(p_anim, frmbuf, 10, 30, 0, 0x02);
+        anim_can_change_palette = false;
+        anim_flic_set_frame_buffer(p_anim, p_frmbuf, 10, 30, 0, 0x02);
         pinfo = &game_dirs[DirPlace_Data];
         anim_flic_set_fname(p_anim, "%s/%s.fli", pinfo->directory, "mcomp");
         break;
     case AniSl_CYBORG_BRTH:
-        byte_1AAA88 = 0;
-        anim_flic_set_frame_buffer(p_anim, frmbuf, 0, 0, 0, 0x20);
+        anim_can_change_palette = false;
+        anim_flic_set_frame_buffer(p_anim, p_frmbuf, 0, 0, 0, 0x20);
         break;
     case AniSl_NETSCAN:
-        byte_1AAA88 = 0;
-        anim_flic_set_frame_buffer(p_anim, frmbuf, 0, 0, 0, 0x00);
+        anim_can_change_palette = false;
+        anim_flic_set_frame_buffer(p_anim, p_frmbuf, 0, 0, 0, 0x00);
         break;
       default:
         break;
@@ -390,7 +380,7 @@ void embanim_set_cybmod_model_file(ubyte anislot, ubyte mtype)
     anim_flic_set_fname(p_anim, "%s/mod-%02d.fli", pinfo->directory, (int)mtype);
 }
 
-void embanim_set_cyborg_mod_file(ubyte anislot, ubyte part, ubyte stage)
+void embanim_set_cyborg_part_file(ubyte anislot, ubyte part, ubyte stage)
 {
     struct Animation *p_anim;
     PathInfo *pinfo;

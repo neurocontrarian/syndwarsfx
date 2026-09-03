@@ -1750,7 +1750,7 @@ void process_engine_unk3(void)
             if (!in_network_game && ((ingame.Flags & GamF_Unkn00040000) != 0))
             {
                 ingame.Flags &= ~GamF_Unkn00040000;
-                xdo_next_frame(AniSl_BILLBOARD);
+                embanim_do_next_frame(AniSl_BILLBOARD);
             }
         }
     }
@@ -2297,7 +2297,7 @@ TbBool setup_host(void)
 
     setup_host_sub6();
     play_intro();
-    flic_unkn03(AniSl_BILLBOARD);
+    embanim_reinit(AniSl_BILLBOARD);
 
     return ret;
 }
@@ -6046,8 +6046,8 @@ void show_load_and_prep_mission(void)
         generate_shadows_for_multicolor_sprites();
         adjust_mission_engine_to_video_mode();
 
-        flic_unkn03(AniSl_BILLBOARD);
-        xdo_next_frame(AniSl_BILLBOARD);
+        embanim_reinit(AniSl_BILLBOARD);
+        embanim_do_next_frame(AniSl_BILLBOARD);
 
         if (in_network_game)
         {
