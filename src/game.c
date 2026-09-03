@@ -7499,22 +7499,17 @@ static void render_extra_frames(void)
 
 void game_process(void)
 {
-    /** Frames per turn the machine is currently keeping up with. Walks between
-     * 1 and render_frames_per_turn one step at a time. */
+    /** Frames per turn the machine is currently keeping up with. */
     static ushort frames_held = 1;
-    /** Turns without an overrun before one more frame is tried again. */
-    static ushort recover_turns = 16;
-    /** Turns without an overrun so far. */
-    static ushort good_turns = 0;
-    /** Turns which overran in a row. */
-    static ushort bad_turns = 0;
+    /** Turns in a row which measured room for fewer frames than are drawn. */
+    static ushort turns_asking_less = 0;
+    /** Turns in a row which measured room for more. */
+    static ushort turns_asking_more = 0;
     /** Turns to let pass before measuring anything, on entering the view. */
     static ushort warmup_turns = 0;
-    /** Whether the level being held is one just taken on, so that giving it
-     * up again counts as that attempt having failed. */
-    static TbBool tried_one_more = false;
     /** Whether the turn before this one drew the in-mission view. */
     static TbBool drawing_last_turn = false;
+    ushort can_hold;
 
     debug_multicolor_sprite(193);
     LOGDBG("WSCREEN 0x%p", (void *)lbDisplay.WScreen);
@@ -7551,63 +7546,70 @@ void game_process(void)
         {
             if (!drawing_last_turn)
             {
-                // Coming from a menu, a briefing or a load. Start from what
-                // the setting asks for, and let a couple of seconds pass
-                // before believing anything the machine does: the opening
-                // turns of a mission are long whatever is drawn, with the
-                // caches cold and the map being paged in.
-                frames_held = render_frames_per_turn;
-                recover_turns = 16;
-                good_turns = 0;
-                bad_turns = 0;
-                warmup_turns = 32;
-                tried_one_more = false;
+                // Coming from a menu, a briefing or a load. Start on one
+                // frame and let the measurement bring it up. Starting on
+                // what the setting asks for made the opening seconds of
+                // every mission run slow while it was found out, and the
+                // opening turns are long whatever is drawn - caches cold,
+                // map being paged in - so they are worth little as a
+                // measurement anyway.
+                frames_held = 1;
+                turns_asking_less = 0;
+                turns_asking_more = 0;
+                warmup_turns = 16;
             }
             else if (warmup_turns > 0)
             {
                 warmup_turns--;
             }
-            else if (render_turn_overran())
-            {
-                // One long turn is a hitch - an explosion, a file being read,
-                // the window manager. Two in a row is the machine saying it
-                // cannot hold this many frames.
-                bad_turns++;
-                if ((bad_turns >= 2) && (frames_held > 1))
-                {
-                    // Give up one frame rather than dropping straight to one.
-                    // A machine which cannot hold four frames within a turn
-                    // usually holds three, and three is much closer to four
-                    // than to one.
-                    frames_held--;
-                    LOGSYNC_F("down to %d frames per turn", (int)frames_held);
-                    // Waiting longer before the next attempt is meant for a
-                    // machine sitting just under a level, so that it stops
-                    // crossing it back and forth. Only an attempt at one more
-                    // frame which did not hold counts: walking down to the
-                    // level the machine can take must not push that wait up.
-                    if (tried_one_more && (recover_turns <= 256))
-                        recover_turns *= 4;
-                    bad_turns = 0;
-                    tried_one_more = false;
-                }
-                good_turns = 0;
-            }
             else
             {
-                bad_turns = 0;
-                good_turns++;
-                if ((good_turns >= recover_turns)
-                  && (frames_held < render_frames_per_turn)) {
-                    frames_held++;
-                    good_turns = 0;
-                    tried_one_more = true;
-                    LOGSYNC_F("up to %d frames per turn", (int)frames_held);
+                // How many frames the turn which just ended had the time to
+                // draw. Measured rather than found by trying one more and
+                // seeing whether it held: trying costs a turn which runs
+                // long every time the answer is no, and the cost of a frame
+                // says on its own whether one more would fit.
+                can_hold = render_frames_turn_can_hold();
+                if (can_hold > render_frames_per_turn)
+                    can_hold = render_frames_per_turn;
+                if (can_hold < 1)
+                    can_hold = 1;
+
+                if (can_hold < frames_held)
+                {
+                    turns_asking_more = 0;
+                    turns_asking_less++;
+                    // Two turns in a row before believing it. One long turn
+                    // on its own is a hitch - an explosion, a file being
+                    // read, the window manager - and giving up a frame for it
+                    // would leave the picture worse for a whole scene.
+                    if (turns_asking_less >= 2) {
+                        frames_held = can_hold;
+                        turns_asking_less = 0;
+                        LOGSYNC_F("down to %d frames per turn", (int)frames_held);
+                    }
                 }
-                else if (good_turns > 2) {
-                    // The level has held for a while now; giving it up later
-                    // is a hitch or a heavier scene, not that attempt failing.
-                    tried_one_more = false;
+                else if (can_hold > frames_held)
+                {
+                    turns_asking_less = 0;
+                    turns_asking_more++;
+                    // Half a second of agreement before going up. Coming
+                    // back up is not urgent, and a scene which has just eased
+                    // off may not stay that way. Going straight to the amount
+                    // measured rather than one frame at a time: the cost of a
+                    // frame says what fits, and stepping up one at a time only
+                    // means several seconds of drawing fewer frames than the
+                    // machine can manage.
+                    if (turns_asking_more >= 8) {
+                        frames_held = can_hold;
+                        turns_asking_more = 0;
+                        LOGSYNC_F("up to %d frames per turn", (int)frames_held);
+                    }
+                }
+                else
+                {
+                    turns_asking_less = 0;
+                    turns_asking_more = 0;
                 }
             }
             render_frames_this_turn = frames_held;

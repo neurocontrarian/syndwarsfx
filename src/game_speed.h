@@ -72,11 +72,12 @@ void render_clock_set_turn(ulong turn);
 /** Records the moment a game turn starts, and the length of the one before. */
 void render_turn_begins(void);
 
-/** Whether the game turn which just ended took longer than a turn is meant to
- * last, meaning the machine could not draw the frames it was asked for within
- * it. This is what decides how many frames the next turns ask for, so that the
- * game keeps its turn rate instead of playing in slow motion. */
-TbBool render_turn_overran(void);
+/** How many frames the machine could have drawn within a turn, going by what
+ * one frame cost in the turn which just ended, sleeps taken out. Zero while
+ * nothing has been measured yet. This is what decides how many frames the next
+ * turns draw, so that the game keeps its turn rate instead of playing in slow
+ * motion. */
+ushort render_frames_turn_can_hold(void);
 
 /** Whether there is still room within the current game turn to draw another
  * extra frame. A coarse guard against one unusually heavy frame running the
