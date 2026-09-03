@@ -2263,11 +2263,7 @@ void process_engine_frame(TbBool advance, ushort frame)
         }
     }
 
-    // Only the frame which carries the turn clears the lights. They are
-    // applied once per turn, from process_things(), and read by the floor
-    // drawing; clearing them after every frame left the extra frames of a
-    // turn drawing an unlit floor, one frame lit and the next not.
-    if (advance && (word_1552F8 != 36) && !byte_1C8444)
+    if (word_1552F8 != 36 && !byte_1C8444)
     {
         clear_super_quick_lights();
     }
