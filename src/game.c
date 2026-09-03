@@ -1010,8 +1010,73 @@ char func_cc638(const char *text1, const char *text2)
 
 void screen_dark_curtain_down(void)
 {
+#if 0
     asm volatile ("call ASM_screen_dark_curtain_down\n"
         :  :  : "eax" );
+    return;
+#endif
+    int w;
+    ushort range_beg[MAX_SUPPORTED_SCREEN_WIDTH];
+    ushort range_len[MAX_SUPPORTED_SCREEN_WIDTH];
+    uint already_count;
+    short angl_A, angl_B, angl_C;
+    short dt_angl_A, dt_angl_B, dt_angl_C;
+
+    dt_angl_B = 20 + (LbRandomAnyShort() & 0x1F);
+    dt_angl_A = 20 + (LbRandomAnyShort() & 0x1F);
+    dt_angl_C = 20 + (LbRandomAnyShort() & 0x1F);
+    angl_B = LbRandomAnyShort() & LbFPMath_AngleMask;
+    angl_A = LbRandomAnyShort() & LbFPMath_AngleMask;
+    angl_C = LbRandomAnyShort() & LbFPMath_AngleMask;
+    for (w = 0; w < 320; w++)
+    {
+        int mag;
+
+        range_beg[w] = 0;
+        mag = lbSinTable[(angl_A & LbFPMath_AngleMask) + 512];
+        mag += lbSinTable[angl_B & LbFPMath_AngleMask];
+        mag -= lbSinTable[angl_C & LbFPMath_AngleMask];
+        range_len[w] = abs(mag) >> 14;
+
+        angl_C += dt_angl_C;
+        angl_A += dt_angl_A;
+        angl_B += dt_angl_B;
+    }
+
+    do
+    {
+        int h_beg, h_end, h;
+
+        already_count = 0;
+        for (w = 0; w < 320; w++)
+        {
+            h_beg = range_beg[w] / game_num_fps;
+            if (h_beg >= lbDisplay.GraphicsScreenHeight) {
+                already_count++;
+                continue;
+            }
+            h_end = (range_beg[w] + range_len[w]) / game_num_fps;
+            for (h = h_beg; h < h_end; h++)
+            {
+                TbPixel px;
+                uint scr_pos;
+
+                if (h >= lbDisplay.GraphicsScreenHeight)
+                    break;
+
+                scr_pos = 320 * h + w;
+                px = lbDisplay.WScreen[scr_pos];
+                lbDisplay.WScreen[scr_pos] = pixmap.fade_table[px + 4096];
+            }
+            range_beg[w] += range_len[w];
+            range_len[w] += 1 + (range_len[w] >> 5);
+            if (range_len[w] > MAX_SUPPORTED_SCREEN_HEIGHT * 4)
+                range_len[w] = MAX_SUPPORTED_SCREEN_HEIGHT * 4;
+        }
+        swap_wscreen();
+        game_update();
+    }
+    while (already_count < 320);
 }
 
 int load_outro_text(ubyte *buf)
