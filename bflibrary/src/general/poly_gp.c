@@ -1,3 +1,4 @@
+#pragma GCC optimize ("O2", "no-strict-aliasing", "unroll-loops")
 /******************************************************************************/
 // Bullfrog Engine Emulation Library - for use to remake classic games like
 // Syndicate Wars, Magic Carpet, Genewars or Dungeon Keeper.
@@ -20,6 +21,7 @@
 #include "poly_gp.h"
 
 #include <assert.h>
+#include <string.h>
 #include "bfendian.h"
 #include "bfgentab.h"
 #include "poly.h"
@@ -325,7 +327,7 @@ const long gpoly_divtable[][64] = {
 /**
  * whether the addition (x+y) of two byte ints would use carry
  */
-static inline ubyte __CFADDB__(sbyte x, sbyte y)
+static inline __attribute__((always_inline)) ubyte __CFADDB__(sbyte x, sbyte y)
 {
     return (ubyte)(x) > (ubyte)(x+y);
 }
@@ -333,7 +335,7 @@ static inline ubyte __CFADDB__(sbyte x, sbyte y)
 /**
  * whether the addition (x+y) of two long ints would use carry
  */
-static inline ubyte __CFADDL__(long x, long y)
+static inline __attribute__((always_inline)) ubyte __CFADDL__(long x, long y)
 {
     return (ulong)(x) > (ulong)(x+y);
 }
@@ -341,7 +343,7 @@ static inline ubyte __CFADDL__(long x, long y)
 /**
  * whether the subtraction (x-y) of two byte ints would use carry
  */
-static inline ubyte __CFSUBB__(sbyte x, sbyte y)
+static inline __attribute__((always_inline)) ubyte __CFSUBB__(sbyte x, sbyte y)
 {
     return (ubyte)(x) < (ubyte)(y);
 }
@@ -349,7 +351,7 @@ static inline ubyte __CFSUBB__(sbyte x, sbyte y)
 /**
  * whether the subtraction (x-y) of two long ints would use carry
  */
-static inline ubyte __CFSUBL__(long x, long y)
+static inline __attribute__((always_inline)) ubyte __CFSUBL__(long x, long y)
 {
     return (ulong)(x) < (ulong)(y);
 }
@@ -380,7 +382,7 @@ static int gpoly_mul_rot_2(int a1, int a2)
     return val;
 }
 
-static TbPixel gpoly_pixel_shaded(struct gpoly_blends *p_bld, const struct gpoly_factors *p_inc)
+static inline __attribute__((always_inline)) TbPixel gpoly_pixel_shaded(struct gpoly_blends *p_bld, const struct gpoly_factors *p_inc)
 {
     int loc_2d;
     ubyte a3b_h, a3b_l;
@@ -409,7 +411,7 @@ static TbPixel gpoly_pixel_shaded(struct gpoly_blends *p_bld, const struct gpoly
     return pixmap.fade_table[(ret_h << 8) | ret_l];
 }
 
-static TbPixel gpoly_pixel_noshade(struct gpoly_blends *p_bld, const struct gpoly_factors *p_inc)
+static inline __attribute__((always_inline)) TbPixel gpoly_pixel_noshade(struct gpoly_blends *p_bld, const struct gpoly_factors *p_inc)
 {
     int loc_2d;
     ubyte a3b_h, a3b_l;
@@ -1207,9 +1209,11 @@ void gpoly_rasterize_shaded_nobound(struct gpoly_state *st)
             {
                 ubyte *o;
 
-                // Writes range_len consecutive pixels. This used to be a
-                // variable trip count loop entered at an offset through
-                // gpoly_countdown[], which no compiler can unroll.
+                // This used to be a variable trip count loop entered through
+                // gpoly_countdown[], a transcription of the sixteen times
+                // unrolled block of the original assembly. It amounts to
+                // writing range_len consecutive pixels in order, so it is
+                // spelled out as such.
                 o = &loc_0F4[range_beg_scr];
                 range_remain = range_len;
                 while (range_remain > 0)
