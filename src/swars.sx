@@ -134,6 +134,7 @@
 .global EXPORT_SYMBOL(small_font);			/* 0x1A5848 */
 .global EXPORT_SYMBOL(display_palette);		/* 0x1A5878 */
 .global EXPORT_SYMBOL(colour_lookup);		/* 0x1A71B8 */
+.global EXPORT_SYMBOL(pointer_hotspot);		/* 0x154874+1 */
 
 .global EXPORT_SYMBOL(unkn_changing_color_counter1);	/* 0x1AA26C */
 .global EXPORT_SYMBOL(colour_lookup_lock);	/* 0x1AA270 */
@@ -6986,8 +6987,8 @@ func_3ab94:
 		mov    EXPORT_SYMBOL(pointer_sprites),%eax
 		add    $0x30,%eax
 		call   ac_LbMouseChangeSprite
-		mov    data_15488b,%edx
-		mov    data_15488a,%eax
+		mov    EXPORT_SYMBOL(pointer_hotspot)+0x13,%edx # pointer_hotspot[8].y shifted 3 bytes back
+		mov    EXPORT_SYMBOL(pointer_hotspot)+0x12,%eax # pointer_hotspot[8].x shifted 3 bytes back
 		sar    $0x18,%edx
 		sar    $0x18,%eax
 		call   ac_LbMouseChangeSpriteOffset
@@ -32020,7 +32021,7 @@ GLOBAL_FUNC(ASM_person_burning)	/* 0x053D8C */
 		push   %esi
 		sub    $0x4,%esp
 		mov    %eax,%esi
-		mov    EXPORT_SYMBOL(byte_154F6C),%eax
+		mov    EXPORT_SYMBOL(burning_timer_delatas),%eax
 		mov    %eax,(%esp)
 		movb   $0x20,0x5a(%esi)
 		call   ac_LbRandomAnyShort
@@ -131426,24 +131427,6 @@ data_153919:
 		.fill   0xc
 		.align  4
 
-GLOBAL (weapon_sound)	/* 0x1543B8 */
-		.ascii  "\x00\x0a\x0b\x0e\x0d\x10\x25\x0c"
-		.ascii  "\x24\x11\x12\x13\x14\x16\x16\x15"
-		.ascii  "\x17\x0f\x19\x00\x18\x1a\x1b\x00"
-		.ascii  "\x1c\x1d\x1e\x1f\x20\x21\x22\x00"
-GLOBAL (weapon_sound_z)	/* 0x1543D8 */
-		.ascii  "\x00\x0a\x0b\x0e\x0d\x10\x25\x23"
-		.ascii  "\x24\x11\x12\x13\x14\x16\x16\x15"
-		.ascii  "\x17\x0f\x19\x00\x18\x23\x1b\x00"
-		.ascii  "\x1c\x1d\x1e\x1f\x20\x21\x22\x00"
-
-data_15488a:
-		.byte	0xf7
-data_15488b:
-		.byte	0xff
-		.long	0x0
-
-
 GLOBAL (ASM_byte_154BB4)	/* 0x154BB4 */
 		.ascii  "\xdc\xe0\xe0\xde\xdc\xdc\x00\x00"
 
@@ -131458,10 +131441,11 @@ GLOBAL (ASM_pers_anims_wth_shadows)
 		.ascii  "\x11\x01\xa1\x00\xc1\x00\xd1\x02"
 		.ascii  "\xf1\x02\x41\x01\x91\x01\xb1\x01"
 		.ascii  "\x21\x00\x00\x00"
-GLOBAL(byte_154F6C)
+GLOBAL(burning_timer_delatas)
 		.ascii  "\x00\x00\x01\x00\x01\x00\x00\x00"
 
-data_154f78:
+/* TODO check function unused_create_effects_52_circle at 0x06750C, maybe this is something interesting */
+effect_52_angle_div:	/* 0x154F78, used in unused_create_effects_52_circle */
 		.ascii  "\x01\x04\x06\x0a\x0f\x14\x14\x16"
 		.ascii  "\x18\x19\x1b\x1d\x1f\x00\x00\x00"
 plasma_width:
@@ -131471,9 +131455,7 @@ GLOBAL (anim_slots)	/* 0x155000 */
 		.byte	0x0
 		.byte	0x0
 		.byte	0x1
-mod1_anim_no:	/* 0x155003 */
 		.fill   0x5
-mod2_anim_no:	/* 0x155008 */
 		.byte	0x0
 data_155009:
 		.ascii  "\x00\x00\x00\x0a\x00"

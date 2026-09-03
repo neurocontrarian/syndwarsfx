@@ -120,6 +120,20 @@ ushort weapon_damage[WEP_TYPES_COUNT] = {
   0, 0, 5, 0, 0, 6, 0, 0,
 };
 
+ubyte weapon_sound[WEP_TYPES_COUNT] = {
+   0, 10, 11, 14, 13, 16, 37, 12,
+  36, 17, 18, 19, 20, 22, 22, 21,
+  23, 15, 25,  0, 24, 26, 27,  0,
+  28, 29, 30, 31, 32, 33, 34,  0,
+};
+
+ubyte weapon_sound_z[WEP_TYPES_COUNT] = {
+   0, 10, 11, 14, 13, 16, 37, 35,
+  36, 17, 18, 19, 20, 22, 22, 21,
+  23, 15, 25,  0, 24, 35, 27,  0,
+  28, 29, 30, 31, 32, 33, 34,  0,
+};
+
 struct WeaponDefAdd weapon_defs_a[33] = {0};
 struct TbNamedEnum weapon_names[33] = {0};
 
@@ -603,6 +617,20 @@ ushort weapon_sprite_index(WeaponType wtype, TbBool enabled)
         sprid = 0 + wdef->Sprite;
     }
     return sprid;
+}
+
+ushort weapon_sound_name_speech_index(WeaponType wtype)
+{
+    ushort smp;
+
+    if (wtype >= WEP_TYPES_COUNT)
+        return 0;
+
+    if (background_type == 1)
+        smp = weapon_sound_z[wtype];
+    else
+        smp = weapon_sound[wtype];
+    return smp;
 }
 
 TbBool weapon_is_for_throwing(WeaponType wtype)

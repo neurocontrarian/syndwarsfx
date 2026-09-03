@@ -217,7 +217,7 @@ ushort female_peep = 0x2028;
 ushort head_my_path = 1;
 ushort word_1531DA = 1;
 
-extern sbyte byte_154F6C[8];
+extern sbyte burning_timer_delatas[8];
 extern short word_1AA38E;
 extern short word_1AA390;
 extern short word_1AA392;
@@ -6590,7 +6590,7 @@ void person_burning(struct Thing *p_person)
     if ((p_person->Flag & TngF_PlayerAgent) != 0)
         p_person->U.UPerson.RecoilTimer--;
     else
-        p_person->U.UPerson.RecoilTimer -= byte_154F6C[LbRandomAnyShort() & 3];
+        p_person->U.UPerson.RecoilTimer -= burning_timer_delatas[LbRandomAnyShort() & 3];
 
     if (p_person->U.UPerson.RecoilTimer != 0)
     {
