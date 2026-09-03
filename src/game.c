@@ -7493,6 +7493,13 @@ static void render_extra_frames(void)
         game_update();
         LbScreenSwapClear(0);
     }
+
+    // A frame which was dropped still owns its share of the turn. The wait is
+    // done once per drawn frame, so without this the turn ends early and the
+    // game runs fast - twice as fast on a turn which drew one frame out of
+    // two, which is felt as the world speeding up and slowing down.
+    for (; frame < render_frames_this_turn; frame++)
+        wait_next_gameturn();
 }
 
 void game_process(void)
