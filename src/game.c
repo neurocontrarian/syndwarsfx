@@ -457,12 +457,6 @@ void load_prim_quad(void)
         test_open(100);
 }
 
-void bang_init(void)
-{
-    asm volatile ("call ASM_bang_init\n"
-        :  :  : "eax" );
-}
-
 void bang_set_detail(int a1)
 {
     asm volatile ("call ASM_bang_set_detail\n"

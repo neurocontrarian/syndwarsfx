@@ -94,6 +94,9 @@
 .global EXPORT_SYMBOL(colour_sel_purple);	/* 0x181152 */
 .global EXPORT_SYMBOL(ex_faces);			/* 0x18194C */
 
+.global EXPORT_SYMBOL(shrapnel_free);		/* 0x19714C */
+.global EXPORT_SYMBOL(phwoar_free);			/* 0x19714E */
+
 .global EXPORT_SYMBOL(scratch_buf1)			/* 0x19CB54 */
 .global EXPORT_SYMBOL(colour_grey1);		/* 0x19CC5C */
 .global EXPORT_SYMBOL(colour_grey2);		/* 0x19CC5D */
@@ -173,6 +176,9 @@
 .global EXPORT_SYMBOL(tree_routecost);
 .global EXPORT_SYMBOL(tree_route);
 .global EXPORT_SYMBOL(route_bak);		/* 0x1BF9C8 */
+
+.global EXPORT_SYMBOL(phwoar_num_used);	/* 0x1DC4DC */
+.global EXPORT_SYMBOL(phwoar_num_free);	/* 0x1DC4E0 */
 
 /*----------------------------------------------------------------*/
 /* int place_default_player(unsigned int player_id, __int16 a2)
@@ -105460,12 +105466,12 @@ GLOBAL_FUNC (ASM_bang_init)	/* 0xB0E00 */
 		mov    $0x1,%esi
 		mov    $0x3ff,%ebx
 		xor    %ecx,%ecx
-		mov    %si,shrapnel_free
-		mov    %si,phwoar_free
+		mov    %si,EXPORT_SYMBOL(shrapnel_free)
+		mov    %si,EXPORT_SYMBOL(phwoar_free)
 		mov    %cx,EXPORT_SYMBOL(phwoar)+0x18(%edx)
 		xor    %edx,%edx
-		mov    %ebx,data_1dc4e0
-		mov    %edx,phwoar__child
+		mov    %ebx,EXPORT_SYMBOL(phwoar_num_free)
+		mov    %edx,EXPORT_SYMBOL(phwoar_num_used)
 		pop    %esi
 		pop    %edx
 		pop    %ecx
@@ -105602,7 +105608,7 @@ get_some_phwoar:	/* 0x0B1110 */
 /*----------------------------------------------------------------*/
 		push   %ebx
 		push   %edx
-		mov    phwoar_free,%dx
+		mov    EXPORT_SYMBOL(phwoar_free),%dx
 		test   %dx,%dx
 		jne    jump_b1123
 		xor    %eax,%eax
@@ -105616,14 +105622,14 @@ get_some_phwoar:	/* 0x0B1110 */
 		lea    0x0(,%edx,8),%eax
 		sub    %edx,%eax
 		mov    EXPORT_SYMBOL(phwoar)+0x18(,%eax,4),%ax
-		mov    phwoar__child,%edx
-		mov    %ax,phwoar_free
+		mov    EXPORT_SYMBOL(phwoar_num_used),%edx
+		mov    %ax,EXPORT_SYMBOL(phwoar_free)
 		mov    %ebx,%eax
-		mov    data_1dc4e0,%ebx
+		mov    EXPORT_SYMBOL(phwoar_num_free),%ebx
 		inc    %edx
 		dec    %ebx
-		mov    %edx,phwoar__child
-		mov    %ebx,data_1dc4e0
+		mov    %edx,EXPORT_SYMBOL(phwoar_num_used)
+		mov    %ebx,EXPORT_SYMBOL(phwoar_num_free)
 		pop    %edx
 		pop    %ebx
 		ret
@@ -105639,8 +105645,8 @@ give_some_shrapnel:	/* 0x0B1160 */
 		mov    %ax,%bx
 		lea    0x0(,%ebx,4),%eax
 		sub    %ebx,%eax
-		mov    shrapnel_free,%bx
-		mov    %dx,shrapnel_free
+		mov    EXPORT_SYMBOL(shrapnel_free),%bx
+		mov    %dx,EXPORT_SYMBOL(shrapnel_free)
 		mov    %bx,EXPORT_SYMBOL(shrapnel)+0x16(,%eax,8)
 		pop    %edx
 		pop    %ebx
@@ -105658,15 +105664,15 @@ give_some_phwoar:	/* 0x0B118C */
 		lea    0x0(,%ebx,8),%eax
 		sub    %ebx,%eax
 		lea    0x0(,%eax,4),%ebx
-		mov    phwoar_free,%ax
-		mov    %dx,phwoar_free
+		mov    EXPORT_SYMBOL(phwoar_free),%ax
+		mov    %dx,EXPORT_SYMBOL(phwoar_free)
 		mov    %ax,EXPORT_SYMBOL(phwoar)+0x18(%ebx)
-		mov    phwoar__child,%edx
-		mov    data_1dc4e0,%ebx
+		mov    EXPORT_SYMBOL(phwoar_num_used),%edx
+		mov    EXPORT_SYMBOL(phwoar_num_free),%ebx
 		dec    %edx
 		inc    %ebx
-		mov    %edx,phwoar__child
-		mov    %ebx,data_1dc4e0
+		mov    %edx,EXPORT_SYMBOL(phwoar_num_used)
+		mov    %ebx,EXPORT_SYMBOL(phwoar_num_free)
 		pop    %edx
 		pop    %ebx
 		ret
@@ -106433,11 +106439,11 @@ GLOBAL_FUNC (ASM_new_bang)	/* 0xB1B30 */
 		sar    $0x8,%eax
 		cmp    $0x8000,%eax
 		jge    jump_b2629
-		mov    phwoar_free,%bx
+		mov    EXPORT_SYMBOL(phwoar_free),%bx
 		inc    %esi
 		test   %bx,%bx
 		je     jump_b2629
-		cmpw   $0x0,shrapnel_free
+		cmpw   $0x0,EXPORT_SYMBOL(shrapnel_free)
 		je     jump_b2629
 		cmp    $0xa,%ecx
 		jne    jump_b1c40
@@ -106660,7 +106666,7 @@ GLOBAL_FUNC (ASM_new_bang)	/* 0xB1B30 */
 		jle    jump_b254a
 		mov    %eax,0x88(%esp)
 	jump_b1f44:
-		mov    shrapnel_free,%cx
+		mov    EXPORT_SYMBOL(shrapnel_free),%cx
 		test   %cx,%cx
 		jne    jump_b23e0
 		xor    %eax,%eax
@@ -106949,7 +106955,7 @@ GLOBAL_FUNC (ASM_new_bang)	/* 0xB1B30 */
 		imul   $0x18,%edx,%edx
 		mov    EXPORT_SYMBOL(shrapnel)+0x16(%edx),%dx
 		mov    %ecx,%eax
-		mov    %dx,shrapnel_free
+		mov    %dx,EXPORT_SYMBOL(shrapnel_free)
 	jump_b23f8:
 		mov    %eax,0xb8(%esp)
 		test   %ax,%ax
@@ -107040,7 +107046,7 @@ GLOBAL_FUNC (ASM_new_bang)	/* 0xB1B30 */
 	jump_b254a:
 		cmpl   $0x0,0xa8(%esp)
 		je     jump_b261a
-		mov    phwoar_free,%ax
+		mov    EXPORT_SYMBOL(phwoar_free),%ax
 		test   %ax,%ax
 		je     jump_b259d
 		xor    %edx,%edx
@@ -107049,14 +107055,14 @@ GLOBAL_FUNC (ASM_new_bang)	/* 0xB1B30 */
 		lea    0x0(,%edx,8),%eax
 		sub    %edx,%eax
 		mov    EXPORT_SYMBOL(phwoar)+0x18(,%eax,4),%ax
-		mov    phwoar__child,%edx
-		mov    %ax,phwoar_free
+		mov    EXPORT_SYMBOL(phwoar_num_used),%edx
+		mov    %ax,EXPORT_SYMBOL(phwoar_free)
 		mov    %ebx,%eax
-		mov    data_1dc4e0,%ebx
+		mov    EXPORT_SYMBOL(phwoar_num_free),%ebx
 		inc    %edx
 		dec    %ebx
-		mov    %edx,phwoar__child
-		mov    %ebx,data_1dc4e0
+		mov    %edx,EXPORT_SYMBOL(phwoar_num_used)
+		mov    %ebx,EXPORT_SYMBOL(phwoar_num_free)
 	jump_b259d:
 		test   %ax,%ax
 		je     jump_b261a
@@ -132097,11 +132103,6 @@ GLOBAL (net_game_play_flags)	/* 0x1811F2 */
 		.byte	0x0
 		.fill   0x4b1
 
-shrapnel_free:	/* 0x19714C */
-		.short  0x0
-phwoar_free:	/* 0x19714E */
-		.short  0x0
-
 GLOBAL (mission_status)	/* 0x199828 */
 		.long	0x0
 data_19982c:
@@ -133385,10 +133386,11 @@ GLOBAL (scanner_unkn370)	/* 0x1DC370 */
 		.long	0x0
 data_1dc374:
 		.fill   0x168
-phwoar__child:	/* 0x1DC4DC */
+GLOBAL (ASM_phwoar_num_used)	/* 0x1DC4DC */
 		.long	0x0
-data_1dc4e0:
-		.fill   0x2c
+GLOBAL (ASM_phwoar_num_free)	/* 0x1DC4E0 */
+		.long	0x0
+		.fill   0x28
 data_1dc50c:
 		.long	0x0
 data_1dc510:
