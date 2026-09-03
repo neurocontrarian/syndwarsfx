@@ -69,21 +69,6 @@ void render_clock_next_frame(ushort frame, ushort nframes);
 /** Sets the animation clock to the given turn, on a mission starting. */
 void render_clock_set_turn(ulong turn);
 
-/** Records the moment a game turn starts, and the length of the one before. */
-void render_turn_begins(void);
-
-/** How many frames the machine could have drawn within a turn, going by what
- * one frame cost in the turn which just ended, sleeps taken out. Zero while
- * nothing has been measured yet. This is what decides how many frames the next
- * turns draw, so that the game keeps its turn rate instead of playing in slow
- * motion. */
-ushort render_frames_turn_can_hold(void);
-
-/** Whether there is still room within the current game turn to draw another
- * extra frame. A coarse guard against one unusually heavy frame running the
- * turn away; how many frames the machine sustains is decided per turn. */
-TbBool render_extra_frame_fits(void);
-
 /** Whether the frame being drawn is the one which also carries the game turn
  * forward. False for the extra frames drawn within a turn, so that anything
  * animated from within the drawing code keeps its original pace. */

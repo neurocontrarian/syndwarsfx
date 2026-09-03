@@ -45,9 +45,6 @@ ushort render_frames_this_turn = 1;
 /** End of the current animation turn, in 1/256th of a turn. */
 static ulong anim_turn_end = 0;
 
-/** Frames drawn so far within the current game turn. */
-static ushort turn_frames_drawn = 0;
-
 void render_clock_set_turn(ulong turn)
 {
     anim_turn_end = turn << 8;
@@ -65,7 +62,6 @@ void render_clock_next_frame(ushort frame, ushort nframes)
         frame = nframes - 1;
 
     drawturn++;
-    turn_frames_drawn++;
     if (frame == 0)
         anim_turn_end += 256;
 
@@ -151,68 +147,6 @@ ubyte get_speed_control_inputs(void)
     return did_inp;
 }
 
-static TbClockMSec turn_beg_time = 0;
-
-/** Time slept within the current game turn, by the pacing wait. */
-static TbClockMSec turn_sleep_time = 0;
-
-/** Time the turn which just ended spent drawing, sleeps taken out. */
-static TbClockMSec last_turn_draw = 0;
-
-/** Frames the turn which just ended actually drew. */
-static ushort last_turn_frames = 1;
-
-void render_turn_begins(void)
-{
-    TbClockMSec now, len;
-
-    now = LbTimerClock();
-    if ((turn_beg_time != 0) && (turn_frames_drawn > 0))
-    {
-        len = now - turn_beg_time;
-        last_turn_draw = (len > turn_sleep_time) ? (len - turn_sleep_time) : 0;
-        last_turn_frames = turn_frames_drawn;
-    }
-    turn_beg_time = now;
-    turn_sleep_time = 0;
-    turn_frames_drawn = 0;
-}
-
-ushort render_frames_turn_can_hold(void)
-{
-    TbClockMSec turn_len, per_frame;
-
-    if ((last_turn_draw == 0) || (last_turn_frames == 0))
-        return 0;
-    // What one frame costs to draw, sleeps taken out. Measuring it is the
-    // only way to tell a machine which is a little too slow from one which is
-    // fast enough: asking each frame in turn whether the clock is still
-    // within its share cannot, since such a frame is always started in time
-    // and always finished late.
-    per_frame = last_turn_draw / last_turn_frames;
-    if (per_frame < 1)
-        per_frame = 1;
-    turn_len = 1000 / game_num_fps;
-    // The same small tolerance the turn length is held to: a turn running one
-    // part in sixteen long is not felt, and refusing it would cost a whole
-    // frame of smoothness for nothing.
-    return (turn_len + turn_len / 16) / per_frame;
-}
-
-TbBool render_extra_frame_fits(void)
-{
-    TbClockMSec turn_len;
-
-    turn_len = 1000 / game_num_fps;
-    // A coarse guard only. How many frames this machine keeps up with is
-    // decided from one turn to the next, in game_process(); dropping a frame
-    // here moves the frames of this turn to other places within it, which is
-    // seen as the picture jerking, so it is done only once the turn has
-    // already run out - a single unusually heavy frame, not a machine which
-    // is simply a little too slow.
-    return LbTimerClock() < turn_beg_time + turn_len;
-}
-
 /** Reports the actual pace once per second, so that the game turn rate can
  * be checked against the drawn frame rate. Called once per drawn frame. */
 static void cadence_sample(void)
@@ -286,11 +220,7 @@ void wait_next_gameturn(void)
         sleep_end = curr_time;
         subframe = 0;
     }
-    {
-        TbClockMSec slept_from = LbTimerClock();
-        LbSleepUntil(sleep_end);
-        turn_sleep_time += LbTimerClock() - slept_from;
-    }
+    LbSleepUntil(sleep_end);
     last_loop_time = sleep_end;
 }
 
