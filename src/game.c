@@ -7472,17 +7472,33 @@ void game_process_orbital_station_explode(void)
 /** Amount of extra frames the previous turn managed to draw. */
 static ushort extra_frames_drawn = 0;
 
+/** Turns in a row which had time left for the frames the setting asks for. */
+static ushort turns_with_room = 0;
+
 static void render_extra_frames(void)
 {
     ushort frame;
 
     extra_frames_drawn = 0;
-    if (render_frames_this_turn <= 1)
-        return;
     if (ingame.DisplayMode != DpM_ENGINEPLY)
         return;
     if (skip_redraw_this_turn())
         return;
+
+    if (render_frames_this_turn <= 1)
+    {
+        // Backed off, so nothing more is drawn. The time the single frame of
+        // this turn took is looked at though: if it left room for the frames
+        // the setting asks for, that is counted. Asking for them again to
+        // find out would cost a visible jump; looking at the clock costs
+        // nothing.
+        if ((render_frames_per_turn > 1)
+          && render_extra_frame_fits(1, render_frames_per_turn))
+            turns_with_room++;
+        else
+            turns_with_room = 0;
+        return;
+    }
 
     for (frame = 1; frame < render_frames_this_turn; frame++)
     {
@@ -7552,10 +7568,16 @@ void game_process(void)
             // draws both ends on the real position; alternating between the
             // two makes the whole picture jump back and forth. The full
             // amount is tried again every 256 turns.
-            if ((asked_frames_last_turn > 1) && (extra_frames_drawn == 0))
+            if ((asked_frames_last_turn > 1) && (extra_frames_drawn == 0)) {
                 frames_backed_off = 1;
-            if ((gameturn & 0xFF) == 0)
+                turns_with_room = 0;
+            }
+            // Sixteen turns in a row with time to spare - a second of it -
+            // before asking for the full amount again
+            if (turns_with_room >= 16) {
                 frames_backed_off = 0;
+                turns_with_room = 0;
+            }
             if (frames_backed_off)
                 render_frames_this_turn = 1;
             asked_frames_last_turn = render_frames_this_turn;
