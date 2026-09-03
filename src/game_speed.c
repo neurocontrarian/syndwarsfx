@@ -161,11 +161,13 @@ TbBool render_extra_frame_fits(ushort frame, ushort nframes)
     if (nframes < 2)
         return false;
     turn_len = 1000 / game_num_fps;
-    // The moment this frame was supposed to be drawn at. Being past it means
-    // the machine cannot draw that many frames within a turn, and drawing it
-    // anyway would push the whole turn late - the simulation would run slow
-    // rather than the picture being less smooth.
-    due = turn_beg_time + (turn_len * (TbClockMSec)frame) / nframes;
+    // The moment by which this frame has to be done, that is the end of its
+    // share of the turn - not the moment it was due to start. The wait which
+    // paces the game sleeps until exactly that start, so comparing against it
+    // was always just too late, and every extra frame was dropped however
+    // fast the machine was. Being past the end of the share is what says the
+    // machine cannot draw that many frames within a turn.
+    due = turn_beg_time + (turn_len * (TbClockMSec)(frame + 1)) / nframes;
     return LbTimerClock() <= due;
 }
 
