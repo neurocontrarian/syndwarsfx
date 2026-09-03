@@ -28,6 +28,7 @@
 #include "bfjoyst.h"
 #include "ssampply.h"
 
+#include "embedanim.h"
 #include "feappbar.h"
 #include "fecryo.h"
 #include "femain.h"
@@ -897,48 +898,37 @@ ubyte show_equipment_screen(void)
 
 void init_weapon_anim(ubyte weapon)
 {
-    struct Animation *p_anim;
-    PathInfo *pinfo;
-    ulong k;
     ubyte anislot;
 
-    pinfo = &game_dirs[DirPlace_Equip];
-
     anislot = AniSl_EQVIEW;
-    if (weapon >= 32)
-    {
-        k = anim_slots[anislot];
-        p_anim = &animations[k];
-        anim_flic_set_fname(p_anim, "%s/mod-%02d.fli", pinfo->directory, (int)weapon - 32);
-    }
-    else
-    {
-        k = anim_slots[anislot];
-        p_anim = &animations[k];
-        anim_flic_set_fname(p_anim, "%s/wep-%02d.fli", pinfo->directory, (int)weapon);
+    if (weapon >= 32) {
+        embanim_set_cybmod_model_file(anislot, weapon - 32);
+    } else {
+        embanim_set_weapon_model_file(anislot, weapon);
     }
     flic_unkn03(anislot);
 }
 
 void weapon_flic_data_to_screen(void)
 {
-    struct Animation *p_anim;
-    ulong k;
+    TbPixel *frame_buf;
     short w, h;
+    ubyte anislot;
+
+    anislot = AniSl_EQVIEW;
+    frame_buf = embanim_frame_buffer(anislot);
 
     w = equip_display_box.Width - 8;
     h = w * 7 / 10;
-    k = anim_slots[AniSl_EQVIEW];
-    p_anim = &animations[k];
 
     LbScreenSetGraphicsWindow(equip_display_box.X + 4, equip_display_box.Y + 4, w, h);
     // Frame zero means animation didn't started yet; use the opportunity to copy
     // clean background to the animation playback buffer
-    if (p_anim->FrameNumber == 0) {
-        LbScreenSave(lbDisplay.GraphicsWindowPtr, p_anim->FrameBuffer,
+    if (embanim_current_frame_number(anislot) == 0) {
+        LbScreenSave(lbDisplay.GraphicsWindowPtr, frame_buf,
             lbDisplay.GraphicsWindowHeight);
     } else {
-        LbScreenCopy(p_anim->FrameBuffer, lbDisplay.GraphicsWindowPtr,
+        LbScreenCopy(frame_buf, lbDisplay.GraphicsWindowPtr,
             lbDisplay.GraphicsWindowHeight);
     }
     LbScreenSetGraphicsWindow(0, 0, lbDisplay.GraphicsScreenWidth,

@@ -28,6 +28,7 @@
 
 #include "bigmap.h"
 #include "campaign.h"
+#include "embedanim.h"
 #include "femail.h"
 #include "femain.h"
 #include "game_data.h"
@@ -237,16 +238,10 @@ ubyte show_brief_netscan_box(struct ScreenTextBox *p_box)
 
 void flic_netscan_open_anim(ubyte netno)
 {
-    struct Animation *p_anim;
-    PathInfo *pinfo;
-    int k;
     ubyte anislot;
 
     anislot = AniSl_NETSCAN;
-    k = anim_slots[anislot];
-    p_anim = &animations[k];
-    pinfo = &game_dirs[DirPlace_Equip];
-    anim_flic_set_fname(p_anim, "%s/net%02d.fli", pinfo->directory, netno);
+    embanim_set_netscan_file(anislot, netno);
     flic_unkn03(anislot);
 }
 

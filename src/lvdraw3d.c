@@ -36,6 +36,7 @@
 #include "enginzoom.h"
 
 #include "bigmap.h"
+#include "embedanim.h"
 #include "engindrwlstm_wrp.h"
 #include "engindrwlstx.h"
 #include "enginsngtxtr.h"

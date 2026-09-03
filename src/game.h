@@ -67,20 +67,6 @@ enum LoginControlStates {
     LognCt_Unkn10,
 };
 
-enum AnimSlot {
-  AniSl_FULLSCREEN = 0,
-  AniSl_BILLBOARD = 1,
-  AniSl_EQVIEW = 2,	/**< equipment (weapon or mod) presentation in buy/sell window */
-  AniSl_CYBORG_INOUT = 3,	/**< cyborg mod insertion or removal anim */
-  AniSl_UNKN4 = 4,
-  AniSl_UNKN5 = 5,
-  AniSl_UNKN6 = 6,
-  AniSl_UNKN7 = 7,
-  AniSl_CYBORG_BRTH = 8,
-  AniSl_NETSCAN = 9,
-  AniSl_SCRATCH = 10,	/**< scratch buffer for some transparent menu animations */
-};
-
 // For some reason, we have different values for change_screen
 //TODO consolidate with ScreenType, use the same values
 enum ChangeScreenType {
@@ -180,9 +166,6 @@ extern u32 engine_mem_alloc_size;
 
 extern long navi2_unkn_counter;
 extern long navi2_unkn_counter_max;
-
-extern ubyte anim_slots[];
-extern struct Animation animations[2];
 
 extern ubyte *scratch_buf1;
 
@@ -327,20 +310,6 @@ void init_agents(void);
 void srm_reset_research(void);
 void net_new_game_prepare(void);
 
-/** Decode and draw next frame of the animation.
- */
-int xdo_next_frame(ubyte anislot);
-
-/** Decode and draw previous frame of the animation.
- *
- * Note that printing a previous frame of the FLI file requires
- * decoding all frames from start - these files do not use
- * bi-directional FLIC format.
- */
-int xdo_prev_frame(ubyte anislot);
-
-void flic_unkn03(ubyte a1);
-
 void my_preprocess_text(char *text);
 
 TbBool player_try_spend_money(long cost);
@@ -365,8 +334,6 @@ void game_set_cam_track_thing_xz(ThingIdx thing);
 TbBool game_cam_tracked_thing_is_player_agent(void);
 
 ubyte process_send_person(ushort player, int i);
-
-ubyte *anim_type_get_output_buffer(ubyte anislot);
 
 short test_missions(ubyte flag);
 void init_level_3d(ubyte flag);

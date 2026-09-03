@@ -75,6 +75,7 @@
 #include "dos.h"
 #include "drawshape.h"
 #include "drawtext.h"
+#include "embedanim.h"
 #include "enginbckt.h"
 #include "engindrwlstm_wrp.h"
 #include "engindrwlstx.h"
@@ -267,11 +268,8 @@ extern short word_1774E8[2 * 150];
 
 char *data_15319c = unknmsg_str;
 
-extern ubyte billboard_anim_no;
-extern ubyte byte_1AAA88;
 extern long dword_1AAB74;
 extern long dword_1AAB78;
-extern ubyte active_anim;
 extern ushort word_1AABD0;
 
 extern long mech_unkn_tile_x1;
@@ -332,10 +330,6 @@ struct TbLoadFiles missionspr_load_files[] =
   { "data/pointr0-3.tab",(void **)&pointer_sprites,	(void **)&pointer_sprites_end, 0, 0, 0 },
   { "qdata/pal.pal",	(void **)&display_palette,	(void **)NULL,				0, 0, 0 },
   { "",					(void **)NULL, 				(void **)NULL,				0, 0, 0 }
-};
-
-ubyte byte_154BB4[] = {
-  220, 224, 224, 222, 220, 220,
 };
 
 char unk_credits_text_s[] = "";
@@ -538,174 +532,6 @@ TbBool game_setup_stuff(void)
     }
 
     return ret;
-}
-
-void anim_show_FLI_SS2_NP(void)
-{
-    struct Animation *p_anim;
-
-    p_anim = &animations[active_anim];
-    anim_show_FLI_SS2(p_anim);
-}
-
-void anim_show_FLI_BRUN_NP(void)
-{
-    struct Animation *p_anim;
-
-    p_anim = &animations[active_anim];
-    anim_show_FLI_BRUN(p_anim);
-}
-
-void anim_show_FLI_LC_NP(void)
-{
-    struct Animation *p_anim;
-
-    p_anim = &animations[active_anim];
-    anim_show_FLI_LC(p_anim);
-}
-
-ubyte *anim_type_get_output_buffer(ubyte anislot)
-{
-    switch (anislot)
-    {
-    case AniSl_FULLSCREEN:
-    default:
-        return lbDisplay.WScreen;
-    case AniSl_BILLBOARD:
-        return vec_tmap[4];
-    case AniSl_EQVIEW:
-    case AniSl_UNKN4:
-    case AniSl_UNKN5:
-    case AniSl_UNKN6:
-    case AniSl_UNKN7:
-    case AniSl_NETSCAN:
-        return vec_tmap[5];
-    case AniSl_CYBORG_INOUT:
-    case AniSl_CYBORG_BRTH:
-        return vec_tmap[5] + 0x8000;
-    case AniSl_SCRATCH:
-        return vec_tmap[4] + 0x8000;
-    }
-}
-
-void anim_billboard_select_rand(void)
-{
-    ushort rnd;
-
-    rnd = LbRandomPosShort() & 7;
-    if (rnd <= 0)
-        billboard_anim_no = 1;
-    else if (rnd <= 2)
-        billboard_anim_no = 2;
-    else if (rnd <= 5)
-        billboard_anim_no = 0;
-    else
-        billboard_anim_no = 3;
-}
-
-void anim_billboard_select_next(void)
-{
-    billboard_anim_no++;
-    if (billboard_anim_no > 3)
-        billboard_anim_no = 0;
-}
-
-void anim_billboard_broadcast_sound(void)
-{
-    struct Thing *p_thing;
-    ushort rnd;
-    ubyte smpl_no;
-
-    if (in_network_game)
-        return;
-    if (ingame.VisibleBillboardThing == 0)
-        return;
-
-    p_thing = &things[ingame.VisibleBillboardThing];
-    smpl_no = byte_154BB4[billboard_anim_no];
-    rnd = LbRandomPosShort() & 1;
-    play_dist_sample(p_thing, smpl_no + rnd, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 1);
-}
-
-void flic_unkn03(ubyte anislot)
-{
-    struct Animation *p_anim;
-    ubyte *frmbuf;
-    PathInfo *pinfo;
-    int k;
-
-    k = anim_slots[anislot];
-    p_anim = &animations[k];
-    if (anim_is_opened(p_anim)) {
-        anim_flic_close(p_anim);
-    }
-
-    anim_scratch = scratch_buf1;
-    anim_flic_init(p_anim, anislot, 0x00);
-    frmbuf = anim_type_get_output_buffer(anislot);
-
-    switch (anislot)
-    {
-    case AniSl_BILLBOARD:
-        byte_1AAA88 = 0;
-        anim_flic_set_frame_buffer(p_anim, frmbuf, 0, 0, 0, 0x20);
-        anim_billboard_select_rand();
-        anim_billboard_broadcast_sound();
-        pinfo = &game_dirs[DirPlace_QData];
-        anim_flic_set_fname(p_anim, "%s/%s-1%d.fli", pinfo->directory, "demo", (int)billboard_anim_no);
-        anim_billboard_select_next();
-        break;
-    case AniSl_EQVIEW:
-        byte_1AAA88 = 0;
-        anim_flic_set_frame_buffer(p_anim, frmbuf, 0, 0, 0, 0x00);
-        break;
-    case AniSl_CYBORG_INOUT:
-        byte_1AAA88 = 0;
-        anim_flic_set_frame_buffer(p_anim, frmbuf, 0, 0, 0, 0x00);
-        break;
-    case AniSl_UNKN4:
-        byte_1AAA88 = 1;
-        anim_flic_set_frame_buffer(p_anim, frmbuf, 0, 0, 0, 0x02);
-        pinfo = &game_dirs[DirPlace_Data];
-        anim_flic_set_fname(p_anim, "%s/%s.fli", pinfo->directory, "intro");
-        break;
-    case AniSl_UNKN5:
-        byte_1AAA88 = 0;
-        anim_flic_set_frame_buffer(p_anim, frmbuf, 10, 30, 0, 0x02);
-        pinfo = &game_dirs[DirPlace_Data];
-        anim_flic_set_fname(p_anim, "%s/%s.fli", pinfo->directory, "mcomp");
-        break;
-    case AniSl_UNKN6:
-        byte_1AAA88 = 0;
-        anim_flic_set_frame_buffer(p_anim, frmbuf, 10, 30, 0, 0x02);
-        pinfo = &game_dirs[DirPlace_Data];
-        anim_flic_set_fname(p_anim, "%s/%s.fli", pinfo->directory, "mcomp");
-        break;
-    case AniSl_UNKN7:
-        byte_1AAA88 = 0;
-        anim_flic_set_frame_buffer(p_anim, frmbuf, 10, 30, 0, 0x02);
-        pinfo = &game_dirs[DirPlace_Data];
-        anim_flic_set_fname(p_anim, "%s/%s.fli", pinfo->directory, "mcomp");
-        break;
-    case AniSl_CYBORG_BRTH:
-        byte_1AAA88 = 0;
-        anim_flic_set_frame_buffer(p_anim, frmbuf, 0, 0, 0, 0x20);
-        break;
-    case AniSl_NETSCAN:
-        byte_1AAA88 = 0;
-        anim_flic_set_frame_buffer(p_anim, frmbuf, 0, 0, 0, 0x00);
-        break;
-      default:
-        break;
-    }
-
-    if (anim_flic_show_open(p_anim) == Lb_FAIL)
-    {
-        if (anislot == AniSl_BILLBOARD)
-            ingame.Flags &= ~GamF_BillboardMovies;
-        return;
-    }
-    p_anim->anfield_4 += 12;
 }
 
 void update_danger_music(ubyte a1)
@@ -3608,95 +3434,6 @@ TbBool game_setup(void)
         game_startup_fail_screen();
     }
     return ret;
-}
-
-void anim_show_draw_next_frame(struct Animation *p_anim)
-{
-    ubyte pal_change;
-
-    pal_change = anim_show_frame(p_anim);
-    p_anim->FrameNumber++;
-
-    if (pal_change)
-    {
-        LbScreenWaitVbi();
-        if (byte_1AAA88) {
-            LbPaletteSet(anim_palette);
-        }
-    }
-}
-
-int xdo_next_frame(ubyte anislot)
-{
-    struct Animation *p_anim;
-    ushort k;
-
-    k = anim_slots[anislot];
-    active_anim = k;
-    p_anim = &animations[k];
-
-    if (anislot >= AniSl_EQVIEW && anislot <= AniSl_CYBORG_INOUT)
-    {
-        if (p_anim->FrameNumber == 0) {
-            play_sample_using_heap(0, 135, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 3u);
-        } else if (p_anim->FrameNumber == p_anim->FLCFileHeader.NumberOfFrames >> 1) {
-            play_sample_using_heap(0, 115, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 3u);
-        }
-    }
-
-    if (p_anim->FrameNumber >= p_anim->FLCFileHeader.NumberOfFrames)
-    {
-        anim_flic_close(p_anim);
-        if ((p_anim->Flags & 0x20) != 0) {
-            flic_unkn03(p_anim->Type);
-        }
-        return 1;
-    }
-
-    anim_show_prep_next_frame(p_anim, anim_type_get_output_buffer(p_anim->Type));
-    anim_show_draw_next_frame(p_anim);
-
-    return 0;
-}
-
-int xdo_prev_frame(ubyte anislot)
-{
-    struct Animation *p_anim;
-    ubyte *p_frmbuf;
-    uint i, rq_frame;
-    ushort k;
-
-    k = anim_slots[anislot];
-    active_anim = k;
-    p_anim = &animations[k];
-
-    if (p_anim->FrameNumber == 0)
-        rq_frame = p_anim->FLCFileHeader.NumberOfFrames;
-    else
-        rq_frame = p_anim->FrameNumber - 1;
-
-    p_frmbuf = anim_type_get_output_buffer(p_anim->Type);
-
-    if (rq_frame == 0)
-    {
-        LbMemorySet(p_frmbuf, 0, p_anim->FLCFileHeader.Width * p_anim->FLCFileHeader.Height);
-        anim_flic_close(p_anim);
-        if ((p_anim->Flags & 0x20) != 0) {
-            flic_unkn03(p_anim->Type);
-        }
-        return 1;
-    }
-
-    anim_flic_show_replay(p_anim);
-    LbMemorySet(p_frmbuf, 0, p_anim->FLCFileHeader.Width * p_anim->FLCFileHeader.Height);
-    anim_show_prep_next_frame(p_anim, p_frmbuf);
-    anim_show_draw_next_frame(p_anim);
-    for (i = 1; i < rq_frame; i++)
-    {
-        anim_show_prep_next_frame(p_anim, NULL);
-        anim_show_draw_next_frame(p_anim);
-    }
-    return 0;
 }
 
 void mapwho_unkn01(int a1, int a2)
