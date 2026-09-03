@@ -2195,6 +2195,15 @@ void process_engine_frame(TbBool advance, ushort frame)
 
     frame_advances_state = advance;
 
+    // Where the camera ended up for this turn. Recorded here rather than in
+    // the game loop, because the camera is moved during the drawing - by
+    // process_view_inputs() for scrolling and process_engine_unk1() for the
+    // rotation, both of which run just before this function. Recording it
+    // before those ran made every drawn frame show a camera one whole turn
+    // behind, and the last frame of a turn never landed on the real position.
+    if (advance)
+        camera_turn_recorded();
+
     if (advance)
         get_engine_inputs();
 
@@ -7517,7 +7526,6 @@ void game_process(void)
         if ((ingame.DisplayMode == DpM_ENGINEPLY)
           && ((ingame.Flags & TngF_ProgressAction) != 0))
             process_explode();
-        camera_turn_recorded();
         things_turn_recorded();
         // Only the in-mission view draws more than one frame per turn.
         // Anywhere else the turn has to keep its full length, or every
