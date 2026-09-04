@@ -55,6 +55,8 @@ syndwarsfx_SOURCES = \
 	dos.h \
 	drawtext_wrp.c \
 	drawtext_wrp.h \
+	embedanim.c \
+	embedanim.h \
 	engindrwlstm_wrp.c \
 	engindrwlstm_wrp.h \
 	engindrwlstx_tng.c \

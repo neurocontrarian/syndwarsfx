@@ -433,9 +433,9 @@ void build_building(struct Thing *p_thing)
             return;
     }
 
-    if (draw_frame == p_thing->U.UObject.DrawTurn)
+    if (drawturn == p_thing->U.UObject.DrawTurn)
         return;
-    p_thing->U.UObject.DrawTurn = draw_frame;
+    p_thing->U.UObject.DrawTurn = drawturn;
 
     if (p_thing->SubType == SubTT_BLD_BILLBOARD)
     {

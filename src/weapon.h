@@ -182,8 +182,6 @@ extern ubyte weapon_tech_level[33];
 extern ushort weapon_nrg[WEP_TYPES_COUNT];
 extern ushort weapon_range[WEP_TYPES_COUNT];
 extern ushort weapon_damage[WEP_TYPES_COUNT];
-extern ubyte weapon_sound[32];
-extern ubyte weapon_sound_z[32];
 extern short persuaded_person_weapons_sell_cost_permil;
 
 extern ushort weapon_text_index[WEP_TYPES_COUNT];
@@ -252,6 +250,10 @@ ubyte weapon_simultaneous_fire_in_group(WeaponType lead_wtype, WeaponType follwr
 /** Returns panel sprite index to be used to represent the weapon.
  */
 ushort weapon_sprite_index(WeaponType wtype, TbBool enabled);
+
+/** Returns index of the speech sample telling weapon name.
+ */
+ushort weapon_sound_name_speech_index(WeaponType wtype);
 
 TbBool weapons_has_weapon(ulong weapons, WeaponType wtype);
 

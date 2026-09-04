@@ -34,6 +34,7 @@
 #include "campaign.h"
 #include "cybmod.h"
 #include "display.h"
+#include "embedanim.h"
 #include "feequip.h"
 #include "femain.h"
 #include "fenet.h"
@@ -406,68 +407,6 @@ void sprint_cryo_cyborg_mods_static_fname(char *str, ubyte part, ubyte *p_mods_a
     }
 }
 
-void cryo_cyborg_mods_anim_set_fname(ubyte anislot, ubyte part, ubyte stage)
-{
-    struct Animation *p_anim;
-    PathInfo *pinfo;
-    int k;
-
-    k = anim_slots[anislot];
-    p_anim = &animations[k];
-
-    pinfo = &game_dirs[DirPlace_QEquip];
-
-    switch (stage)
-    {
-    case ModDSt_BRT:
-        anim_flic_set_fname(p_anim, "%s/m%da%d.fli", pinfo->directory, flic_mods[0], flic_mods[2]);
-        break;
-    case ModDSt_OUT:
-        switch (part)
-        {
-        case ModDPt_CHEST:
-            anim_flic_set_fname(p_anim, "%s/m%dbo.fli", pinfo->directory, old_flic_mods[0]);
-            break;
-        case ModDPt_BRAIN:
-            anim_flic_set_fname(p_anim, "%s/m%dbbo.fli", pinfo->directory, old_flic_mods[0]);
-            break;
-        case ModDPt_ARMS:
-            anim_flic_set_fname(p_anim, "%s/m%da%do.fli", pinfo->directory, old_flic_mods[0], old_flic_mods[2]);
-            break;
-        case ModDPt_LEGS:
-            anim_flic_set_fname(p_anim, "%s/m%dl%do.fli", pinfo->directory, old_flic_mods[0], old_flic_mods[3]);
-            break;
-        default:
-            assert(!"unreachable");
-            break;
-        }
-        break;
-    case ModDSt_IN:
-        switch (part)
-        {
-          case ModDPt_CHEST:
-            anim_flic_set_fname(p_anim, "%s/m%dbi.fli", pinfo->directory, flic_mods[0]);
-            break;
-          case ModDPt_BRAIN:
-            anim_flic_set_fname(p_anim, "%s/m%dbbi.fli", pinfo->directory, flic_mods[0]);
-            break;
-          case ModDPt_ARMS:
-            anim_flic_set_fname(p_anim, "%s/m%da%di.fli", pinfo->directory, flic_mods[0], flic_mods[2]);
-            break;
-          case ModDPt_LEGS:
-            anim_flic_set_fname(p_anim, "%s/m%dl%di.fli", pinfo->directory, flic_mods[0], flic_mods[3]);
-            break;
-          default:
-            assert(!"unreachable");
-            break;
-        }
-        break;
-    case 3:
-        // No animation
-        break;
-    }
-}
-
 /** Returns scanline width for given RAW image width.
  *
  * RAW images are padded, meaning amount of bytes between lines
@@ -585,7 +524,7 @@ void cryo_cyborg_part_buf_blokey_static_load(ubyte *p_mods_arr, ubyte part)
     long len;
     short h, scanln;
 
-    p_scratch = anim_type_get_output_buffer(AniSl_SCRATCH);
+    p_scratch = embanim_type_get_output_buffer(AniSl_SCRATCH);
     p_partbuf = cryo_cyborg_part_buf_ptr(part);
 
     scanln = raw_file_scanline(equip_blokey_rect[part].Width);
@@ -618,7 +557,7 @@ void cryo_cyborg_part_buf_blokey_fli_frame_copy(ubyte part, ubyte anislot)
     h = equip_blokey_rect[part].Height;
 
     // Blit the current part image onto framebuf
-    p_flicbuf = anim_type_get_output_buffer(anislot);
+    p_flicbuf = embanim_type_get_output_buffer(anislot);
     p_partbuf = cryo_cyborg_part_buf_ptr(part);
     partbuf_scanln = raw_file_scanline(w);
 
@@ -649,33 +588,6 @@ void cryo_cyborg_part_buf_blokey_static_load_all(ubyte *p_mods_arr)
             continue;
 
         cryo_cyborg_part_buf_blokey_static_load(p_mods_arr, part);
-    }
-}
-
-/** Clears output buffer of the animation at given slot.
- *
- * The animation must be opened, but its frame buffer
- * doesn't have to be set for this function to work.
- */
-void flic_clear_output_buffer(ubyte anislot)
-{
-    struct Animation *p_anim;
-    int k;
-
-    k = anim_slots[anislot];
-    p_anim = &animations[k];
-    if (anim_is_opened(p_anim))
-    {
-        ubyte *obuf;
-        short h;
-
-        obuf = anim_type_get_output_buffer(p_anim->Type);
-
-        for (h = p_anim->FLCFileHeader.Height; h > 0; h--)
-        {
-            LbMemorySet(obuf, '\0', p_anim->FLCFileHeader.Width);
-            obuf += p_anim->FLCFileHeader.Width;
-        }
     }
 }
 
@@ -761,9 +673,9 @@ void init_next_blokey_flic(void)
         }
         else if (!IsSamplePlaying(0, 134, 0))
         {
-            cryo_cyborg_mods_anim_set_fname(anislot, part, stage);
-            flic_unkn03(anislot);
-            flic_clear_output_buffer(anislot);
+            embanim_set_cyborg_part_file(anislot, part, stage);
+            embanim_reinit(anislot);
+            embanim_clear_output_buffer(anislot);
             play_sample_using_heap(0, 126, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 1u);
             current_frame = 0;
             new_current_drawing_mod = ModDPt_BREATH;
@@ -772,8 +684,8 @@ void init_next_blokey_flic(void)
         break;
     case ModDSt_OUT:
         anislot = AniSl_CYBORG_INOUT;
-        cryo_cyborg_mods_anim_set_fname(anislot, part, stage);
-        flic_unkn03(anislot);
+        embanim_set_cyborg_part_file(anislot, part, stage);
+        embanim_reinit(anislot);
         old_flic_mods[part] = 0;
         new_current_drawing_mod = part;
         mod_draw_states[part] |= ModDSt_ModAnimOut;
@@ -783,9 +695,9 @@ void init_next_blokey_flic(void)
         break;
     case ModDSt_IN:
         anislot = AniSl_CYBORG_INOUT;
-        cryo_cyborg_mods_anim_set_fname(anislot, part, stage);
-        flic_unkn03(anislot);
-        flic_clear_output_buffer(anislot);
+        embanim_set_cyborg_part_file(anislot, part, stage);
+        embanim_reinit(anislot);
+        embanim_clear_output_buffer(anislot);
         new_current_drawing_mod = part;
         mod_draw_states[part] |= ModDSt_ModAnimIn;
         mod_draw_states[part] &= ~ModDSt_Unkn08;
@@ -1082,7 +994,7 @@ void draw_blokey_body_mods(void)
         {
             if ((mod_draw_states[part] & ModDSt_ModAnimIn) == 0)
                 continue;
-            done = xdo_next_frame(AniSl_CYBORG_INOUT);
+            done = embanim_do_next_frame(AniSl_CYBORG_INOUT);
             cryo_cyborg_part_buf_blokey_fli_frame_copy(part, AniSl_CYBORG_INOUT);
             still_playing = 1;
             if (done)
@@ -1104,7 +1016,7 @@ void draw_blokey_body_mods(void)
         {
             if ((mod_draw_states[part] & ModDSt_ModAnimOut) == 0)
                 continue;
-            done = xdo_prev_frame(AniSl_CYBORG_INOUT);
+            done = embanim_do_prev_frame(AniSl_CYBORG_INOUT);
             cryo_cyborg_part_buf_blokey_fli_frame_copy(part, AniSl_CYBORG_INOUT);
             still_playing = 1;
             if (done)
@@ -1126,7 +1038,7 @@ void draw_blokey_body_mods(void)
 
     if (!still_playing && (current_drawing_mod == ModDPt_BREATH))
     {
-        done = xdo_next_frame(AniSl_CYBORG_BRTH);
+        done = embanim_do_next_frame(AniSl_CYBORG_BRTH);
         cryo_cyborg_part_buf_blokey_fli_frame_copy(current_drawing_mod, AniSl_CYBORG_BRTH);
         draw_flic_purple_list(blokey_part_buf_breath_data_to_screen);
         still_playing = !done;
@@ -1480,7 +1392,7 @@ void draw_display_box_content_mod(struct ScreenTextBox *p_box)
             // Mark that we should start animation frames the next time
             p_box->TextFadePos++;
         else
-            xdo_next_frame(AniSl_EQVIEW);
+            embanim_do_next_frame(AniSl_EQVIEW);
         draw_flic_purple_list(ac_weapon_flic_data_to_screen);
         break;
     }

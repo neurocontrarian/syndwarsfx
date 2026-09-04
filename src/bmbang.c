@@ -18,12 +18,24 @@
 /******************************************************************************/
 #include "bmbang.h"
 
+#include "enginshrapn.h"
+
 #include "thing.h"
 #include "swlog.h"
 /******************************************************************************/
 
 extern ubyte byte_1C4769;
 extern struct MapCreater map_craters[128];
+
+void bang_init(void)
+{
+#if 0
+    asm volatile ("call ASM_bang_init\n"
+        :  :  : "eax" );
+#endif
+    shrapnel_init();
+    phwoar_init();
+}
 
 void new_bang(int x, int y, int z, int type, int owner, int c)
 {

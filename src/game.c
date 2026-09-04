@@ -75,6 +75,7 @@
 #include "dos.h"
 #include "drawshape.h"
 #include "drawtext.h"
+#include "embedanim.h"
 #include "enginbckt.h"
 #include "engindrwlstm_wrp.h"
 #include "engindrwlstx.h"
@@ -267,11 +268,8 @@ extern short word_1774E8[2 * 150];
 
 char *data_15319c = unknmsg_str;
 
-extern ubyte billboard_anim_no;
-extern ubyte byte_1AAA88;
 extern long dword_1AAB74;
 extern long dword_1AAB78;
-extern ubyte active_anim;
 extern ushort word_1AABD0;
 
 extern long mech_unkn_tile_x1;
@@ -332,10 +330,6 @@ struct TbLoadFiles missionspr_load_files[] =
   { "data/pointr0-3.tab",(void **)&pointer_sprites,	(void **)&pointer_sprites_end, 0, 0, 0 },
   { "qdata/pal.pal",	(void **)&display_palette,	(void **)NULL,				0, 0, 0 },
   { "",					(void **)NULL, 				(void **)NULL,				0, 0, 0 }
-};
-
-ubyte byte_154BB4[] = {
-  220, 224, 224, 222, 220, 220,
 };
 
 char unk_credits_text_s[] = "";
@@ -457,12 +451,6 @@ void load_prim_quad(void)
         test_open(100);
 }
 
-void bang_init(void)
-{
-    asm volatile ("call ASM_bang_init\n"
-        :  :  : "eax" );
-}
-
 void bang_set_detail(int a1)
 {
     asm volatile ("call ASM_bang_set_detail\n"
@@ -544,174 +532,6 @@ TbBool game_setup_stuff(void)
     }
 
     return ret;
-}
-
-void anim_show_FLI_SS2_NP(void)
-{
-    struct Animation *p_anim;
-
-    p_anim = &animations[active_anim];
-    anim_show_FLI_SS2(p_anim);
-}
-
-void anim_show_FLI_BRUN_NP(void)
-{
-    struct Animation *p_anim;
-
-    p_anim = &animations[active_anim];
-    anim_show_FLI_BRUN(p_anim);
-}
-
-void anim_show_FLI_LC_NP(void)
-{
-    struct Animation *p_anim;
-
-    p_anim = &animations[active_anim];
-    anim_show_FLI_LC(p_anim);
-}
-
-ubyte *anim_type_get_output_buffer(ubyte anislot)
-{
-    switch (anislot)
-    {
-    case AniSl_FULLSCREEN:
-    default:
-        return lbDisplay.WScreen;
-    case AniSl_BILLBOARD:
-        return vec_tmap[4];
-    case AniSl_EQVIEW:
-    case AniSl_UNKN4:
-    case AniSl_UNKN5:
-    case AniSl_UNKN6:
-    case AniSl_UNKN7:
-    case AniSl_NETSCAN:
-        return vec_tmap[5];
-    case AniSl_CYBORG_INOUT:
-    case AniSl_CYBORG_BRTH:
-        return vec_tmap[5] + 0x8000;
-    case AniSl_SCRATCH:
-        return vec_tmap[4] + 0x8000;
-    }
-}
-
-void anim_billboard_select_rand(void)
-{
-    ushort rnd;
-
-    rnd = LbRandomPosShort() & 7;
-    if (rnd <= 0)
-        billboard_anim_no = 1;
-    else if (rnd <= 2)
-        billboard_anim_no = 2;
-    else if (rnd <= 5)
-        billboard_anim_no = 0;
-    else
-        billboard_anim_no = 3;
-}
-
-void anim_billboard_select_next(void)
-{
-    billboard_anim_no++;
-    if (billboard_anim_no > 3)
-        billboard_anim_no = 0;
-}
-
-void anim_billboard_broadcast_sound(void)
-{
-    struct Thing *p_thing;
-    ushort rnd;
-    ubyte smpl_no;
-
-    if (in_network_game)
-        return;
-    if (ingame.VisibleBillboardThing == 0)
-        return;
-
-    p_thing = &things[ingame.VisibleBillboardThing];
-    smpl_no = byte_154BB4[billboard_anim_no];
-    rnd = LbRandomPosShort() & 1;
-    play_dist_sample(p_thing, smpl_no + rnd, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 1);
-}
-
-void flic_unkn03(ubyte anislot)
-{
-    struct Animation *p_anim;
-    ubyte *frmbuf;
-    PathInfo *pinfo;
-    int k;
-
-    k = anim_slots[anislot];
-    p_anim = &animations[k];
-    if (anim_is_opened(p_anim)) {
-        anim_flic_close(p_anim);
-    }
-
-    anim_scratch = scratch_buf1;
-    anim_flic_init(p_anim, anislot, 0x00);
-    frmbuf = anim_type_get_output_buffer(anislot);
-
-    switch (anislot)
-    {
-    case AniSl_BILLBOARD:
-        byte_1AAA88 = 0;
-        anim_flic_set_frame_buffer(p_anim, frmbuf, 0, 0, 0, 0x20);
-        anim_billboard_select_rand();
-        anim_billboard_broadcast_sound();
-        pinfo = &game_dirs[DirPlace_QData];
-        anim_flic_set_fname(p_anim, "%s/%s-1%d.fli", pinfo->directory, "demo", (int)billboard_anim_no);
-        anim_billboard_select_next();
-        break;
-    case AniSl_EQVIEW:
-        byte_1AAA88 = 0;
-        anim_flic_set_frame_buffer(p_anim, frmbuf, 0, 0, 0, 0x00);
-        break;
-    case AniSl_CYBORG_INOUT:
-        byte_1AAA88 = 0;
-        anim_flic_set_frame_buffer(p_anim, frmbuf, 0, 0, 0, 0x00);
-        break;
-    case AniSl_UNKN4:
-        byte_1AAA88 = 1;
-        anim_flic_set_frame_buffer(p_anim, frmbuf, 0, 0, 0, 0x02);
-        pinfo = &game_dirs[DirPlace_Data];
-        anim_flic_set_fname(p_anim, "%s/%s.fli", pinfo->directory, "intro");
-        break;
-    case AniSl_UNKN5:
-        byte_1AAA88 = 0;
-        anim_flic_set_frame_buffer(p_anim, frmbuf, 10, 30, 0, 0x02);
-        pinfo = &game_dirs[DirPlace_Data];
-        anim_flic_set_fname(p_anim, "%s/%s.fli", pinfo->directory, "mcomp");
-        break;
-    case AniSl_UNKN6:
-        byte_1AAA88 = 0;
-        anim_flic_set_frame_buffer(p_anim, frmbuf, 10, 30, 0, 0x02);
-        pinfo = &game_dirs[DirPlace_Data];
-        anim_flic_set_fname(p_anim, "%s/%s.fli", pinfo->directory, "mcomp");
-        break;
-    case AniSl_UNKN7:
-        byte_1AAA88 = 0;
-        anim_flic_set_frame_buffer(p_anim, frmbuf, 10, 30, 0, 0x02);
-        pinfo = &game_dirs[DirPlace_Data];
-        anim_flic_set_fname(p_anim, "%s/%s.fli", pinfo->directory, "mcomp");
-        break;
-    case AniSl_CYBORG_BRTH:
-        byte_1AAA88 = 0;
-        anim_flic_set_frame_buffer(p_anim, frmbuf, 0, 0, 0, 0x20);
-        break;
-    case AniSl_NETSCAN:
-        byte_1AAA88 = 0;
-        anim_flic_set_frame_buffer(p_anim, frmbuf, 0, 0, 0, 0x00);
-        break;
-      default:
-        break;
-    }
-
-    if (anim_flic_show_open(p_anim) == Lb_FAIL)
-    {
-        if (anislot == AniSl_BILLBOARD)
-            ingame.Flags &= ~GamF_BillboardMovies;
-        return;
-    }
-    p_anim->anfield_4 += 12;
 }
 
 void update_danger_music(ubyte a1)
@@ -1714,7 +1534,7 @@ void engine_draw_things(int pos_beg_x, int pos_beg_z, int rend_beg_x, int rend_b
                         struct Thing *p_thing;
                         p_thing = &things[thing];
                         if ((p_thing->Type == TT_BUILDING)
-                         && (p_thing->U.UObject.DrawTurn != draw_frame)) {
+                         && (p_thing->U.UObject.DrawTurn != drawturn)) {
                             draw_thing_object(p_thing);
                         }
                     }
@@ -1752,7 +1572,7 @@ void engine_draw_things(int pos_beg_x, int pos_beg_z, int rend_beg_x, int rend_b
                         struct Thing *p_thing;
                         p_thing = &things[thing];
                         if ((p_thing->Type == TT_BUILDING)
-                          && (p_thing->U.UObject.DrawTurn != draw_frame)
+                          && (p_thing->U.UObject.DrawTurn != drawturn)
                           && (p_thing->U.UObject.BHeight > 1400)) {
                             draw_thing_object(p_thing);
                         }
@@ -1766,7 +1586,7 @@ void engine_draw_things(int pos_beg_x, int pos_beg_z, int rend_beg_x, int rend_b
                         struct Thing *p_thing;
                         p_thing = &things[thing];
                         if ( p_thing->Type == TT_BUILDING
-                          && (p_thing->U.UObject.DrawTurn != draw_frame)
+                          && (p_thing->U.UObject.DrawTurn != drawturn)
                           && (p_thing->U.UObject.BHeight > 1400)) {
                             thing = draw_thing_object(p_thing);
                             continue;
@@ -1899,306 +1719,11 @@ void screen_sorted_sprite_persn_render_callback(ushort sspr)
     }
 }
 
-/******************************************************************************/
-/* Drawing several frames within one game turn.
- *
- * The simulation still advances once per game turn. The extra frames drawn in
- * between differ only by the camera position, which is moved along the path
- * the camera travelled during the previous turn. This costs one turn worth of
- * camera latency, and makes map scrolling smooth.
- */
-
-static s32 cam_frm_prev_x, cam_frm_prev_z, cam_frm_prev_angle;
-static s32 cam_frm_curr_x, cam_frm_curr_z, cam_frm_curr_angle;
-static s32 cam_frm_save_x, cam_frm_save_z, cam_frm_save_angle;
-
-/** Distance above which a camera move is considered a jump rather than a
- * scroll, and is therefore not interpolated. Two map tiles. */
-#define CAM_FRM_JUMP_DIST 512
-
-/** A full camera turn, in the units engn_anglexz is kept in. Readers shift it
- * right by 5 before masking with LbFPMath_AngleMask. */
-#define CAM_FRM_ANGLE_FULL ((LbFPMath_AngleMask + 1) << 5)
-
-/** Records where the camera ended up for the turn whose input was just
- * processed. To be called once per game turn, right after input(). */
-static void camera_turn_recorded(void)
-{
-    cam_frm_prev_x = cam_frm_curr_x;
-    cam_frm_prev_z = cam_frm_curr_z;
-    cam_frm_prev_angle = cam_frm_curr_angle;
-    cam_frm_curr_x = engn_xc;
-    cam_frm_curr_z = engn_zc;
-    cam_frm_curr_angle = engn_anglexz;
-}
-
-/** Moves the camera to where it should be for the given frame of the current
- * turn, keeping the real position aside. Frames are numbered from 0, and the
- * last one lands exactly on the real position. */
-static void camera_frame_begin(ushort frame)
-{
-    s32 dx, dz, dangle;
-
-    cam_frm_save_x = engn_xc;
-    cam_frm_save_z = engn_zc;
-    cam_frm_save_angle = engn_anglexz;
-
-    draw_frame++;
-
-    if (render_frames_per_turn <= 1)
-        return;
-    if (ingame.DisplayMode != DpM_ENGINEPLY)
-        return;
-
-    dx = cam_frm_curr_x - cam_frm_prev_x;
-    dz = cam_frm_curr_z - cam_frm_prev_z;
-    // A jump rather than a scroll - snap instead of sliding across the map.
-    // Checked on its own, so that a camera teleport does not also freeze the
-    // rotation for that turn.
-    if ((abs(dx) <= CAM_FRM_JUMP_DIST) && (abs(dz) <= CAM_FRM_JUMP_DIST))
-    {
-        engn_xc = cam_frm_prev_x + dx * (frame + 1) / render_frames_per_turn;
-        engn_zc = cam_frm_prev_z + dz * (frame + 1) / render_frames_per_turn;
-    }
-
-    // engn_anglexz is a free running accumulator, never masked anywhere in the
-    // tree; readers take (engn_anglexz >> 5) & LbFPMath_AngleMask, so a full
-    // turn is CAM_FRM_ANGLE_FULL and not LbFPMath_AngleMask + 1. Masking it
-    // here used to squeeze the camera into a thirty-second of a turn, which
-    // froze byte_176D49 and with it the facing of every person sprite.
-    dangle = cam_frm_curr_angle - cam_frm_prev_angle;
-    if (labs(dangle) < CAM_FRM_ANGLE_FULL / 2)
-    {
-        engn_anglexz = cam_frm_prev_angle
-          + dangle * (frame + 1) / render_frames_per_turn;
-        camera_update_angle_derived();
-    }
-}
-
-/** Puts the real camera position back after a frame has been drawn. */
-static void camera_frame_end(void)
-{
-    engn_xc = cam_frm_save_x;
-    engn_zc = cam_frm_save_z;
-    engn_anglexz = cam_frm_save_angle;
-}
-
-/* Interpolation of moving things between game turns.
- *
- * Same principle as the camera above. The position of every active thing is
- * recorded once per game turn; the frames drawn within a turn place each thing
- * along the path it travelled during the previous turn, and the real positions
- * are put back as soon as the frame is drawn. The simulation therefore never
- * sees an interpolated position.
- */
-
-struct TngFrmPos {
-    long X;
-    long Y;
-    long Z;
-    ulong Turn;
-};
-
-struct TngFrmSaved {
-    ThingIdx Index;
-    long X;
-    long Y;
-    long Z;
-};
-
-static struct TngFrmPos tng_frm_prev[THINGS_LIMIT];
-static struct TngFrmPos tng_frm_curr[THINGS_LIMIT];
-static struct TngFrmPos sth_frm_prev[STHINGS_LIMIT];
-static struct TngFrmPos sth_frm_curr[STHINGS_LIMIT];
-static struct TngFrmSaved tng_frm_saved[THINGS_LIMIT + STHINGS_LIMIT];
-static ushort tng_frm_saved_count = 0;
-
-/** Distance above which a move is taken for a teleport rather than a walk,
- * and is therefore not interpolated. One map tile: thing coordinates count
- * 65536 to the tile, which is what the map lookups shift out with `X >> 16`;
- * the 256 of the render coordinates is a tile there, not here. */
-#define TNG_FRM_JUMP_DIST 65536
-
-/** Records where every active thing stands at the end of the turn whose input
- * was just processed. To be called once per game turn. */
-static void things_turn_recorded(void)
-{
-    struct Thing *p_thing;
-    struct SimpleThing *p_sthing;
-    ThingIdx thing, nxthing;
-    int remain;
-
-    if (render_frames_per_turn <= 1)
-        return;
-
-    remain = things_used;
-    for (thing = things_used_head; thing > 0; thing = nxthing)
-    {
-        if (--remain == -1)
-            break;
-        p_thing = &things[thing];
-        nxthing = p_thing->LinkChild;
-        if (thing >= THINGS_LIMIT)
-            continue;
-        tng_frm_prev[thing] = tng_frm_curr[thing];
-        tng_frm_curr[thing].X = p_thing->X;
-        tng_frm_curr[thing].Y = p_thing->Y;
-        tng_frm_curr[thing].Z = p_thing->Z;
-        tng_frm_curr[thing].Turn = gameturn;
-        // Not followed on the previous turn - a new thing, or a reused slot
-        if (tng_frm_prev[thing].Turn + 1 != gameturn)
-            tng_frm_prev[thing] = tng_frm_curr[thing];
-    }
-
-    remain = sthings_used;
-    for (thing = sthings_used_head; thing < 0; thing = nxthing)
-    {
-        if (--remain == -1)
-            break;
-        p_sthing = &sthings[thing];
-        nxthing = p_sthing->LinkChild;
-        if (-thing >= STHINGS_LIMIT)
-            continue;
-        sth_frm_prev[-thing] = sth_frm_curr[-thing];
-        sth_frm_curr[-thing].X = p_sthing->X;
-        sth_frm_curr[-thing].Y = p_sthing->Y;
-        sth_frm_curr[-thing].Z = p_sthing->Z;
-        sth_frm_curr[-thing].Turn = gameturn;
-        if (sth_frm_prev[-thing].Turn + 1 != gameturn)
-            sth_frm_prev[-thing] = sth_frm_curr[-thing];
-    }
-}
-
-/** Places one thing where it should be for the given frame, and remembers the
- * position it had. Returns nothing; things which must not move are skipped. */
-static void tng_frm_shift(ThingIdx index, long *p_x, long *p_y, long *p_z,
-  const struct TngFrmPos *p_prev, const struct TngFrmPos *p_curr, ushort back)
-{
-    struct TngFrmSaved *p_saved;
-    long dx, dy, dz;
-
-    if (p_curr->Turn != gameturn)
-        return;
-    dx = p_curr->X - p_prev->X;
-    dy = p_curr->Y - p_prev->Y;
-    dz = p_curr->Z - p_prev->Z;
-    // A jump rather than a walk: the thing is placed on the recorded position
-    // instead of being slid across the map towards it
-    if ((labs(dx) > TNG_FRM_JUMP_DIST) || (labs(dz) > TNG_FRM_JUMP_DIST))
-    {
-        dx = 0;
-        dy = 0;
-        dz = 0;
-    }
-
-    p_saved = &tng_frm_saved[tng_frm_saved_count];
-    p_saved->Index = index;
-    p_saved->X = *p_x;
-    p_saved->Y = *p_y;
-    p_saved->Z = *p_z;
-    tng_frm_saved_count++;
-
-    *p_x = p_curr->X - dx * back / render_frames_per_turn;
-    *p_y = p_curr->Y - dy * back / render_frames_per_turn;
-    *p_z = p_curr->Z - dz * back / render_frames_per_turn;
-}
-
-/** Moves every active thing to where it should be for the given frame of the
- * current turn. Frames are numbered from 0; the last one lands on the position
- * recorded for this turn.
- *
- * Every frame has to be placed from the recording, the last one included. The
- * live position cannot stand in for it: process_things() runs in the middle of
- * the turn, between the first frame and the others, so from the second frame
- * on the live position is a whole turn ahead of what is being drawn. */
-static void things_frame_begin(ushort frame)
-{
-    struct Thing *p_thing;
-    struct SimpleThing *p_sthing;
-    ThingIdx thing, nxthing;
-    int remain;
-    ushort back;
-
-    tng_frm_saved_count = 0;
-    if (render_frames_per_turn <= 1)
-        return;
-    if (ingame.DisplayMode != DpM_ENGINEPLY)
-        return;
-    // How many frames short of the real position this frame stands
-    back = render_frames_per_turn - 1 - frame;
-
-    remain = things_used;
-    for (thing = things_used_head; thing > 0; thing = nxthing)
-    {
-        if (--remain == -1)
-            break;
-        p_thing = &things[thing];
-        nxthing = p_thing->LinkChild;
-        if (thing >= THINGS_LIMIT)
-            continue;
-        tng_frm_shift(thing, &p_thing->X, &p_thing->Y, &p_thing->Z,
-          &tng_frm_prev[thing], &tng_frm_curr[thing], back);
-    }
-
-    remain = sthings_used;
-    for (thing = sthings_used_head; thing < 0; thing = nxthing)
-    {
-        if (--remain == -1)
-            break;
-        p_sthing = &sthings[thing];
-        nxthing = p_sthing->LinkChild;
-        if (-thing >= STHINGS_LIMIT)
-            continue;
-        tng_frm_shift(thing, &p_sthing->X, &p_sthing->Y, &p_sthing->Z,
-          &sth_frm_prev[-thing], &sth_frm_curr[-thing], back);
-    }
-}
-
-/** Puts back the real position of everything moved for the frame just drawn.
- * Walks exactly what was moved, so a thing list changed meanwhile cannot
- * leave a position behind. */
-static void things_frame_end(void)
-{
-    struct TngFrmSaved *p_saved;
-    ushort i;
-
-    for (i = 0; i < tng_frm_saved_count; i++)
-    {
-        p_saved = &tng_frm_saved[i];
-        if (p_saved->Index > 0)
-        {
-            struct Thing *p_thing;
-            p_thing = &things[p_saved->Index];
-            p_thing->X = p_saved->X;
-            p_thing->Y = p_saved->Y;
-            p_thing->Z = p_saved->Z;
-        }
-        else
-        {
-            struct SimpleThing *p_sthing;
-            p_sthing = &sthings[p_saved->Index];
-            p_sthing->X = p_saved->X;
-            p_sthing->Y = p_saved->Y;
-            p_sthing->Z = p_saved->Z;
-        }
-    }
-    tng_frm_saved_count = 0;
-}
-
-/** Prepares and draws one frame of the game engine.
- *
- * When advance is false, the parts which move the simulation forward are
- * skipped, so the frame can be drawn again within the same game turn without
- * the world ageing twice.
- */
-void process_engine_frame(TbBool advance, ushort frame)
+void process_engine_unk3(void)
 {
     PlayerInfo *p_locplayer;
 
-    frame_advances_state = advance;
-
-    if (advance)
-        get_engine_inputs();
+    get_engine_inputs();
 
     reset_drawlist();
     ingame.NextRocket = 0;
@@ -2213,10 +1738,9 @@ void process_engine_frame(TbBool advance, ushort frame)
     mech_unkn_dw_1DC890 = mech_unkn_tile_x3;
     mech_unkn_dw_1DC894 = mech_unkn_tile_y3;
 
-    if (advance)
-        process_map_craters();
+    process_map_craters();
 
-    if (advance && ((ingame.Flags & GamF_BillboardBAT) == 0) &&
+    if (((ingame.Flags & GamF_BillboardBAT) == 0) &&
       ((ingame.Flags & GamF_BillboardMovies) != 0))
     {
         dword_176CBC += fifties_per_gameturn;
@@ -2226,7 +1750,7 @@ void process_engine_frame(TbBool advance, ushort frame)
             if (!in_network_game && ((ingame.Flags & GamF_Unkn00040000) != 0))
             {
                 ingame.Flags &= ~GamF_Unkn00040000;
-                xdo_next_frame(AniSl_BILLBOARD);
+                embanim_do_next_frame(AniSl_BILLBOARD);
             }
         }
     }
@@ -2234,9 +1758,6 @@ void process_engine_frame(TbBool advance, ushort frame)
     int rend_beg_x, rend_beg_z;
     int pos_beg_x, pos_beg_z;
     int tlcount_x, tlcount_z;
-
-    camera_frame_begin(frame);
-    things_frame_begin(frame);
 
     camera_setup_view(&pos_beg_x, &pos_beg_z, &rend_beg_x, &rend_beg_z, &tlcount_x, &tlcount_z);
 
@@ -2260,8 +1781,6 @@ void process_engine_frame(TbBool advance, ushort frame)
     {
         clear_super_quick_lights();
     }
-    if (advance)
-        process_explode();
     assert(vec_tmap[1] != NULL);
     vec_map = vec_tmap[1];
     face_transp_tinted_surface_col = deep_radar_surface_col;
@@ -2285,14 +1804,10 @@ void process_engine_frame(TbBool advance, ushort frame)
         ingame.NextRocket = 0;
     }
 
-    things_frame_end();
-    camera_frame_end();
-    frame_advances_state = true;
-}
-
-void process_engine_unk3(void)
-{
-    process_engine_frame(true, 0);
+    // Which frame of an animated texture is on screen is not part of the game
+    // state - no simulation code reads it. Advanced here, after the frame was
+    // enlisted, it keeps the pace it had within process_things().
+    animate_textures();
 }
 
 void process_sound_heap(void)
@@ -2786,7 +2301,7 @@ TbBool setup_host(void)
 
     setup_host_sub6();
     play_intro();
-    flic_unkn03(AniSl_BILLBOARD);
+    embanim_reinit(AniSl_BILLBOARD);
 
     return ret;
 }
@@ -3923,95 +3438,6 @@ TbBool game_setup(void)
         game_startup_fail_screen();
     }
     return ret;
-}
-
-void anim_show_draw_next_frame(struct Animation *p_anim)
-{
-    ubyte pal_change;
-
-    pal_change = anim_show_frame(p_anim);
-    p_anim->FrameNumber++;
-
-    if (pal_change)
-    {
-        LbScreenWaitVbi();
-        if (byte_1AAA88) {
-            LbPaletteSet(anim_palette);
-        }
-    }
-}
-
-int xdo_next_frame(ubyte anislot)
-{
-    struct Animation *p_anim;
-    ushort k;
-
-    k = anim_slots[anislot];
-    active_anim = k;
-    p_anim = &animations[k];
-
-    if (anislot >= AniSl_EQVIEW && anislot <= AniSl_CYBORG_INOUT)
-    {
-        if (p_anim->FrameNumber == 0) {
-            play_sample_using_heap(0, 135, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 3u);
-        } else if (p_anim->FrameNumber == p_anim->FLCFileHeader.NumberOfFrames >> 1) {
-            play_sample_using_heap(0, 115, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 3u);
-        }
-    }
-
-    if (p_anim->FrameNumber >= p_anim->FLCFileHeader.NumberOfFrames)
-    {
-        anim_flic_close(p_anim);
-        if ((p_anim->Flags & 0x20) != 0) {
-            flic_unkn03(p_anim->Type);
-        }
-        return 1;
-    }
-
-    anim_show_prep_next_frame(p_anim, anim_type_get_output_buffer(p_anim->Type));
-    anim_show_draw_next_frame(p_anim);
-
-    return 0;
-}
-
-int xdo_prev_frame(ubyte anislot)
-{
-    struct Animation *p_anim;
-    ubyte *p_frmbuf;
-    uint i, rq_frame;
-    ushort k;
-
-    k = anim_slots[anislot];
-    active_anim = k;
-    p_anim = &animations[k];
-
-    if (p_anim->FrameNumber == 0)
-        rq_frame = p_anim->FLCFileHeader.NumberOfFrames;
-    else
-        rq_frame = p_anim->FrameNumber - 1;
-
-    p_frmbuf = anim_type_get_output_buffer(p_anim->Type);
-
-    if (rq_frame == 0)
-    {
-        LbMemorySet(p_frmbuf, 0, p_anim->FLCFileHeader.Width * p_anim->FLCFileHeader.Height);
-        anim_flic_close(p_anim);
-        if ((p_anim->Flags & 0x20) != 0) {
-            flic_unkn03(p_anim->Type);
-        }
-        return 1;
-    }
-
-    anim_flic_show_replay(p_anim);
-    LbMemorySet(p_frmbuf, 0, p_anim->FLCFileHeader.Width * p_anim->FLCFileHeader.Height);
-    anim_show_prep_next_frame(p_anim, p_frmbuf);
-    anim_show_draw_next_frame(p_anim);
-    for (i = 1; i < rq_frame; i++)
-    {
-        anim_show_prep_next_frame(p_anim, NULL);
-        anim_show_draw_next_frame(p_anim);
-    }
-    return 0;
 }
 
 void mapwho_unkn01(int a1, int a2)
@@ -6624,8 +6050,8 @@ void show_load_and_prep_mission(void)
         generate_shadows_for_multicolor_sprites();
         adjust_mission_engine_to_video_mode();
 
-        flic_unkn03(AniSl_BILLBOARD);
-        xdo_next_frame(AniSl_BILLBOARD);
+        embanim_reinit(AniSl_BILLBOARD);
+        embanim_do_next_frame(AniSl_BILLBOARD);
 
         if (in_network_game)
         {
@@ -7077,6 +6503,11 @@ void show_game_screen(void)
 
 void draw_game(void)
 {
+    // One more frame is about to be drawn. The counters the drawing uses
+    // advance here, so that they follow the frames and not the game turns.
+    drawturn++;
+    render_anim_turn++;
+
     switch (ingame.DisplayMode)
     {
     case DpM_UNKN_1:
@@ -7450,26 +6881,6 @@ void game_process_orbital_station_explode(void)
     }
 }
 
-/** Draws the frames which follow the first one within a game turn. */
-static void render_extra_frames(void)
-{
-    ushort frame;
-
-    if (render_frames_per_turn <= 1)
-        return;
-    if (ingame.DisplayMode != DpM_ENGINEPLY)
-        return;
-    if (skip_redraw_this_turn())
-        return;
-
-    for (frame = 1; frame < render_frames_per_turn; frame++)
-    {
-        process_engine_frame(false, frame);
-        game_update();
-        LbScreenSwapClear(0);
-    }
-}
-
 void game_process(void)
 {
     debug_multicolor_sprite(193);
@@ -7477,7 +6888,6 @@ void game_process(void)
 
     while ( !exit_game )
     {
-        render_frames_this_turn = 1;
         process_sound_heap();
         navi2_unkn_counter -= 2;
         if (navi2_unkn_counter < 0)
@@ -7491,8 +6901,12 @@ void game_process(void)
         }
         input();
         update_tick_time();
-        camera_turn_recorded();
-        things_turn_recorded();
+        // Faces thrown by an explosion can hit people once they land, so they
+        // are world state and progress with the world - not from within the
+        // renderer, where this used to be called from.
+        if ((ingame.DisplayMode == DpM_ENGINEPLY)
+          && ((ingame.Flags & TngF_ProgressAction) != 0))
+            process_explode();
         draw_game();
         debug_trace_turn_bound(gameturn);
         load_packet();
@@ -7517,21 +6931,13 @@ void game_process(void)
         }
         else if (!skip_redraw_this_turn())
         {
-            // Only the in-mission view draws more than one frame per turn.
-            // Anywhere else the turn has to keep its full length, or every
-            // screen runs render_frames_per_turn times too fast.
-            if (ingame.DisplayMode == DpM_ENGINEPLY)
-                render_frames_this_turn = render_frames_per_turn;
             game_update();
             LbScreenSwapClear(0);
-            render_extra_frames();
-            render_frames_this_turn = 1;
         }
 
         update_unkn_changing_colors();
         game_process_orbital_station_explode();
         gameturn++;
-        render_anim_turn = gameturn;
         scene_post_effect_prepare();
     }
     PacketRecord_Close();

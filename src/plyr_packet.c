@@ -200,11 +200,7 @@ void player_agent_weapon_switch(PlayerIdx plyr, ThingIdx person, short shift)
     if ((plyr == local_player_no) && (p_person->U.UPerson.CurrentWeapon != 0))
     {
         ushort smp;
-        // Weapon name speech
-        if (background_type == 1)
-            smp = weapon_sound_z[p_person->U.UPerson.CurrentWeapon];
-        else
-            smp = weapon_sound[p_person->U.UPerson.CurrentWeapon];
+        smp = weapon_sound_name_speech_index(p_person->U.UPerson.CurrentWeapon);
         play_disk_sample(local_player_no, smp, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 3);
     }
 }
@@ -633,13 +629,11 @@ void player_agent_select_specific_weapon(PlayerIdx plyr, struct Thing *p_person,
     set_person_anim_mode(p_person, gun_out_anim(p_person, 0));
     p_person->Speed = calc_person_speed(p_person);
     p_person->U.UPerson.TempWeapon = p_person->U.UPerson.CurrentWeapon;
+
     if ((plyr == local_player_no) && (p_person->U.UPerson.CurrentWeapon != 0))
     {
         ushort smp;
-        if (background_type == 1)
-            smp = weapon_sound_z[p_person->U.UPerson.CurrentWeapon];
-        else
-            smp = weapon_sound[p_person->U.UPerson.CurrentWeapon];
+        smp = weapon_sound_name_speech_index(p_person->U.UPerson.CurrentWeapon);
         play_disk_sample(local_player_no, smp, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 3);
     }
 }

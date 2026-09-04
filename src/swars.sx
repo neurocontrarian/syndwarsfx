@@ -94,6 +94,9 @@
 .global EXPORT_SYMBOL(colour_sel_purple);	/* 0x181152 */
 .global EXPORT_SYMBOL(ex_faces);			/* 0x18194C */
 
+.global EXPORT_SYMBOL(shrapnel_free);		/* 0x19714C */
+.global EXPORT_SYMBOL(phwoar_free);			/* 0x19714E */
+
 .global EXPORT_SYMBOL(scratch_buf1)			/* 0x19CB54 */
 .global EXPORT_SYMBOL(colour_grey1);		/* 0x19CC5C */
 .global EXPORT_SYMBOL(colour_grey2);		/* 0x19CC5D */
@@ -131,6 +134,7 @@
 .global EXPORT_SYMBOL(small_font);			/* 0x1A5848 */
 .global EXPORT_SYMBOL(display_palette);		/* 0x1A5878 */
 .global EXPORT_SYMBOL(colour_lookup);		/* 0x1A71B8 */
+.global EXPORT_SYMBOL(pointer_hotspot);		/* 0x154874+1 */
 
 .global EXPORT_SYMBOL(unkn_changing_color_counter1);	/* 0x1AA26C */
 .global EXPORT_SYMBOL(colour_lookup_lock);	/* 0x1AA270 */
@@ -173,6 +177,9 @@
 .global EXPORT_SYMBOL(tree_routecost);
 .global EXPORT_SYMBOL(tree_route);
 .global EXPORT_SYMBOL(route_bak);		/* 0x1BF9C8 */
+
+.global EXPORT_SYMBOL(phwoar_num_used);	/* 0x1DC4DC */
+.global EXPORT_SYMBOL(phwoar_num_free);	/* 0x1DC4E0 */
 
 /*----------------------------------------------------------------*/
 /* int place_default_player(unsigned int player_id, __int16 a2)
@@ -6980,8 +6987,8 @@ func_3ab94:
 		mov    EXPORT_SYMBOL(pointer_sprites),%eax
 		add    $0x30,%eax
 		call   ac_LbMouseChangeSprite
-		mov    data_15488b,%edx
-		mov    data_15488a,%eax
+		mov    EXPORT_SYMBOL(pointer_hotspot)+0x13,%edx # pointer_hotspot[8].y shifted 3 bytes back
+		mov    EXPORT_SYMBOL(pointer_hotspot)+0x12,%eax # pointer_hotspot[8].x shifted 3 bytes back
 		sar    $0x18,%edx
 		sar    $0x18,%eax
 		call   ac_LbMouseChangeSpriteOffset
@@ -32014,7 +32021,7 @@ GLOBAL_FUNC(ASM_person_burning)	/* 0x053D8C */
 		push   %esi
 		sub    $0x4,%esp
 		mov    %eax,%esi
-		mov    EXPORT_SYMBOL(byte_154F6C),%eax
+		mov    EXPORT_SYMBOL(burning_timer_delatas),%eax
 		mov    %eax,(%esp)
 		movb   $0x20,0x5a(%esi)
 		call   ac_LbRandomAnyShort
@@ -105460,12 +105467,12 @@ GLOBAL_FUNC (ASM_bang_init)	/* 0xB0E00 */
 		mov    $0x1,%esi
 		mov    $0x3ff,%ebx
 		xor    %ecx,%ecx
-		mov    %si,shrapnel_free
-		mov    %si,phwoar_free
+		mov    %si,EXPORT_SYMBOL(shrapnel_free)
+		mov    %si,EXPORT_SYMBOL(phwoar_free)
 		mov    %cx,EXPORT_SYMBOL(phwoar)+0x18(%edx)
 		xor    %edx,%edx
-		mov    %ebx,data_1dc4e0
-		mov    %edx,phwoar__child
+		mov    %ebx,EXPORT_SYMBOL(phwoar_num_free)
+		mov    %edx,EXPORT_SYMBOL(phwoar_num_used)
 		pop    %esi
 		pop    %edx
 		pop    %ecx
@@ -105602,7 +105609,7 @@ get_some_phwoar:	/* 0x0B1110 */
 /*----------------------------------------------------------------*/
 		push   %ebx
 		push   %edx
-		mov    phwoar_free,%dx
+		mov    EXPORT_SYMBOL(phwoar_free),%dx
 		test   %dx,%dx
 		jne    jump_b1123
 		xor    %eax,%eax
@@ -105616,14 +105623,14 @@ get_some_phwoar:	/* 0x0B1110 */
 		lea    0x0(,%edx,8),%eax
 		sub    %edx,%eax
 		mov    EXPORT_SYMBOL(phwoar)+0x18(,%eax,4),%ax
-		mov    phwoar__child,%edx
-		mov    %ax,phwoar_free
+		mov    EXPORT_SYMBOL(phwoar_num_used),%edx
+		mov    %ax,EXPORT_SYMBOL(phwoar_free)
 		mov    %ebx,%eax
-		mov    data_1dc4e0,%ebx
+		mov    EXPORT_SYMBOL(phwoar_num_free),%ebx
 		inc    %edx
 		dec    %ebx
-		mov    %edx,phwoar__child
-		mov    %ebx,data_1dc4e0
+		mov    %edx,EXPORT_SYMBOL(phwoar_num_used)
+		mov    %ebx,EXPORT_SYMBOL(phwoar_num_free)
 		pop    %edx
 		pop    %ebx
 		ret
@@ -105639,8 +105646,8 @@ give_some_shrapnel:	/* 0x0B1160 */
 		mov    %ax,%bx
 		lea    0x0(,%ebx,4),%eax
 		sub    %ebx,%eax
-		mov    shrapnel_free,%bx
-		mov    %dx,shrapnel_free
+		mov    EXPORT_SYMBOL(shrapnel_free),%bx
+		mov    %dx,EXPORT_SYMBOL(shrapnel_free)
 		mov    %bx,EXPORT_SYMBOL(shrapnel)+0x16(,%eax,8)
 		pop    %edx
 		pop    %ebx
@@ -105658,15 +105665,15 @@ give_some_phwoar:	/* 0x0B118C */
 		lea    0x0(,%ebx,8),%eax
 		sub    %ebx,%eax
 		lea    0x0(,%eax,4),%ebx
-		mov    phwoar_free,%ax
-		mov    %dx,phwoar_free
+		mov    EXPORT_SYMBOL(phwoar_free),%ax
+		mov    %dx,EXPORT_SYMBOL(phwoar_free)
 		mov    %ax,EXPORT_SYMBOL(phwoar)+0x18(%ebx)
-		mov    phwoar__child,%edx
-		mov    data_1dc4e0,%ebx
+		mov    EXPORT_SYMBOL(phwoar_num_used),%edx
+		mov    EXPORT_SYMBOL(phwoar_num_free),%ebx
 		dec    %edx
 		inc    %ebx
-		mov    %edx,phwoar__child
-		mov    %ebx,data_1dc4e0
+		mov    %edx,EXPORT_SYMBOL(phwoar_num_used)
+		mov    %ebx,EXPORT_SYMBOL(phwoar_num_free)
 		pop    %edx
 		pop    %ebx
 		ret
@@ -106433,11 +106440,11 @@ GLOBAL_FUNC (ASM_new_bang)	/* 0xB1B30 */
 		sar    $0x8,%eax
 		cmp    $0x8000,%eax
 		jge    jump_b2629
-		mov    phwoar_free,%bx
+		mov    EXPORT_SYMBOL(phwoar_free),%bx
 		inc    %esi
 		test   %bx,%bx
 		je     jump_b2629
-		cmpw   $0x0,shrapnel_free
+		cmpw   $0x0,EXPORT_SYMBOL(shrapnel_free)
 		je     jump_b2629
 		cmp    $0xa,%ecx
 		jne    jump_b1c40
@@ -106660,7 +106667,7 @@ GLOBAL_FUNC (ASM_new_bang)	/* 0xB1B30 */
 		jle    jump_b254a
 		mov    %eax,0x88(%esp)
 	jump_b1f44:
-		mov    shrapnel_free,%cx
+		mov    EXPORT_SYMBOL(shrapnel_free),%cx
 		test   %cx,%cx
 		jne    jump_b23e0
 		xor    %eax,%eax
@@ -106949,7 +106956,7 @@ GLOBAL_FUNC (ASM_new_bang)	/* 0xB1B30 */
 		imul   $0x18,%edx,%edx
 		mov    EXPORT_SYMBOL(shrapnel)+0x16(%edx),%dx
 		mov    %ecx,%eax
-		mov    %dx,shrapnel_free
+		mov    %dx,EXPORT_SYMBOL(shrapnel_free)
 	jump_b23f8:
 		mov    %eax,0xb8(%esp)
 		test   %ax,%ax
@@ -107040,7 +107047,7 @@ GLOBAL_FUNC (ASM_new_bang)	/* 0xB1B30 */
 	jump_b254a:
 		cmpl   $0x0,0xa8(%esp)
 		je     jump_b261a
-		mov    phwoar_free,%ax
+		mov    EXPORT_SYMBOL(phwoar_free),%ax
 		test   %ax,%ax
 		je     jump_b259d
 		xor    %edx,%edx
@@ -107049,14 +107056,14 @@ GLOBAL_FUNC (ASM_new_bang)	/* 0xB1B30 */
 		lea    0x0(,%edx,8),%eax
 		sub    %edx,%eax
 		mov    EXPORT_SYMBOL(phwoar)+0x18(,%eax,4),%ax
-		mov    phwoar__child,%edx
-		mov    %ax,phwoar_free
+		mov    EXPORT_SYMBOL(phwoar_num_used),%edx
+		mov    %ax,EXPORT_SYMBOL(phwoar_free)
 		mov    %ebx,%eax
-		mov    data_1dc4e0,%ebx
+		mov    EXPORT_SYMBOL(phwoar_num_free),%ebx
 		inc    %edx
 		dec    %ebx
-		mov    %edx,phwoar__child
-		mov    %ebx,data_1dc4e0
+		mov    %edx,EXPORT_SYMBOL(phwoar_num_used)
+		mov    %ebx,EXPORT_SYMBOL(phwoar_num_free)
 	jump_b259d:
 		test   %ax,%ax
 		je     jump_b261a
@@ -131420,24 +131427,6 @@ data_153919:
 		.fill   0xc
 		.align  4
 
-GLOBAL (weapon_sound)	/* 0x1543B8 */
-		.ascii  "\x00\x0a\x0b\x0e\x0d\x10\x25\x0c"
-		.ascii  "\x24\x11\x12\x13\x14\x16\x16\x15"
-		.ascii  "\x17\x0f\x19\x00\x18\x1a\x1b\x00"
-		.ascii  "\x1c\x1d\x1e\x1f\x20\x21\x22\x00"
-GLOBAL (weapon_sound_z)	/* 0x1543D8 */
-		.ascii  "\x00\x0a\x0b\x0e\x0d\x10\x25\x23"
-		.ascii  "\x24\x11\x12\x13\x14\x16\x16\x15"
-		.ascii  "\x17\x0f\x19\x00\x18\x23\x1b\x00"
-		.ascii  "\x1c\x1d\x1e\x1f\x20\x21\x22\x00"
-
-data_15488a:
-		.byte	0xf7
-data_15488b:
-		.byte	0xff
-		.long	0x0
-
-
 GLOBAL (ASM_byte_154BB4)	/* 0x154BB4 */
 		.ascii  "\xdc\xe0\xe0\xde\xdc\xdc\x00\x00"
 
@@ -131452,10 +131441,11 @@ GLOBAL (ASM_pers_anims_wth_shadows)
 		.ascii  "\x11\x01\xa1\x00\xc1\x00\xd1\x02"
 		.ascii  "\xf1\x02\x41\x01\x91\x01\xb1\x01"
 		.ascii  "\x21\x00\x00\x00"
-GLOBAL(byte_154F6C)
+GLOBAL(burning_timer_delatas)
 		.ascii  "\x00\x00\x01\x00\x01\x00\x00\x00"
 
-data_154f78:
+/* TODO check function unused_create_effects_52_circle at 0x06750C, maybe this is something interesting */
+effect_52_angle_div:	/* 0x154F78, used in unused_create_effects_52_circle */
 		.ascii  "\x01\x04\x06\x0a\x0f\x14\x14\x16"
 		.ascii  "\x18\x19\x1b\x1d\x1f\x00\x00\x00"
 plasma_width:
@@ -131465,9 +131455,7 @@ GLOBAL (anim_slots)	/* 0x155000 */
 		.byte	0x0
 		.byte	0x0
 		.byte	0x1
-mod1_anim_no:	/* 0x155003 */
 		.fill   0x5
-mod2_anim_no:	/* 0x155008 */
 		.byte	0x0
 data_155009:
 		.ascii  "\x00\x00\x00\x0a\x00"
@@ -132097,11 +132085,6 @@ GLOBAL (net_game_play_flags)	/* 0x1811F2 */
 		.byte	0x0
 		.fill   0x4b1
 
-shrapnel_free:	/* 0x19714C */
-		.short  0x0
-phwoar_free:	/* 0x19714E */
-		.short  0x0
-
 GLOBAL (mission_status)	/* 0x199828 */
 		.long	0x0
 data_19982c:
@@ -132485,8 +132468,6 @@ data_1aa67c:
 		.long	0x0
 data_1aa680:
 		.long	0x0
-GLOBAL (billboard_anim_no)	/* 0x1AA684 */
-		.byte	0x0
 		.align  4
 
 data_1aaa20:
@@ -132503,9 +132484,7 @@ data_1aaa54:
 		.long	0x0
 data_1aaa58:
 		.fill   0x30
-GLOBAL (byte_1AAA88)	/* 0x1AAA88 */
-		.byte  0x0
-		.align  2
+		.align  4
 data_1aaa8a:
 		.short  0x0
 GLOBAL (animations)	/* 0x1AAA8C */
@@ -132540,7 +132519,7 @@ data_1aaac4:
 		.fill   0x36
 data_1aaafa:
 		.fill   0x72
-GLOBAL (active_anim)	/* 0x1AAB6C */
+GLOBAL (ASM_active_anim)	/* 0x1AAB6C */
 		.fill   0x8
 GLOBAL (dword_1AAB74)	/* 0x1AAB74 */
 		.long	0x0
@@ -133385,10 +133364,11 @@ GLOBAL (scanner_unkn370)	/* 0x1DC370 */
 		.long	0x0
 data_1dc374:
 		.fill   0x168
-phwoar__child:	/* 0x1DC4DC */
+GLOBAL (ASM_phwoar_num_used)	/* 0x1DC4DC */
 		.long	0x0
-data_1dc4e0:
-		.fill   0x2c
+GLOBAL (ASM_phwoar_num_free)	/* 0x1DC4E0 */
+		.long	0x0
+		.fill   0x28
 data_1dc50c:
 		.long	0x0
 data_1dc510:

@@ -28,6 +28,7 @@
 
 #include "bigmap.h"
 #include "campaign.h"
+#include "embedanim.h"
 #include "femail.h"
 #include "femain.h"
 #include "game_data.h"
@@ -237,23 +238,17 @@ ubyte show_brief_netscan_box(struct ScreenTextBox *p_box)
 
 void flic_netscan_open_anim(ubyte netno)
 {
-    struct Animation *p_anim;
-    PathInfo *pinfo;
-    int k;
     ubyte anislot;
 
     anislot = AniSl_NETSCAN;
-    k = anim_slots[anislot];
-    p_anim = &animations[k];
-    pinfo = &game_dirs[DirPlace_Equip];
-    anim_flic_set_fname(p_anim, "%s/net%02d.fli", pinfo->directory, netno);
-    flic_unkn03(anislot);
+    embanim_set_netscan_file(anislot, netno);
+    embanim_reinit(anislot);
 }
 
 void purple_unkn2_data_to_screen(void)
 {
-    ubyte *buf;
-    buf = anim_type_get_output_buffer(AniSl_NETSCAN);
+    TbPixel *buf;
+    buf = embanim_type_get_output_buffer(AniSl_NETSCAN);
     LbScreenSetGraphicsWindow(brief_graphical_box.X + 1, brief_graphical_box.Y + 1,
       brief_graphical_box.Width - 2, brief_graphical_box.Height - 2);
     LbScreenCopy(buf, lbDisplay.GraphicsWindowPtr, lbDisplay.GraphicsWindowHeight);
@@ -521,7 +516,7 @@ ubyte show_citymap_box(struct ScreenBox *p_box)
         anim_no = netscan_objectives[selected_netscan_objective].AnimNo;
         if (anim_no == 0)
             brief_citymap_content = BriCtM_AUTO_SCANNER;
-        if (xdo_next_frame(AniSl_NETSCAN))
+        if (embanim_do_next_frame(AniSl_NETSCAN))
             brief_citymap_content = BriCtM_AUTO_SCANNER;
         draw_flic_purple_list(ac_purple_unkn2_data_to_screen);
     }

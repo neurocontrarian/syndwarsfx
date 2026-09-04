@@ -36,6 +36,7 @@
 #include "engincam.h"
 #include "engincolour.h"
 #include "enginpeff.h"
+#include "enginprops.h"
 #include "engintxtrmap.h"
 #include "render_gpoly.h"
 
@@ -390,32 +391,23 @@ void SCANNER_move_objective_info(int width, int height, int end_pos)
           scanner_unkn370 = -20;
       if (end_pos > lbDisplay.PhysicalScreenWidth - 16)
           scanner_unkn370 = 10;
-      // The chat scroller counts frames, so it only advances on the frame
-      // which carries the turn forward; that keeps its original pace whatever
-      // the number of frames drawn per turn
-      if (frame_advances_state)
+      if (scanner_unkn370 > 0)
       {
-          if (scanner_unkn370 > 0)
-          {
-              scanner_unkn370--;
-              scanner_unkn3CC -= 1 * height / 9;
-          }
-          if (scanner_unkn370 < 0)
-          {
-              scanner_unkn370++;
-              scanner_unkn3CC += 1 * height / 9;
-              if (scanner_unkn3CC > 0)
-                  scanner_unkn3CC = 0;
-          }
+          scanner_unkn370--;
+          scanner_unkn3CC -= 1 * height / 9;
+      }
+      if (scanner_unkn370 < 0)
+      {
+          scanner_unkn370++;
+          scanner_unkn3CC += 1 * height / 9;
+          if (scanner_unkn3CC > 0)
+              scanner_unkn3CC = 0;
       }
     }
     else
     {
         if (end_pos < 0)
             scanner_unkn3CC = width;
-        // Advanced once per game turn (the caller only runs this on the frame
-        // which carries the turn forward), so the step is the original one,
-        // independent of how many frames are drawn per turn.
         scanner_unkn3CC -= 2 * height / 9;
     }
 }
@@ -486,10 +478,7 @@ void draw_objective_info_text(int scr_x, int scr_y, int width, int height)
 
     LbScreenLoadGraphicsWindow(&bkpwnd);
 
-    // Only on the frame which carries the turn forward, otherwise the text
-    // scrolls as many times faster as there are frames drawn per turn
-    if (frame_advances_state)
-        SCANNER_move_objective_info(width, height, end_pos);
+    SCANNER_move_objective_info(width, height, end_pos);
 }
 
 void draw_players_chat(void)
@@ -1611,8 +1600,8 @@ void draw_transparent_slant_bar(short x, short y, ushort w, ushort h)
     point3.pp.X = (x - sh_x);
 
     // The shield bar is animated, even if it's not possible to see
-    waftx = waft_table[(gameturn >> 3) & 31];
-    wafty = waft_table[(gameturn + 16) & 31];
+    waftx = waft_table[(render_anim_turn >> 3) & 31];
+    wafty = waft_table[(render_anim_turn + 16) & 31];
     tmx = ((waftx + 30) >> 1);
     tmy = ((wafty + 30) >> 3) + 64;
     point1.pp.U = tmx << 16;
