@@ -39,11 +39,19 @@ void bang_init(void)
 
 void new_bang(int x, int y, int z, int type, int owner, int c)
 {
+    // Pushed through a register holding them: a "g" operand may be placed
+    // relative to the stack pointer, which each push moves.
+    int stkargs[2];
+
+    stkargs[0] = (int)(intptr_t)owner;
+    stkargs[1] = (int)(intptr_t)c;
+
     asm volatile (
-      "push %5\n"
-      "push %4\n"
+      "push 4(%4)\n"
+      "push 0(%4)\n"
       "call ASM_new_bang\n"
-        : : "a" (x), "d" (y), "b" (z), "c" (type), "g" (owner), "g" (c));
+        : : "a" (x), "d" (y), "b" (z), "c" (type), "r" (stkargs)
+        : "cc", "memory");
 }
 
 void bang_new5(int x, int y, int z, int type, int owner)
@@ -91,11 +99,19 @@ void unused_func_025(short a1, short a2, short a3)
 
 void do_shockwave(int x, int y, int z, int radius, int intensity, struct Thing *p_owner)
 {
+    // Pushed through a register holding them: a "g" operand may be placed
+    // relative to the stack pointer, which each push moves.
+    int stkargs[2];
+
+    stkargs[0] = (int)(intptr_t)intensity;
+    stkargs[1] = (int)(intptr_t)p_owner;
+
     asm volatile (
-      "push %5\n"
-      "push %4\n"
+      "push 4(%4)\n"
+      "push 0(%4)\n"
       "call ASM_do_shockwave\n"
-        : : "a" (x), "d" (y), "b" (z), "c" (radius), "g" (intensity), "g" (p_owner));
+        : : "a" (x), "d" (y), "b" (z), "c" (radius), "r" (stkargs)
+        : "cc", "memory");
 }
 
 
@@ -109,30 +125,54 @@ void do_shockwave_building(int dist, int intensity, struct Thing *p_thing, struc
 void do_shockwave_vehicle(int dx, int dz, int dist, int intensity,
   struct Thing *p_vevicle, struct Thing *p_owner)
 {
+    // Pushed through a register holding them: a "g" operand may be placed
+    // relative to the stack pointer, which each push moves.
+    int stkargs[2];
+
+    stkargs[0] = (int)(intptr_t)p_vevicle;
+    stkargs[1] = (int)(intptr_t)p_owner;
+
     asm volatile (
-      "push %5\n"
-      "push %4\n"
+      "push 4(%4)\n"
+      "push 0(%4)\n"
       "call ASM_do_shockwave_vehicle\n"
-        : : "a" (dx), "d" (dz), "b" (dist), "c" (intensity), "g" (p_vevicle), "g" (p_owner));
+        : : "a" (dx), "d" (dz), "b" (dist), "c" (intensity), "r" (stkargs)
+        : "cc", "memory");
 }
 
 void do_shockwave_person(int dx, int dz, int dist, int intensity,
   struct Thing *p_person, struct Thing *p_owner)
 {
+    // Pushed through a register holding them: a "g" operand may be placed
+    // relative to the stack pointer, which each push moves.
+    int stkargs[2];
+
+    stkargs[0] = (int)(intptr_t)p_person;
+    stkargs[1] = (int)(intptr_t)p_owner;
+
     asm volatile (
-      "push %5\n"
-      "push %4\n"
+      "push 4(%4)\n"
+      "push 0(%4)\n"
       "call ASM_do_shockwave_person\n"
-        : : "a" (dx), "d" (dz), "b" (dist), "c" (intensity), "g" (p_person), "g" (p_owner));
+        : : "a" (dx), "d" (dz), "b" (dist), "c" (intensity), "r" (stkargs)
+        : "cc", "memory");
 }
 
 void do_shockwave_scale_effect(int dx, int dz, int dist, int intensity,
   struct SimpleThing *p_sthing, struct Thing *p_owner)
 {
+    // Pushed through a register holding them: a "g" operand may be placed
+    // relative to the stack pointer, which each push moves.
+    int stkargs[2];
+
+    stkargs[0] = (int)(intptr_t)p_sthing;
+    stkargs[1] = (int)(intptr_t)p_owner;
+
     asm volatile (
-      "push %5\n"
-      "push %4\n"
+      "push 4(%4)\n"
+      "push 0(%4)\n"
       "call ASM_do_shockwave_scale_effect\n"
-        : : "a" (dx), "d" (dz), "b" (dist), "c" (intensity), "g" (p_sthing), "g" (p_owner));
+        : : "a" (dx), "d" (dz), "b" (dist), "c" (intensity), "r" (stkargs)
+        : "cc", "memory");
 }
 /******************************************************************************/

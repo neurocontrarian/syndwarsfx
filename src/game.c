@@ -1444,12 +1444,21 @@ void draw_hud(int dcthing)
 
 void func_6fd1c(int a1, int a2, int a3, int a4, int a5, int a6, ubyte a7)
 {
+    // Pushed through a register holding them: a "g" operand may be placed
+    // relative to the stack pointer, which each push moves.
+    int stkargs[3];
+
+    stkargs[0] = (int)(intptr_t)a5;
+    stkargs[1] = (int)(intptr_t)a6;
+    stkargs[2] = (int)(intptr_t)a7;
+
     asm volatile (
-      "push %6\n"
-      "push %5\n"
-      "push %4\n"
+      "push 8(%4)\n"
+      "push 4(%4)\n"
+      "push 0(%4)\n"
       "call ASM_func_6fd1c\n"
-        : : "a" (a1), "d" (a2), "b" (a3), "c" (a4), "g" (a5), "g" (a6), "g" (a7));
+        : : "a" (a1), "d" (a2), "b" (a3), "c" (a4), "r" (stkargs)
+        : "cc", "memory");
 }
 
 void draw_engine_net_text(void)
