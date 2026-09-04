@@ -1582,11 +1582,19 @@ void draw_agent_grouping_bars(short panel)
 
 void func_702c0(int a1, int a2, int a3, int a4, int a5, ubyte a6)
 {
+    // Pushed through a register holding them: a "g" operand may be placed
+    // relative to the stack pointer, which each push moves.
+    int stkargs[2];
+
+    stkargs[0] = (int)(intptr_t)a5;
+    stkargs[1] = (int)(intptr_t)a6;
+
     asm volatile (
-      "push %5\n"
-      "push %4\n"
+      "push 4(%4)\n"
+      "push 0(%4)\n"
       "call ASM_func_702c0\n"
-        : : "a" (a1), "d" (a2), "b" (a3), "c" (a4), "g" (a5), "g" (a6));
+        : : "a" (a1), "d" (a2), "b" (a3), "c" (a4), "r" (stkargs)
+        : "cc", "memory");
 }
 
 void draw_transparent_slant_bar(short x, short y, ushort w, ushort h)

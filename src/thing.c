@@ -1930,11 +1930,20 @@ struct SimpleThing *create_scale_effect(int x, int y, int z, ushort frame, short
 struct SimpleThing *create_sound_effect(int x, int y, int z, ushort sample, int vol, int loop)
 {
     struct SimpleThing *ret;
+    // Pushed through a register holding them: a "g" operand may be placed
+    // relative to the stack pointer, which each push moves.
+    int stkargs[2];
+
+    stkargs[0] = (int)(intptr_t)vol;
+    stkargs[1] = (int)(intptr_t)loop;
+
     asm volatile (
-      "push %6\n"
-      "push %5\n"
+      "push 4(%5)\n"
+      "push 0(%5)\n"
       "call ASM_create_sound_effect\n"
-        : "=r" (ret) : "a" (x), "d" (y), "b" (z), "c" (sample), "g" (vol), "g" (loop));
+        : "=r" (ret)
+        : "a" (x), "d" (y), "b" (z), "c" (sample), "r" (stkargs)
+        : "cc", "memory");
     return ret;
 }
 
@@ -1992,12 +2001,22 @@ struct SimpleThing *create_electric_strand(MapCoord x, MapCoord y, MapCoord z,
 {
 #if 1
     struct SimpleThing *ret;
+    // Pushed through a register holding them: a "g" operand may be placed
+    // relative to the stack pointer, which each push moves.
+    int stkargs[3];
+
+    stkargs[0] = (int)(intptr_t)y2;
+    stkargs[1] = (int)(intptr_t)z2;
+    stkargs[2] = (int)(intptr_t)sound;
+
     asm volatile (
-      "push %7\n"
-      "push %6\n"
-      "push %5\n"
+      "push 8(%5)\n"
+      "push 4(%5)\n"
+      "push 0(%5)\n"
       "call ASM_create_electric_strand\n"
-        : "=r" (ret) : "a" (x), "d" (y), "b" (z), "c" (x2), "g" (y2), "g" (z2), "g" (sound));
+        : "=r" (ret)
+        : "a" (x), "d" (y), "b" (z), "c" (x2), "r" (stkargs)
+        : "cc", "memory");
     return ret;
 #endif
 }
