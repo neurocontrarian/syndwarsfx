@@ -5243,12 +5243,22 @@ void process_weapon(struct Thing *p_person)
 s32 laser_hit_at(s32 x1, s32 y1, s32 z1, s32 *x2, s32 *y2, s32 *z2, struct Thing *p_shot)
 {
     s32 ret;
+    // Pushed through a register holding them: a "g" operand may be placed
+    // relative to the stack pointer, which each push moves.
+    int stkargs[3];
+
+    stkargs[0] = (int)(intptr_t)y2;
+    stkargs[1] = (int)(intptr_t)z2;
+    stkargs[2] = (int)(intptr_t)p_shot;
+
     asm volatile (
-      "push %7\n"
-      "push %6\n"
-      "push %5\n"
+      "push 8(%5)\n"
+      "push 4(%5)\n"
+      "push 0(%5)\n"
       "call ASM_laser_hit_at\n"
-        : "=r" (ret) : "a" (x1), "d" (y1), "b" (z1), "c" (x2), "g" (y2), "g" (z2), "g" (p_shot));
+        : "=r" (ret)
+        : "a" (x1), "d" (y1), "b" (z1), "c" (x2), "r" (stkargs)
+        : "cc", "memory");
     return ret;
 }
 

@@ -90,11 +90,19 @@ int unkn_path_func_001(struct Thing *p_thing, ubyte a2)
 
 void path_init8_unkn3(struct Path *path, int ax8, int ay8, int bx8, int by8, int a6)
 {
+    // Pushed through a register holding them: a "g" operand may be placed
+    // relative to the stack pointer, which each push moves.
+    int stkargs[2];
+
+    stkargs[0] = (int)(intptr_t)by8;
+    stkargs[1] = (int)(intptr_t)a6;
+
     asm volatile (
-      "push %5\n"
-      "push %4\n"
+      "push 4(%4)\n"
+      "push 0(%4)\n"
       "call ASM_path_init8_unkn3\n"
-        : : "a" (path), "d" (ax8), "b" (ay8), "c" (bx8), "g" (by8), "g" (a6));
+        : : "a" (path), "d" (ax8), "b" (ay8), "c" (bx8), "r" (stkargs)
+        : "cc", "memory");
 }
 
 //TODO temp copy of static func
@@ -302,24 +310,44 @@ void make_edge(int x1, int y1, int x2, int y2)
 int edge_find(int x1, int y1, int x2, int y2, int *ntri1, int *ncor1)
 {
     int ret;
+    // Pushed through a register holding them: a "g" operand may be placed
+    // relative to the stack pointer, which each push moves.
+    int stkargs[2];
+
+    stkargs[0] = (int)(intptr_t)ntri1;
+    stkargs[1] = (int)(intptr_t)ncor1;
+
     asm volatile (
-      "push %6\n"
-      "push %5\n"
+      "push 4(%5)\n"
+      "push 0(%5)\n"
       "call ASM_edge_find\n"
-        : "=r" (ret) : "a" (x1), "d" (y1), "b" (x2), "c" (y2), "g" (ntri1), "g" (ncor1));
+        : "=r" (ret)
+        : "a" (x1), "d" (y1), "b" (x2), "c" (y2), "r" (stkargs)
+        : "cc", "memory");
     return ret;
 }
 
 TbBool two4_line_intersection(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4)
 {
     TbBool ret;
+    // Pushed through a register holding them: a "g" operand may be placed
+    // relative to the stack pointer, which each push moves.
+    int stkargs[4];
+
+    stkargs[0] = (int)(intptr_t)x3;
+    stkargs[1] = (int)(intptr_t)y3;
+    stkargs[2] = (int)(intptr_t)x4;
+    stkargs[3] = (int)(intptr_t)y4;
+
     asm volatile (
-      "push %8\n"
-      "push %7\n"
-      "push %6\n"
-      "push %5\n"
+      "push 12(%5)\n"
+      "push 8(%5)\n"
+      "push 4(%5)\n"
+      "push 0(%5)\n"
       "call ASM_two4_line_intersection\n"
-        : "=r" (ret) : "a" (x1), "d" (y1), "b" (x2), "c" (y2), "g" (x3), "g" (y3), "g" (x4), "g" (y4));
+        : "=r" (ret)
+        : "a" (x1), "d" (y1), "b" (x2), "c" (y2), "r" (stkargs)
+        : "cc", "memory");
     return ret;
 }
 

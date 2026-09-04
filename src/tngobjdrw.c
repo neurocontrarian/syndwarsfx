@@ -572,13 +572,23 @@ void build_unkn18(struct Thing *p_thing)
 
 void build_electricity(int x1, int y1, int z1, int x2, int y2, int z2, int itime, struct Thing *p_owner)
 {
+    // Pushed through a register holding them: a "g" operand may be placed
+    // relative to the stack pointer, which each push moves.
+    int stkargs[4];
+
+    stkargs[0] = (int)(intptr_t)y2;
+    stkargs[1] = (int)(intptr_t)z2;
+    stkargs[2] = (int)(intptr_t)itime;
+    stkargs[3] = (int)(intptr_t)p_owner;
+
     asm volatile (
-      "push %7\n"
-      "push %6\n"
-      "push %5\n"
-      "push %4\n"
+      "push 12(%4)\n"
+      "push 8(%4)\n"
+      "push 4(%4)\n"
+      "push 0(%4)\n"
       "call ASM_build_electricity\n"
-        : : "a" (x1), "d" (y1), "b" (z1), "c" (x2), "g" (y2), "g" (z2), "g" (itime), "g" (p_owner));
+        : : "a" (x1), "d" (y1), "b" (z1), "c" (x2), "r" (stkargs)
+        : "cc", "memory");
 }
 
 void build_laser_elec(struct Thing *p_thing)
@@ -637,24 +647,44 @@ void build_nuclear_bomb(struct SimpleThing *p_sthing)
 
 void build_laser_beam(int x1, int y1, int z1, int x2, int y2, int z2, int itime, struct Thing *p_owner)
 {
+    // Pushed through a register holding them: a "g" operand may be placed
+    // relative to the stack pointer, which each push moves.
+    int stkargs[4];
+
+    stkargs[0] = (int)(intptr_t)y2;
+    stkargs[1] = (int)(intptr_t)z2;
+    stkargs[2] = (int)(intptr_t)itime;
+    stkargs[3] = (int)(intptr_t)p_owner;
+
     asm volatile (
-      "push %7\n"
-      "push %6\n"
-      "push %5\n"
-      "push %4\n"
+      "push 12(%4)\n"
+      "push 8(%4)\n"
+      "push 4(%4)\n"
+      "push 0(%4)\n"
       "call ASM_build_laser_beam\n"
-        : : "a" (x1), "d" (y1), "b" (z1), "c" (x2), "g" (y2), "g" (z2), "g" (itime), "g" (p_owner));
+        : : "a" (x1), "d" (y1), "b" (z1), "c" (x2), "r" (stkargs)
+        : "cc", "memory");
 }
 
 void build_laser_beam_q(int x1, int y1, int z1, int x2, int y2, int z2, int itime, struct Thing *p_owner)
 {
+    // Pushed through a register holding them: a "g" operand may be placed
+    // relative to the stack pointer, which each push moves.
+    int stkargs[4];
+
+    stkargs[0] = (int)(intptr_t)y2;
+    stkargs[1] = (int)(intptr_t)z2;
+    stkargs[2] = (int)(intptr_t)itime;
+    stkargs[3] = (int)(intptr_t)p_owner;
+
     asm volatile (
-      "push %7\n"
-      "push %6\n"
-      "push %5\n"
-      "push %4\n"
+      "push 12(%4)\n"
+      "push 8(%4)\n"
+      "push 4(%4)\n"
+      "push 0(%4)\n"
       "call ASM_build_laser_beam_q\n"
-        : : "a" (x1), "d" (y1), "b" (z1), "c" (x2), "g" (y2), "g" (z2), "g" (itime), "g" (p_owner));
+        : : "a" (x1), "d" (y1), "b" (z1), "c" (x2), "r" (stkargs)
+        : "cc", "memory");
 }
 
 void build_laser29(struct Thing *p_thing)
@@ -679,13 +709,23 @@ void build_electricity_strand(struct SimpleThing *p_sthing, ubyte itime)
 
 void build_razor_wire_strand(int x1, int y1, int z1, int x2, int y2, int z2, int itime, struct Thing *p_owner)
 {
+    // Pushed through a register holding them: a "g" operand may be placed
+    // relative to the stack pointer, which each push moves.
+    int stkargs[4];
+
+    stkargs[0] = (int)(intptr_t)y2;
+    stkargs[1] = (int)(intptr_t)z2;
+    stkargs[2] = (int)(intptr_t)itime;
+    stkargs[3] = (int)(intptr_t)p_owner;
+
     asm volatile (
-      "push %7\n"
-      "push %6\n"
-      "push %5\n"
-      "push %4\n"
+      "push 12(%4)\n"
+      "push 8(%4)\n"
+      "push 4(%4)\n"
+      "push 0(%4)\n"
       "call ASM_build_razor_wire_strand\n"
-        : : "a" (x1), "d" (y1), "b" (z1), "c" (x2), "g" (y2), "g" (z2), "g" (itime), "g" (p_owner));
+        : : "a" (x1), "d" (y1), "b" (z1), "c" (x2), "r" (stkargs)
+        : "cc", "memory");
 }
 
 void build_soul(struct SimpleThing *p_sthing)
