@@ -556,6 +556,7 @@ ubyte flashy_draw_purple_text_box_children(struct ScreenTextBox *p_box)
     ushort i;
     ubyte all_drawn;
 
+    all_drawn = 1;
     lbDisplay.DrawFlags = 0;
     for (i = 0; i < 2; i++)
     {

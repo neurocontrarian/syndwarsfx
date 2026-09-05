@@ -412,9 +412,8 @@ extern ubyte SCANNER_bt085;
 extern ubyte SCANNER_brig;
 extern ubyte SCANNER_cont;
 
-extern struct scanstr1 SCANNER_bbpoint[255];
-extern long dword_1DBB64[];
-extern long dword_1DBB6C[512];
+extern struct scanstr1 SCANNER_bbpoint[256];
+extern long SCANNER_unknarr_1DBB6C[512];
 extern TbPixel *SCANNER_screenptr;
 extern ulong SCANNER_keep_arcs;
 extern long scanner_arrow_mode; // = 1;
@@ -1434,8 +1433,8 @@ void SCANNER_draw_blips(int pos_mx, int pos_mz, int sh_x, int sh_y)
             bsh_x = 2 * SCANNER_bbpoint[i].v - pos_mx;
             map_coords_to_scanner(&sc_x, &sc_y, sh_x, sh_y, bsh_x, bsh_y);
 
-            dword_1DBB6C[2 * (base_i + i) + 0] = sc_x;
-            dword_1DBB6C[2 * (base_i + i) + 1] = sc_y;
+            SCANNER_unknarr_1DBB6C[2 * (base_i + i) + 0] = sc_x;
+            SCANNER_unknarr_1DBB6C[2 * (base_i + i) + 1] = sc_y;
         }
 
         for (i = 0; i < 16; i++)
@@ -1444,14 +1443,14 @@ void SCANNER_draw_blips(int pos_mx, int pos_mz, int sh_x, int sh_y)
             int x1, y1, x2, y2;
 
             ri = base_i + i;
-            x1 = dword_1DBB6C[2 * ri + 0];
-            y1 = dword_1DBB6C[2 * ri + 1];
+            x1 = SCANNER_unknarr_1DBB6C[2 * ri + 0];
+            y1 = SCANNER_unknarr_1DBB6C[2 * ri + 1];
             if (i == 15)
               ri = base_i + i - 15;
             else
               ri = base_i + i + 1;
-            x2 = dword_1DBB6C[2 * ri + 0];
-            y2 = dword_1DBB6C[2 * ri + 1];
+            x2 = SCANNER_unknarr_1DBB6C[2 * ri + 0];
+            y2 = SCANNER_unknarr_1DBB6C[2 * ri + 1];
 
             if ((x1 - sc_width <= y1) || (x2 - sc_width <= y2))
             {

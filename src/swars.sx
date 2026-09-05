@@ -100192,9 +100192,9 @@ GLOBAL_FUNC (ASM_SCANNER_init)	/* 0x0ABA1C */
 		mov    EXPORT_SYMBOL(lbSinTable)+2048(,%eax,4),%eax
 		sar    $0x2,%edx
 		sar    $0x2,%eax
-		mov    %edx,EXPORT_SYMBOL(SCANNER_bbpadds)(%ecx)
+		mov    %edx,EXPORT_SYMBOL(SCANNER_bbpadds)-0x8(%ecx)
 		add    $0x800,%ebx
-		mov    %eax,data_1dbae8(%ecx)
+		mov    %eax,EXPORT_SYMBOL(SCANNER_bbpadds)-0x4(%ecx)
 		cmp    $0x80,%ecx
 		jne    jump_aba99
 		xor    %ebx,%ebx
@@ -101858,17 +101858,17 @@ GLOBAL_FUNC(ASM_SCANNER_process_bbpoints)	/* 0x0ACE64 */
 		mov    EXPORT_SYMBOL(ingame)+0x80E(%esi),%bl # ingame.Scanner.BigBlip[0].Speed
 	jump_acf39:
 		mov    %bl,%cl
-		mov    data_1dbaec(%edx),%ebp
+		mov    EXPORT_SYMBOL(SCANNER_bbpadds)(%edx),%ebp
 		shl    %cl,%ebp
 		mov    %ebp,%ecx
 		mov    EXPORT_SYMBOL(SCANNER_bbpoint)(%eax),%ebp
 		add    %ecx,%ebp
 		mov    %bl,%cl
 		mov    %ebp,EXPORT_SYMBOL(SCANNER_bbpoint)(%eax)
-		mov    data_1dbaf0(%edx),%ebp
+		mov    EXPORT_SYMBOL(SCANNER_bbpadds)+0x4(%edx),%ebp
 		shl    %cl,%ebp
 		mov    %ebp,%ecx
-		mov    data_1db2f0(%eax),%ebp
+		mov    EXPORT_SYMBOL(SCANNER_bbpoint)+0x4(%eax),%ebp
 		add    $0x8,%eax
 		add    %ecx,%ebp
 		add    $0x8,%edx
@@ -102763,7 +102763,7 @@ GLOBAL_FUNC(ASM_SCANNER_unkn_func_196)	/* 0xAD2F4 */
 		mov    0xc(%esp),%edx
 		mov    0x50(%esp),%ebx
 		mov    EXPORT_SYMBOL(SCANNER_bbpoint)(%ecx),%esi
-		mov    data_1db2f0(%ecx),%edi
+		mov    EXPORT_SYMBOL(SCANNER_bbpoint)+0x4(%ecx),%edi
 		add    %esi,%esi
 		add    %edi,%edi
 		sub    %edx,%esi
@@ -102823,9 +102823,9 @@ GLOBAL_FUNC(ASM_SCANNER_unkn_func_196)	/* 0xAD2F4 */
 		idiv   %ebx
 		sar    $0x10,%ebp
 		sar    $0x10,%eax
-		mov    %ebp,data_1dbb68(%ecx)
+		mov    %ebp,EXPORT_SYMBOL(SCANNER_unknarr_1DBB6C)-0x4(%ecx)
 		mov    0x8(%esp),%edx
-		mov    %eax,EXPORT_SYMBOL(dword_1DBB64)(%ecx)
+		mov    %eax,EXPORT_SYMBOL(SCANNER_unknarr_1DBB6C)-0x8(%ecx)
 		cmp    %edx,%ecx
 		jne    jump_adcbc
 		mov    0x4(%esp),%eax
@@ -102839,7 +102839,7 @@ GLOBAL_FUNC(ASM_SCANNER_unkn_func_196)	/* 0xAD2F4 */
 		inc    %eax
 	jump_adda1:
 		mov    0x60(%esp),%ebx
-		mov    EXPORT_SYMBOL(dword_1DBB6C)(,%eax,8),%esi
+		mov    EXPORT_SYMBOL(SCANNER_unknarr_1DBB6C)(,%eax,8),%esi
 		mov    EXPORT_SYMBOL(dword_1DBB70)(,%eax,8),%ecx
 		mov    %ebp,%eax
 		sub    %ebx,%eax
@@ -102950,7 +102950,7 @@ GLOBAL_FUNC(ASM_SCANNER_unkn_func_196)	/* 0xAD2F4 */
 		mov    0x4c(%esp),%eax
 		add    0x70(%esp),%eax
 		mov    0x70(%esp),%edx
-		mov    EXPORT_SYMBOL(dword_1DBB6C)(,%eax,8),%ebp
+		mov    EXPORT_SYMBOL(SCANNER_unknarr_1DBB6C)(,%eax,8),%ebp
 		mov    EXPORT_SYMBOL(dword_1DBB70)(,%eax,8),%edi
 		cmp    $0xf,%edx
 		jne    jump_adda0
@@ -103712,7 +103712,7 @@ GLOBAL_FUNC(ASM_SCANNER_draw_signals)	/* 0xAE9C0 */
 		mov    0xcc(%esp),%ecx
 		mov    %eax,0xc4(%esp)
 	jump_aecfd:
-		mov    data_1db2f0(%ecx),%eax
+		mov    EXPORT_SYMBOL(SCANNER_bbpoint)+0x4(%ecx),%eax
 		mov    0x4(%esp),%edx
 		add    %eax,%eax
 		mov    EXPORT_SYMBOL(SCANNER_bbpoint)(%ecx),%ebp
@@ -103780,9 +103780,9 @@ GLOBAL_FUNC(ASM_SCANNER_draw_signals)	/* 0xAE9C0 */
 		mov    0x9c(%esp),%edx
 		sar    $0x10,%eax
 		sar    $0x10,%edx
-		mov    %eax,EXPORT_SYMBOL(dword_1DBB64)(%ecx)
+		mov    %eax,EXPORT_SYMBOL(SCANNER_unknarr_1DBB6C)-0x8(%ecx)
 		mov    0xc4(%esp),%ebp
-		mov    %edx,data_1dbb68(%ecx)
+		mov    %edx,EXPORT_SYMBOL(SCANNER_unknarr_1DBB6C)-0x4(%ecx)
 		cmp    %ebp,%ecx
 		jne    jump_aecfd
 		xor    %eax,%eax
@@ -103796,7 +103796,7 @@ GLOBAL_FUNC(ASM_SCANNER_draw_signals)	/* 0xAE9C0 */
 		inc    %eax
 	jump_aee35:
 		mov    0x10(%esp),%ebx
-		mov    EXPORT_SYMBOL(dword_1DBB6C)(,%eax,8),%edx
+		mov    EXPORT_SYMBOL(SCANNER_unknarr_1DBB6C)(,%eax,8),%edx
 		mov    EXPORT_SYMBOL(dword_1DBB70)(,%eax,8),%ecx
 		mov    %edx,0x20(%esp)
 		mov    %ebp,%eax
@@ -103915,7 +103915,7 @@ GLOBAL_FUNC(ASM_SCANNER_draw_signals)	/* 0xAE9C0 */
 		mov    0xe4(%esp),%ecx
 		add    %ecx,%eax
 		mov    EXPORT_SYMBOL(dword_1DBB70)(,%eax,8),%edx
-		mov    EXPORT_SYMBOL(dword_1DBB6C)(,%eax,8),%ebp
+		mov    EXPORT_SYMBOL(SCANNER_unknarr_1DBB6C)(,%eax,8),%ebp
 		mov    %edx,0xfc(%esp)
 		cmp    $0xf,%ecx
 		jne    jump_aee34
@@ -133339,22 +133339,10 @@ GLOBAL (SCANNER_colour)	/* 0x1DB2E4 */
 GLOBAL (byte_1DB2E9)	/* 0x1DB2E9 */
 		.ascii  "\x00\x00\x00"
 GLOBAL (SCANNER_bbpoint)	/* 0x1DB2EC */
-		.long	0x0
-data_1db2f0:
-		.fill   0x7f4
-GLOBAL (SCANNER_bbpadds)	/* 0x1DBAE4 */
-		.long	0x0
-data_1dbae8:
-		.long	0x0
-data_1dbaec:
-		.long	0x0
-data_1dbaf0:
-		.fill   0x74
-GLOBAL (dword_1DBB64)
-		.long	0x0
-data_1dbb68:
-		.long	0x0
-GLOBAL (dword_1DBB6C)	/* 0x1DBB6C */
+		.fill   0x800
+GLOBAL (SCANNER_bbpadds)	/* 0x1DBAEC */
+		.fill   0x80
+GLOBAL (SCANNER_unknarr_1DBB6C)	/* 0x1DBB6C */
 		.long	0x0
 GLOBAL (dword_1DBB70)
 		.fill   0x7fc

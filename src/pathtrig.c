@@ -1216,6 +1216,13 @@ int add_walk_items_for_face_object(short face, short obj)
             fcpt_y = fcobj_y + p_pt->Y;
             fcpt_z = fcobj_z + p_pt->Z;
         }
+        else
+        {
+            LOGERR("walk on face zero");
+            fcpt_x = fcobj_x;
+            fcpt_y = fcobj_y;
+            fcpt_z = fcobj_z;
+        }
 
         for (cface = startface3; cface < endface3; cface++)
         {

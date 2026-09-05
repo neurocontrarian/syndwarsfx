@@ -838,6 +838,9 @@ void process_next_tnode(struct Thing *p_vehicle)
                 int i, lnk;
                 int dx, dz;
 
+                dx = 0;
+                dz = 1;
+
                 for (i = 0; i < 8; i++)
                 {
                     struct TrafficNode *p_lntnode;

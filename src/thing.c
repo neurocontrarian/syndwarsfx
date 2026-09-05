@@ -1564,6 +1564,8 @@ short get_thing_same_type_head(short ttype, short subtype)
     case TT_MINE:
         if (subtype == 48)
             thing = same_type_head[6];
+        else
+            thing = 0;
         break;
     default:
         thing = 0;
