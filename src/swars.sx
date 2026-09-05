@@ -107655,7 +107655,7 @@ GLOBAL_FUNC(ASM_flashy_draw_purple_shape)	/* 0x0B2ACC */
 		sub    %edx,%eax
 		shl    $0x2,%eax
 		add    %edx,%eax
-		mov    purple_draw_list,%edx
+		mov    EXPORT_SYMBOL(purple_draw_list),%edx
 		mov    0x38(%esp),%ebx
 		mov    %bx,(%edx,%eax,2)
 		mov    (%esp),%ebx
@@ -107972,7 +107972,7 @@ GLOBAL_FUNC(ASM_flashy_draw_purple_shape)	/* 0x0B2ACC */
 		lea    0x0(,%edx,4),%eax
 		sub    %edx,%eax
 		shl    $0x2,%eax
-		mov    purple_draw_list,%ebx
+		mov    EXPORT_SYMBOL(purple_draw_list),%ebx
 		add    %edx,%eax
 		mov    0xc(%esp),%edx
 		mov    %cx,(%ebx,%eax,2)
@@ -108177,7 +108177,7 @@ GLOBAL_FUNC(ASM_flashy_draw_purple_shape)	/* 0x0B2ACC */
 		lea    0x0(,%edx,4),%eax
 		sub    %edx,%eax
 		shl    $0x2,%eax
-		mov    purple_draw_list,%ecx
+		mov    EXPORT_SYMBOL(purple_draw_list),%ecx
 		add    %edx,%eax
 		mov    0x18(%esp),%edx
 		mov    %di,(%ecx,%eax,2)
@@ -108243,7 +108243,7 @@ GLOBAL_FUNC(ASM_copy_box_purple_list)	/* 0x0B7548 */
 		lea    0x0(,%edx,4),%eax
 		sub    %edx,%eax
 		shl    $0x2,%eax
-		mov    purple_draw_list,%edi
+		mov    EXPORT_SYMBOL(purple_draw_list),%edi
 		add    %edx,%eax
 		mov    (%esp),%edx
 		mov    %dx,(%edi,%eax,2)
@@ -108289,7 +108289,7 @@ GLOBAL_FUNC(ASM_draw_box_purple_list) /* 0xb75d8 */
 		lea    0x0(,%edx,4),%eax
 		sub    %edx,%eax
 		shl    $0x2,%eax
-		mov    purple_draw_list,%ecx
+		mov    EXPORT_SYMBOL(purple_draw_list),%ecx
 		add    %edx,%eax
 		mov    (%esp),%edx
 		mov    %dx,(%ecx,%eax,2)
@@ -108332,7 +108332,7 @@ GLOBAL_FUNC(ASM_draw_text_purple_list2)	/* 0x0B766C */
 		lea    0x0(,%edx,4),%eax
 		sub    %edx,%eax
 		shl    $0x2,%eax
-		mov    purple_draw_list,%ecx
+		mov    EXPORT_SYMBOL(purple_draw_list),%ecx
 		add    %edx,%eax
 		mov    EXPORT_SYMBOL(text_window_x1),%dx
 		mov    %si,0x8(%ecx,%eax,2)
@@ -108389,7 +108389,7 @@ GLOBAL_FUNC(ASM_draw_sprite_purple_list)	/* 0x0B773C */
 		lea    0x0(,%edx,4),%eax
 		sub    %edx,%eax
 		shl    $0x2,%eax
-		mov    purple_draw_list,%esi
+		mov    EXPORT_SYMBOL(purple_draw_list),%esi
 		add    %edx,%eax
 		mov    EXPORT_SYMBOL(lbDisplay)+44,%dx # lbDisplay.GraphicsWindowY
 		mov    %ebx,0x4(%esi,%eax,2)
@@ -108431,7 +108431,7 @@ GLOBAL_FUNC(ASM_draw_trig_purple_list)	/* 0x0B77C0 */
 		lea    0x0(,%edx,4),%eax
 		sub    %edx,%eax
 		shl    $0x2,%eax
-		mov    purple_draw_list,%edi
+		mov    EXPORT_SYMBOL(purple_draw_list),%edi
 		add    %edx,%eax
 		mov    (%esp),%edx
 		mov    %dx,(%edi,%eax,2)
@@ -108478,7 +108478,7 @@ GLOBAL_FUNC(ASM_draw_triangle_purple_list)	/* 0x0B7860 */
 		lea    0x0(,%edx,4),%eax
 		sub    %edx,%eax
 		shl    $0x2,%eax
-		mov    purple_draw_list,%edi
+		mov    EXPORT_SYMBOL(purple_draw_list),%edi
 		add    %edx,%eax
 		mov    (%esp),%edx
 		mov    %dx,(%edi,%eax,2)
@@ -108534,7 +108534,7 @@ GLOBAL_FUNC(ASM_draw_line_purple_list)	/* 0x0B791C */
 		lea    0x0(,%edx,4),%eax
 		sub    %edx,%eax
 		shl    $0x2,%eax
-		mov    purple_draw_list,%ebp
+		mov    EXPORT_SYMBOL(purple_draw_list),%ebp
 		add    %edx,%eax
 		mov    (%esp),%edx
 		mov    %dx,0x0(%ebp,%eax,2)
@@ -108564,7 +108564,7 @@ GLOBAL_FUNC(ASM_draw_line_purple_list)	/* 0x0B791C */
 		shl    $0x2,%eax
 		inc    %ebx
 		add    %edx,%eax
-		mov    purple_draw_list,%edx
+		mov    EXPORT_SYMBOL(purple_draw_list),%edx
 		mov    %bx,EXPORT_SYMBOL(purple_draw_index)
 		movb   $0xa,0x17(%edx,%eax,2)
 		jmp    jump_b79f2
@@ -108599,7 +108599,7 @@ GLOBAL_FUNC(ASM_draw_flic_purple_list)	/* 0x0B79FC */
 		lea    0x0(,%edx,4),%eax
 		sub    %edx,%eax
 		shl    $0x2,%eax
-		mov    purple_draw_list,%ebx
+		mov    EXPORT_SYMBOL(purple_draw_list),%ebx
 		add    %edx,%eax
 		mov    EXPORT_SYMBOL(lbDisplay)+113,%dl # lbDisplay.DrawColour
 		mov    %ecx,(%ebx,%eax,2)
@@ -108638,7 +108638,7 @@ GLOBAL_FUNC(ASM_draw_hotspot_purple_list)	/* 0x0B7A64 */
 		shl    $0x2,%eax
 		add    %edx,%eax
 		mov    EXPORT_SYMBOL(lbDisplay)+44,%dx # lbDisplay.GraphicsWindowY
-		mov    purple_draw_list,%ecx
+		mov    EXPORT_SYMBOL(purple_draw_list),%ecx
 		add    %edx,%ebx
 		xor    %edx,%edx
 		mov    %bx,0x2(%ecx,%eax,2)
@@ -130745,7 +130745,7 @@ GLOBAL_FUNC(ASM_user_read_value)	/* 0x0D0380 */
 		repnz scas %es:(%edi),%al
 		not    %ecx
 		dec    %ecx
-		mov    show_alert,%ah
+		mov    EXPORT_SYMBOL(show_alert),%ah
 		mov    %cl,(%esp)
 		test   %ah,%ah
 		jne    jump_d0510
@@ -131134,7 +131134,7 @@ GLOBAL_FUNC(ASM_save_game_slot)	/* 0x0D38B0 */
 		push   $ascS_5
 		mov    $0x1,%dh
 		push   $EXPORT_SYMBOL(alert_text)
-		mov    %dh,show_alert
+		mov    %dh,EXPORT_SYMBOL(show_alert)
 		jmp    jump_d395b
 	jump_d3927:
 		mov    EXPORT_SYMBOL(gui_strings)+0x8EC,%ecx
@@ -131142,7 +131142,7 @@ GLOBAL_FUNC(ASM_save_game_slot)	/* 0x0D38B0 */
 		push   $ascS_6
 		mov    $0x1,%dl
 		push   $EXPORT_SYMBOL(alert_text)
-		mov    %dl,show_alert
+		mov    %dl,EXPORT_SYMBOL(show_alert)
 		jmp    jump_d395b
 	jump_d3942:
 		mov    EXPORT_SYMBOL(gui_strings)+0x8D0,%edx
@@ -131150,7 +131150,7 @@ GLOBAL_FUNC(ASM_save_game_slot)	/* 0x0D38B0 */
 		push   $ascS_7
 		mov    $0x1,%ah
 		push   $EXPORT_SYMBOL(alert_text)
-		mov    %ah,show_alert
+		mov    %ah,EXPORT_SYMBOL(show_alert)
 	jump_d395b:
 		call   ac_sprintf
 		add    $0xc,%esp
@@ -133364,85 +133364,9 @@ data_1dc510:
 data_1dc534:
 		.long	0x0
 data_1dc538:
-		.fill   0x4c
-GLOBAL (purple_box_x1)	/* 0x1DC584 */
-		.long	0x0
-GLOBAL (purple_box_y1)	/* 0x1DC588 */
-		.long	0x0
-		.fill   0x20
-GLOBAL (purple_box_x2)	/* 0x1DC5AC */
-		.long	0x0
-GLOBAL (purple_box_y2)	/* 0x1DC5B0 */
 		.long	0x0
 		.fill   0x48
-GLOBAL (dword_1DC5FC)	/* 0x1DC5FC */
-		.long	0x0
-GLOBAL (dword_1DC600)	/* 0x1DC600 */
-		.fill   0x24
-GLOBAL (dword_1DC624)	/* 0x1DC624 */
-		.long	0x0
-GLOBAL (dword_1DC628)	/* 0x1DC628 */
-		.fill   0x4c
-data_1dc674:
-		.long	0x0
-data_1dc678:
-		.fill   0x24
-data_1dc69c:
-		.long	0x0
-data_1dc6a0:
-		.fill   0x4c
-data_1dc6ec:
-		.long	0x0
-data_1dc6f0:
-		.fill   0x24
-data_1dc714:
-		.long	0x0
-data_1dc718:
-		.fill   0x24
-/* static ubyte purple_joy_move; from draw_purple_screen()
- */
-GLOBAL (purple_joy_move)	/* 0x1DC73C */
-		.byte	0x0
-		.fill   0x3
-GLOBAL (alert_OK_button)	/* 0x1DC740 */
-		.short  0x0
-data_1dc742:
-		.short  0x0
-data_1dc744:
-		.short  0x0
-data_1dc746:
-		.fill   0xa
-data_1dc750:
-		.fill   0x8
-data_1dc758:
-		.fill   0xc
-data_1dc764:
-		.fill   0x8
-data_1dc76c:
-		.long	0x0
-GLOBAL (alert_box)	/* 0x1DC770 */
-		.short  0x0
-data_1dc772:
-		.short  0x0
-data_1dc774:
-		.short  0x0
-data_1dc776:
-		.long	0x0
-data_1dc77a:
-		.short  0x0
-data_1dc77c:
-		.fill   0xc
-GLOBAL (show_alert)	/* 0x1DC788 */
-		.long	0x0
-/* PurpleDrawItem *purple_draw_list;
- */
-GLOBAL (purple_draw_list)
-		.long	0x0
-/* ushort purple_draw_index;
- */
-GLOBAL (purple_draw_index)	/* 0x1DC790 */
-		.short  0x0
-		.fill   0xc
+		.align  4
 
 GLOBAL (unkn_mech_mat8)	/* 0x1DC82C */
 		.long	0x0

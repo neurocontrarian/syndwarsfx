@@ -36,9 +36,15 @@
 #include "mydraw.h"
 #include "swlog.h"
 /******************************************************************************/
+
+struct PurpleDrawItem *purple_draw_list = NULL;
+ushort purple_draw_index = 0;
+
 ushort hotspot_next = 1;
 
-extern ubyte purple_joy_move;
+ubyte purple_joy_move = 0;
+
+/******************************************************************************/
 
 ushort find_closest_hotspot_down(void)
 {

@@ -29,6 +29,7 @@
 #include "ssampply.h"
 
 #include "display.h"
+#include "femain.h"
 #include "game.h"
 #include "game_sprts.h"
 #include "guiboxes.h"
@@ -54,17 +55,16 @@ extern struct ScreenTextBox world_city_info_box;
 extern struct ScreenTextBox equip_display_box;
 extern struct ScreenTextBox cryo_cybmod_list_box;
 extern struct ScreenTextBox controls_list_box;
-extern struct ScreenButton alert_OK_button;
 
-extern long dword_1DC5FC;
-extern long dword_1DC600;
-extern long dword_1DC624;
-extern long dword_1DC628;
+s32 purple_box_x1, purple_box_y1;
+s32 purple_box_x2, purple_box_y2;
 
-extern long purple_box_x1;
-extern long purple_box_y1;
-extern long purple_box_x2;
-extern long purple_box_y2;
+static TbBool button_input_suppressed_by_modal_box(struct ScreenButton *p_btn)
+{
+    if (show_alert && button_is_modal_alert(p_btn))
+        return true;
+    return false;
+}
 
 void draw_line_purple_list(int x1, int y1, int x2, int y2, int colour)
 {
@@ -1318,7 +1318,7 @@ ubyte flashy_draw_purple_button(struct ScreenButton *p_btn)
         }
         else if ((p_btn->Flags & GBxFlg_IsPushed) != 0)
         {
-            if (!show_alert || p_btn == &alert_OK_button)
+            if (!button_input_suppressed_by_modal_box(p_btn))
             {
                 ushort smpl_id;
 
@@ -1357,7 +1357,7 @@ ubyte flashy_draw_purple_button(struct ScreenButton *p_btn)
         }
         else if ((p_btn->Flags & GBxFlg_IsRPushed) != 0)
         {
-            if (!show_alert || p_btn == &alert_OK_button)
+            if (!button_input_suppressed_by_modal_box(p_btn))
             {
                 ushort smpl_id;
 

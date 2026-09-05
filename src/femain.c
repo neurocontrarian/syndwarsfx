@@ -76,8 +76,9 @@ struct ScreenButton main_login_button = {0};
 struct ScreenButton main_map_editor_button = {0};
 struct ScreenButton main_load_button = {0};
 
-extern struct ScreenBox alert_box;
-extern struct ScreenButton alert_OK_button;
+struct ScreenBox alert_box;
+struct ScreenButton alert_OK_button;
+ubyte show_alert = 0;
 
 struct ScreenTextBox heading_box = {0};
 struct ScreenTextBox loading_INITIATING_box = {0};
@@ -409,6 +410,11 @@ void skip_flashy_draw_sysmenu_boxes(void)
     unkn13_SYSTEM_button.Flags |= GBxFlg_Unkn0002;
     for (i = 0; i != SYSMNU_BUTTONS_COUNT; i++)
         sysmnu_buttons[i].Flags |= GBxFlg_Unkn0002;
+}
+
+TbBool button_is_modal_alert(struct ScreenButton *p_btn)
+{
+    return p_btn == &alert_OK_button;
 }
 
 void alert_box_text_va(const char *fmt, va_list arg)
