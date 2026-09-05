@@ -198,6 +198,18 @@ enum ReloadMenuFlags {
     RelMnuF_ScrBoxesFull = 0x04,
 };
 
+#pragma pack(1)
+
+struct struc_CC638 {
+    s32 field_0;
+    s32 field_4;
+    ubyte field_8;
+    ubyte field_9;
+    ubyte field_A;
+    ubyte field_B;
+};
+
+#pragma pack()
 
 extern char *fadedat_fname;
 char session_name[20] = "SWARA";
@@ -278,6 +290,8 @@ extern long mech_unkn_tile_x2;
 extern long mech_unkn_tile_y2;
 extern long mech_unkn_tile_x3;
 extern long mech_unkn_tile_y3;
+
+extern struct struc_CC638 stru_1DDB70[8];
 
 //TODO this is not an extern only because I was unable to locate it in asm
 ushort next_bezier_pt = 1;
@@ -818,6 +832,19 @@ void play_intro(void)
         else
             play_smacker_then_back_to_engine(MPly_Intro);
     }
+}
+
+void sub_CC554(void)
+{
+    ushort i;
+
+    for (i = 0; i < 8; i++)
+    {
+        LbMemoryCopy(&stru_1DDB70[i], &stru_1DDB70[i+1], sizeof(struct struc_CC638));
+        if (stru_1DDB70[i + 1].field_9 > 32)
+            stru_1DDB70[i + 1].field_9 -= 4;
+    }
+    stru_1DDB70[8 - 1].field_8 = 0;
 }
 
 char func_cc638(const char *text1, const char *text2)

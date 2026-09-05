@@ -94,8 +94,8 @@ TbClockMSec sessionlist_last_update[MONITORED_SESSIONS_COUNT] = {0};
 extern ubyte byte_1C6D48;
 extern struct TbNetworkSessionList unkstruct04_arr[MONITORED_SESSIONS_COUNT];
 
-extern ushort word_1DDBD0[8];
-extern ushort word_1DDBE0[8];
+ushort grpaint_last_pt_x[8];
+ushort grpaint_last_pt_y[8];
 
 ubyte do_net_protocol_option(ubyte click);
 ubyte ac_do_net_unkn40(ubyte click);
@@ -1005,7 +1005,7 @@ void net_grpaint_draw_op(short scr_x2, short scr_y2, ubyte colno, sbyte op, ubyt
         break;
     case 1:
         screen_switch_to_custom_buffer(&bkp, dword_1C6DE4, 255, 96);
-        LbDrawLine(word_1DDBD0[plyr], word_1DDBE0[plyr],
+        LbDrawLine(grpaint_last_pt_x[plyr], grpaint_last_pt_y[plyr],
           scr_x2, scr_y2, byte_155170[colno]);
         screen_load_backup_buffer(&bkp);
         break;
@@ -1016,8 +1016,8 @@ void net_grpaint_draw_op(short scr_x2, short scr_y2, ubyte colno, sbyte op, ubyt
         LOGERR("unexpected op=%d", (int)op);
         break;
     }
-    word_1DDBD0[plyr] = scr_x2;
-    word_1DDBE0[plyr] = scr_y2;
+    grpaint_last_pt_x[plyr] = scr_x2;
+    grpaint_last_pt_y[plyr] = scr_y2;
 }
 
 void net_grpaint_clear_op(void)
