@@ -50,7 +50,7 @@ void new_bang(int x, int y, int z, int type, int owner, int c)
       "push 4(%4)\n"
       "push 0(%4)\n"
       "call ASM_new_bang\n"
-        : : "a" (x), "d" (y), "b" (z), "c" (type), "r" (stkargs)
+        : : "a" (x), "d" (y), "b" (z), "c" (type), "S" (stkargs)
         : "cc", "memory");
 }
 
@@ -110,7 +110,7 @@ void do_shockwave(int x, int y, int z, int radius, int intensity, struct Thing *
       "push 4(%4)\n"
       "push 0(%4)\n"
       "call ASM_do_shockwave\n"
-        : : "a" (x), "d" (y), "b" (z), "c" (radius), "r" (stkargs)
+        : : "a" (x), "d" (y), "b" (z), "c" (radius), "S" (stkargs)
         : "cc", "memory");
 }
 
@@ -136,7 +136,7 @@ void do_shockwave_vehicle(int dx, int dz, int dist, int intensity,
       "push 4(%4)\n"
       "push 0(%4)\n"
       "call ASM_do_shockwave_vehicle\n"
-        : : "a" (dx), "d" (dz), "b" (dist), "c" (intensity), "r" (stkargs)
+        : : "a" (dx), "d" (dz), "b" (dist), "c" (intensity), "S" (stkargs)
         : "cc", "memory");
 }
 
@@ -154,7 +154,7 @@ void do_shockwave_person(int dx, int dz, int dist, int intensity,
       "push 4(%4)\n"
       "push 0(%4)\n"
       "call ASM_do_shockwave_person\n"
-        : : "a" (dx), "d" (dz), "b" (dist), "c" (intensity), "r" (stkargs)
+        : : "a" (dx), "d" (dz), "b" (dist), "c" (intensity), "S" (stkargs)
         : "cc", "memory");
 }
 
@@ -172,7 +172,7 @@ void do_shockwave_scale_effect(int dx, int dz, int dist, int intensity,
       "push 4(%4)\n"
       "push 0(%4)\n"
       "call ASM_do_shockwave_scale_effect\n"
-        : : "a" (dx), "d" (dz), "b" (dist), "c" (intensity), "r" (stkargs)
+        : : "a" (dx), "d" (dz), "b" (dist), "c" (intensity), "S" (stkargs)
         : "cc", "memory");
 }
 /******************************************************************************/

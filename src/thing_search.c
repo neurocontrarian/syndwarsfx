@@ -1097,7 +1097,7 @@ short find_nearest_person_min(int x, int y, int z,
       "push 0(%5)\n"
       "call ASM_find_nearest_person_min\n"
         : "=r" (ret)
-        : "a" (x), "d" (y), "b" (z), "c" (n_dist), "r" (stkargs)
+        : "a" (x), "d" (y), "b" (z), "c" (n_dist), "S" (stkargs)
         : "cc", "memory");
     return ret;
 }

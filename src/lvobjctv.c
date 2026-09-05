@@ -825,7 +825,7 @@ ubyte mem_group_arrived_square2(struct Thing *p_person, ushort group, short x, s
       "push 0(%5)\n"
       "call ASM_mem_group_arrived_square2\n"
         : "=r" (ret)
-        : "a" (p_person), "d" (group), "b" (x), "c" (z), "r" (stkargs)
+        : "a" (p_person), "d" (group), "b" (x), "c" (z), "S" (stkargs)
         : "cc", "memory");
     return ret;
 }
@@ -846,7 +846,7 @@ ubyte mem_group_arrived(ushort group, short x, short y, short z,
       "push 0(%5)\n"
       "call ASM_mem_group_arrived\n"
         : "=r" (ret)
-        : "a" (group), "d" (x), "b" (y), "c" (z), "r" (stkargs)
+        : "a" (group), "d" (x), "b" (y), "c" (z), "S" (stkargs)
         : "cc", "memory");
     return ret;
 }

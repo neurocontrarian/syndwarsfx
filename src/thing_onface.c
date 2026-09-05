@@ -59,7 +59,7 @@ ubyte check_big_point_triangle(int x, int y, int ux, int uy, int vx, int vy, int
       "push 0(%5)\n"
       "call ASM_check_big_point_triangle\n"
         : "=r" (ret)
-        : "a" (x), "d" (y), "b" (ux), "c" (uy), "r" (stkargs)
+        : "a" (x), "d" (y), "b" (ux), "c" (uy), "S" (stkargs)
         : "cc", "memory");
     return ret;
 }
