@@ -1522,7 +1522,7 @@ int bul_path_end(int x1, int y1, int z1, int *x2, int *y2, int *z2,
       "push 0(%5)\n"
       "call ASM_bul_path_end\n"
         : "=a" (ret)
-        : "0" (x1), "d" (y1), "b" (z1), "c" (x2), "r" (stkargs)
+        : "0" (x1), "d" (y1), "b" (z1), "c" (x2), "S" (stkargs)
         : "cc", "memory");
     return ret;
 }
@@ -5229,7 +5229,7 @@ s32 laser_hit_at(s32 x1, s32 y1, s32 z1, s32 *x2, s32 *y2, s32 *z2, struct Thing
       "push 0(%5)\n"
       "call ASM_laser_hit_at\n"
         : "=r" (ret)
-        : "a" (x1), "d" (y1), "b" (z1), "c" (x2), "r" (stkargs)
+        : "a" (x1), "d" (y1), "b" (z1), "c" (x2), "S" (stkargs)
         : "cc", "memory");
     return ret;
 }

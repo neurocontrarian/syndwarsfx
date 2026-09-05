@@ -587,7 +587,7 @@ void build_electricity(int x1, int y1, int z1, int x2, int y2, int z2, int itime
       "push 4(%4)\n"
       "push 0(%4)\n"
       "call ASM_build_electricity\n"
-        : : "a" (x1), "d" (y1), "b" (z1), "c" (x2), "r" (stkargs)
+        : : "a" (x1), "d" (y1), "b" (z1), "c" (x2), "S" (stkargs)
         : "cc", "memory");
 }
 
@@ -662,7 +662,7 @@ void build_laser_beam(int x1, int y1, int z1, int x2, int y2, int z2, int itime,
       "push 4(%4)\n"
       "push 0(%4)\n"
       "call ASM_build_laser_beam\n"
-        : : "a" (x1), "d" (y1), "b" (z1), "c" (x2), "r" (stkargs)
+        : : "a" (x1), "d" (y1), "b" (z1), "c" (x2), "S" (stkargs)
         : "cc", "memory");
 }
 
@@ -683,7 +683,7 @@ void build_laser_beam_q(int x1, int y1, int z1, int x2, int y2, int z2, int itim
       "push 4(%4)\n"
       "push 0(%4)\n"
       "call ASM_build_laser_beam_q\n"
-        : : "a" (x1), "d" (y1), "b" (z1), "c" (x2), "r" (stkargs)
+        : : "a" (x1), "d" (y1), "b" (z1), "c" (x2), "S" (stkargs)
         : "cc", "memory");
 }
 
@@ -724,7 +724,7 @@ void build_razor_wire_strand(int x1, int y1, int z1, int x2, int y2, int z2, int
       "push 4(%4)\n"
       "push 0(%4)\n"
       "call ASM_build_razor_wire_strand\n"
-        : : "a" (x1), "d" (y1), "b" (z1), "c" (x2), "r" (stkargs)
+        : : "a" (x1), "d" (y1), "b" (z1), "c" (x2), "S" (stkargs)
         : "cc", "memory");
 }
 

@@ -112,7 +112,7 @@ struct SampleInfo *play_sample_using_heap(ulong bank_id, short smptbl_id,
       "push 0(%5)\n"
       "call ASM_play_sample_using_heap\n"
         : "=r" (ret)
-        : "a" (bank_id), "d" (smptbl_id), "b" (volume), "c" (pan), "r" (stkargs)
+        : "a" (bank_id), "d" (smptbl_id), "b" (volume), "c" (pan), "S" (stkargs)
         : "cc", "memory");
     return ret;
 }
@@ -154,7 +154,7 @@ void play_dist_sample(struct Thing *p_thing, ushort smptbl_id, ushort vol, ushor
       "push 4(%4)\n"
       "push 0(%4)\n"
       "call ASM_play_dist_sample\n"
-        : : "a" (p_thing), "d" (smptbl_id), "b" (vol), "c" (pan), "r" (stkargs)
+        : : "a" (p_thing), "d" (smptbl_id), "b" (vol), "c" (pan), "S" (stkargs)
         : "cc", "memory");
 }
 
@@ -173,7 +173,7 @@ void play_dist_ssample(struct SimpleThing *p_sthing, ushort smptbl_id, ushort vo
       "push 4(%4)\n"
       "push 0(%4)\n"
       "call ASM_play_dist_ssample\n"
-        : : "a" (p_sthing), "d" (smptbl_id), "b" (vol), "c" (pan), "r" (stkargs)
+        : : "a" (p_sthing), "d" (smptbl_id), "b" (vol), "c" (pan), "S" (stkargs)
         : "cc", "memory");
 }
 

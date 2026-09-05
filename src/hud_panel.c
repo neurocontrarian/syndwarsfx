@@ -1593,7 +1593,7 @@ void func_702c0(int a1, int a2, int a3, int a4, int a5, ubyte a6)
       "push 4(%4)\n"
       "push 0(%4)\n"
       "call ASM_func_702c0\n"
-        : : "a" (a1), "d" (a2), "b" (a3), "c" (a4), "r" (stkargs)
+        : : "a" (a1), "d" (a2), "b" (a3), "c" (a4), "S" (stkargs)
         : "cc", "memory");
 }
 

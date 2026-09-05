@@ -152,7 +152,7 @@ struct Thing *create_building_thing(int x, int y, int z, ushort obj, ushort nobj
       "push 0(%5)\n"
       "call ASM_create_building_thing\n"
         : "=r" (ret)
-        : "a" (x), "d" (y), "b" (z), "c" (obj), "r" (stkargs)
+        : "a" (x), "d" (y), "b" (z), "c" (obj), "S" (stkargs)
         : "cc", "memory");
     return ret;
 }
@@ -574,7 +574,7 @@ void bul_hit_vector(int x, int y, int z, short col, int hp, int type)
       "push 4(%4)\n"
       "push 0(%4)\n"
       "call ASM_bul_hit_vector\n"
-        : : "a" (x), "d" (y), "b" (z), "c" (col), "r" (stkargs)
+        : : "a" (x), "d" (y), "b" (z), "c" (col), "S" (stkargs)
         : "cc", "memory");
 }
 
@@ -599,7 +599,7 @@ int mounted_los(int x1, int y1, int z1, int x2, int y2, int z2)
       "push 0(%5)\n"
       "call ASM_mounted_los\n"
         : "=r" (ret)
-        : "a" (x1), "d" (y1), "b" (z1), "c" (x2), "r" (stkargs)
+        : "a" (x1), "d" (y1), "b" (z1), "c" (x2), "S" (stkargs)
         : "cc", "memory");
     return ret;
 }
