@@ -631,7 +631,7 @@ void save_mission_single_conf(TbFileHandle fh, struct Mission *p_missi, char *bu
           (int)p_missi->ExtraRewardType, (int)p_missi->ExtraRewardParam);
         LbFileWrite(fh, buf, strlen(buf));
     }
-    if ((p_missi->SuccessLevel[0]|p_missi->SuccessLevel[1]|p_missi->SuccessLevel[2]) != 0) {
+    if ((p_missi->SuccessLevel[0]|p_missi->SuccessLevel[1]) != 0) {
         sprintf(buf, "SuccessLevel = %d %d\n",
           (int)p_missi->SuccessLevel[0], (int)p_missi->SuccessLevel[1]);
         LbFileWrite(fh, buf, strlen(buf));

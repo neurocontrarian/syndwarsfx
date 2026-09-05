@@ -649,7 +649,7 @@ void draw_mission_mp_players_vals_column(struct ScreenBox *box,
         if (unkn2_names[i][0] == '\0')
             continue;
 
-        plyr = (players[k].MyAgent[0]->U.UPerson.ComCur & 0x1C) >> 2;
+        plyr = (players[i].MyAgent[0]->U.UPerson.ComCur & 0x1C) >> 2;
         n = stats_mp_count_players_agents_killed(plyr);
         snprintf(locstr, sizeof(locstr), "%d", n);
         text = loctext_to_gtext(locstr);

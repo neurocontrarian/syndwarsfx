@@ -438,7 +438,8 @@ void draw_world_cities_names(struct ScreenBox *p_box)
         ms_y = lbDisplay.GraphicsScreenHeight < 400 ? 2 * lbDisplay.MMouseY : lbDisplay.MMouseY;
 
         k = cities[city].TextIndex[0];
-        strncpy(locstr, (char *)&memload[k], sizeof(locstr));
+        strncpy(locstr, (char *)&memload[k], sizeof(locstr) - 1);
+        locstr[sizeof(locstr) - 1] = '\0';
         LbStringToUpper(locstr);
 
         if (byte_15511C < 3)

@@ -900,6 +900,10 @@ ubyte cryo_blokey_mod_level(ubyte ordpart)
     case 4:
         mver = flic_mods[ModDPt_LEGS];
         break;
+    default:
+        mver = 0;
+        LOGWARN("Requested blokey level for wrong part=%d", (int)ordpart);
+        break;
     }
     return mver;
 }
@@ -1730,6 +1734,10 @@ ubyte show_cryo_chamber_screen(void)
                     draw_equip_agent_name_shape(shape, gbstate);
                     name_drawn = 3;
                 }
+                else
+                {
+                    name_drawn = 3;
+                }
                 byte_1C4979 = (name_drawn == 3);
             }
             else
@@ -1743,10 +1751,14 @@ ubyte show_cryo_chamber_screen(void)
                 {
                     drawn = flashy_draw_agent_panel_shape(shape, gbstate);
                 }
-                else
+                else if (byte_1C4978 == 1)
                 {
                     spridx = 140 + nagent;
                     draw_agent_panel_shape(shape, spridx, gbstate);
+                    drawn = 3;
+                }
+                else
+                {
                     drawn = 3;
                 }
                 // Is the flashy draw finished for current button
@@ -1757,7 +1769,8 @@ ubyte show_cryo_chamber_screen(void)
         }
         if (byte_1C4978 == 0)
         {
-            byte_1C4978 = agnt[0] && agnt[1] && agnt[2] && agnt[3];
+            if (agnt[0] && agnt[1] && agnt[2] && agnt[3])
+                byte_1C4978 = 1;
         }
         drawn = boxes_drawn;
     }

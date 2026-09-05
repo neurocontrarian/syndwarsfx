@@ -142,6 +142,7 @@ ubyte show_controls_joystick_box(struct ScreenBox *p_box)
         ln_height = my_char_height('A');
     }
     wpos_y = 126;
+    tx_width = text_window_x2 - text_window_x1;
 
     lbDisplay.DrawFlags |= 0x8000;
     if (ctl_joystick_type == JTyp_EXT_DRIVER)
