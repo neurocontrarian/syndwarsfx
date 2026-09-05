@@ -429,17 +429,21 @@ void draw_players_chat_talk(int x, int y)
             continue;
 
         plname = unkn2_names[plyr];
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wformat-truncation"
         if (player_message_text[plyr][0] != '\0')
         {
             if (plname[0] != '\0')
-                sprintf(locstr, "%s: %s", plname, player_message_text[plyr]);
+                snprintf(locstr, sizeof(locstr)-1, "%s: %s", plname, player_message_text[plyr]);
             else
-                sprintf(locstr, "%s", player_message_text[plyr]);
+                snprintf(locstr, sizeof(locstr)-1, "%s", player_message_text[plyr]);
         }
         else
         {
-            sprintf(locstr, "%s said nothing.", plname);
+            snprintf(locstr, sizeof(locstr)-1, "%s said nothing.", plname);
         }
+        locstr[sizeof(locstr)-1] = '\0';
+#pragma GCC diagnostic pop
         LbStringToUpper(locstr);
 
         lbDisplay.DrawColour = net_player_colours[plyr];

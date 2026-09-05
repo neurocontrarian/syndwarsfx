@@ -1162,7 +1162,11 @@ ubyte show_net_comms_box(struct ScreenBox *p_box)
             const char *text;
 
             plyrname[7] = '\0';
-            snprintf(locstr, sizeof(locstr), "%s: %s", plyrname, net_players[i].field_0);
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wformat-truncation"
+            snprintf(locstr, sizeof(locstr)-1, "%s: %s", plyrname, net_players[i].field_0);
+            locstr[sizeof(locstr)-1] = '\0';
+#pragma GCC diagnostic pop
             text = loctext_to_gtext(locstr);
             draw_text_purple_list2(2, dx + 5, text, 0);
             dx += tx_height + 4;
