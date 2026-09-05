@@ -75,22 +75,22 @@ void draw_line_purple_list(int x1, int y1, int x2, int y2, int colour)
         : : "a" (x1), "d" (y1), "b" (x2), "c" (y2), "g" (colour));
     return;
 #endif
-    struct PurpleDrawItem *pditem;
+    struct PurpleDrawItem *p_pditem;
 
-    pditem = &purple_draw_list[purple_draw_index];
+    p_pditem = &purple_draw_list[purple_draw_index];
     purple_draw_index++;
 
-    pditem->U.Line.X1 = lbDisplay.GraphicsWindowX + x1;
-    pditem->U.Line.Y1 = lbDisplay.GraphicsWindowY + y1;
-    pditem->U.Line.X2 = lbDisplay.GraphicsWindowX + x2;
-    pditem->U.Line.Y2 = lbDisplay.GraphicsWindowY + y2;
-    pditem->U.Line.Colour = colour;
-    pditem->Flags = lbDisplay.DrawFlags;
+    p_pditem->U.Line.X1 = lbDisplay.GraphicsWindowX + x1;
+    p_pditem->U.Line.Y1 = lbDisplay.GraphicsWindowY + y1;
+    p_pditem->U.Line.X2 = lbDisplay.GraphicsWindowX + x2;
+    p_pditem->U.Line.Y2 = lbDisplay.GraphicsWindowY + y2;
+    p_pditem->U.Line.Colour = colour;
+    p_pditem->Flags = lbDisplay.DrawFlags;
 
     if ((x1 == x2) || (y1 == y2))
-        pditem->Type = PuDT_HVLINE;
+        p_pditem->Type = PuDT_HVLINE;
     else
-        pditem->Type = PuDT_LINE;
+        p_pditem->Type = PuDT_LINE;
 }
 
 void draw_box_purple_list(int x, int y, ulong width, ulong height, int colour)
@@ -102,18 +102,18 @@ void draw_box_purple_list(int x, int y, ulong width, ulong height, int colour)
         : : "a" (x), "d" (y), "b" (width), "c" (height), "g" (colour));
     return;
 #endif
-    struct PurpleDrawItem *pditem;
+    struct PurpleDrawItem *p_pditem;
 
-    pditem = &purple_draw_list[purple_draw_index];
+    p_pditem = &purple_draw_list[purple_draw_index];
     purple_draw_index++;
 
-    pditem->U.Box.X = lbDisplay.GraphicsWindowX + x;
-    pditem->U.Box.Y = lbDisplay.GraphicsWindowY + y;
-    pditem->U.Box.Width = width;
-    pditem->U.Box.Colour = colour;
-    pditem->U.Box.Height = height;
-    pditem->Flags = lbDisplay.DrawFlags;
-    pditem->Type = PuDT_BOX;
+    p_pditem->U.Box.X = lbDisplay.GraphicsWindowX + x;
+    p_pditem->U.Box.Y = lbDisplay.GraphicsWindowY + y;
+    p_pditem->U.Box.Width = width;
+    p_pditem->U.Box.Colour = colour;
+    p_pditem->U.Box.Height = height;
+    p_pditem->Flags = lbDisplay.DrawFlags;
+    p_pditem->Type = PuDT_BOX;
 }
 
 void draw_text_purple_list2(int x, int y, const char *text, ushort line)
@@ -124,23 +124,23 @@ void draw_text_purple_list2(int x, int y, const char *text, ushort line)
         : : "a" (x), "d" (y), "b" (text), "c" (line));
     return;
 #endif
-    struct PurpleDrawItem *pditem;
+    struct PurpleDrawItem *p_pditem;
 
-    pditem = &purple_draw_list[purple_draw_index];
+    p_pditem = &purple_draw_list[purple_draw_index];
     purple_draw_index++;
 
-    pditem->U.Text.X = x;
-    pditem->U.Text.Y = y;
-    pditem->U.Text.WindowX = text_window_x1;
-    pditem->U.Text.WindowY = text_window_y1;
-    pditem->U.Text.Width = text_window_x2 - text_window_x1 + 1;
-    pditem->U.Text.Height = text_window_y2 - text_window_y1 + 1;
-    pditem->U.Text.Text = text;
-    pditem->U.Text.Line = line;
-    pditem->U.Text.Colour = lbDisplay.DrawColour;
-    pditem->U.Text.Font = lbFontPtr;
-    pditem->Flags = lbDisplay.DrawFlags;
-    pditem->Type = PuDT_TEXT;
+    p_pditem->U.Text.X = x;
+    p_pditem->U.Text.Y = y;
+    p_pditem->U.Text.WindowX = text_window_x1;
+    p_pditem->U.Text.WindowY = text_window_y1;
+    p_pditem->U.Text.Width = text_window_x2 - text_window_x1 + 1;
+    p_pditem->U.Text.Height = text_window_y2 - text_window_y1 + 1;
+    p_pditem->U.Text.Text = text;
+    p_pditem->U.Text.Line = line;
+    p_pditem->U.Text.Colour = lbDisplay.DrawColour;
+    p_pditem->U.Text.Font = lbFontPtr;
+    p_pditem->Flags = lbDisplay.DrawFlags;
+    p_pditem->Type = PuDT_TEXT;
 }
 
 void draw_sprite_purple_list(int x, int y, const struct TbSprite *p_sprite)
@@ -150,17 +150,17 @@ void draw_sprite_purple_list(int x, int y, const struct TbSprite *p_sprite)
       "call ASM_draw_sprite_purple_list\n"
         : : "a" (x), "d" (y), "b" (p_sprite));
 #endif
-    struct PurpleDrawItem *pditem;
+    struct PurpleDrawItem *p_pditem;
 
-    pditem = &purple_draw_list[purple_draw_index];
+    p_pditem = &purple_draw_list[purple_draw_index];
     purple_draw_index++;
 
-    pditem->U.Sprite.Sprite = p_sprite;
-    pditem->U.Sprite.Colour = lbDisplay.DrawColour;
-    pditem->Flags = lbDisplay.DrawFlags;
-    pditem->U.Sprite.X = lbDisplay.GraphicsWindowX + x;
-    pditem->U.Sprite.Y = lbDisplay.GraphicsWindowY + y;
-    pditem->Type = PuDT_SPRITE;
+    p_pditem->U.Sprite.Sprite = p_sprite;
+    p_pditem->U.Sprite.Colour = lbDisplay.DrawColour;
+    p_pditem->Flags = lbDisplay.DrawFlags;
+    p_pditem->U.Sprite.X = lbDisplay.GraphicsWindowX + x;
+    p_pditem->U.Sprite.Y = lbDisplay.GraphicsWindowY + y;
+    p_pditem->Type = PuDT_SPRITE;
 }
 
 void draw_trig_purple_list(long x2, long y2, long x3, long y3)
@@ -1522,24 +1522,24 @@ void draw_flic_purple_list(void (*fn)())
         : : "a" (fn));
     return;
 #endif
-    struct PurpleDrawItem *pditem;
+    struct PurpleDrawItem *p_pditem;
 
-    pditem = &purple_draw_list[purple_draw_index];
+    p_pditem = &purple_draw_list[purple_draw_index];
     purple_draw_index++;
 
-    pditem->U.Flic.Function = fn;
-    pditem->U.Flic.Colour = lbDisplay.DrawColour;
-    pditem->Flags = lbDisplay.DrawFlags;
-    pditem->Type = PuDT_FLIC;
+    p_pditem->U.Flic.Function = fn;
+    p_pditem->U.Flic.Colour = lbDisplay.DrawColour;
+    p_pditem->Flags = lbDisplay.DrawFlags;
+    p_pditem->Type = PuDT_FLIC;
 }
 
 void draw_noise_box_purple_list(int x, int y, ulong width, ulong height)
 {
-    struct PurpleDrawItem *pditem;
+    struct PurpleDrawItem *p_pditem;
 
     draw_box_purple_list(x, y, width, height, 0);
-    pditem = &purple_draw_list[purple_draw_index - 1];
-    pditem->Type = PuDT_NOISEBOX;
+    p_pditem = &purple_draw_list[purple_draw_index - 1];
+    p_pditem->Type = PuDT_NOISEBOX;
 }
 
 /******************************************************************************/
