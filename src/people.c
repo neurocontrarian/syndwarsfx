@@ -987,8 +987,9 @@ short person_get_dcontrol_player(ThingIdx person)
 {
     struct Thing *p_person;
 
-    if (!person_has_slot_in_any_player_dcontrol(person))
+    if (!person_has_slot_in_any_player_dcontrol(person)) {
         return -1;
+    }
 
     p_person = &things[person];
 
@@ -1012,6 +1013,28 @@ short person_slot_in_player_dcontrol(ThingIdx person, PlayerIdx plyr)
     }
 
     return (p_person->U.UPerson.ComCur & 3);
+}
+
+MapCoord player_agent_person_clear_user_vect_y(struct Thing *p_person)
+{
+    PlayerIdx plyr;
+    ushort plagent;
+
+    plyr = p_person->U.UPerson.ComCur >> 2;
+    plagent = p_person->U.UPerson.ComCur & 3;
+
+    return player_agent_clear_user_vect_y(plyr, plagent);
+}
+
+void player_agent_person_get_user_vect(struct Thing *p_person, struct MapCoords *p_usrv)
+{
+    PlayerIdx plyr;
+    ushort plagent;
+
+    plyr = p_person->U.UPerson.ComCur >> 2;
+    plagent = p_person->U.UPerson.ComCur & 3;
+
+    player_agent_get_user_vect(plyr, plagent, p_usrv);
 }
 
 ubyte person_sex(struct Thing *p_person)
@@ -4780,7 +4803,7 @@ void thing_shoot_at_point(struct Thing *p_thing, short x, short y, short z, uint
 
     if ((p_thing->Flag & TngF_PlayerAgent) != 0)
     {
-        player_set_user_vect(plyr, plagent, x, y, z);
+        player_agent_set_user_vect(plyr, plagent, x, y, z);
     }
     else
     {
@@ -5530,22 +5553,22 @@ void process_protect_person(struct Thing *p_person)
         }
         else if ((p_leadtng->PTarget == NULL) && (p_person->U.UPerson.Target2 == 0))
         {
-            short face_cor_x, face_cor_y, face_cor_z;
+            short face_cor_X, face_cor_Y, face_cor_Z; // store both full positions and delta pos on map
             int weapon_range;
             PlayerIdx prot_plyr;
 
             p_person->Flag |= TngF_ShootAtPos;
             prot_plyr = p_leadtng->U.UPerson.ComCur >> 2;
-            face_cor_x = players[prot_plyr].SpecialItems[0];
-            face_cor_y = players[prot_plyr].SpecialItems[1];
-            face_cor_z = players[prot_plyr].SpecialItems[2];
+            face_cor_X = players[prot_plyr].SpecialItems[0];
+            face_cor_Y = players[prot_plyr].SpecialItems[1];
+            face_cor_Z = players[prot_plyr].SpecialItems[2];
 
             weapon_range = get_weapon_range(p_person);
             map_limit_distance_to_target_fast(
               PRCCOORD_TO_MAPCOORD(p_person->X),
               PRCCOORD_TO_MAPCOORD(p_person->Y),
               PRCCOORD_TO_MAPCOORD(p_person->Z),
-              &face_cor_x, &face_cor_y, &face_cor_z, weapon_range);
+              &face_cor_X, &face_cor_Y, &face_cor_Z, weapon_range);
 
             if ((p_person->Flag & TngF_PlayerAgent) != 0)
             {
@@ -5554,7 +5577,7 @@ void process_protect_person(struct Thing *p_person)
 
                 plyr = p_person->U.UPerson.ComCur >> 2;
                 plagent = p_person->U.UPerson.ComCur & 3;
-                player_set_user_vect(plyr, plagent, face_cor_x, face_cor_y, face_cor_z);
+                player_agent_set_user_vect(plyr, plagent, face_cor_X, face_cor_Y, face_cor_Z);
             }
             p_person->Flag |= TngF_TriggerUse;
             if ((p_person->Flag & TngF_InVehicle) != 0) {
@@ -5565,7 +5588,7 @@ void process_protect_person(struct Thing *p_person)
                 short full_angle;
 
                 full_angle = angle_between_points(PRCCOORD_TO_MAPCOORD(p_person->X),
-                  PRCCOORD_TO_MAPCOORD(p_person->Z), face_cor_x, face_cor_z);
+                  PRCCOORD_TO_MAPCOORD(p_person->Z), face_cor_X, face_cor_Z);
                 change_person_angle_full(p_person, full_angle);
             }
         }

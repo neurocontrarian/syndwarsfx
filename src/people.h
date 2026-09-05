@@ -363,6 +363,14 @@ short person_get_dcontrol_player(ThingIdx person);
  */
 short person_slot_in_player_dcontrol(ThingIdx person, PlayerIdx plyr);
 
+/** Retrieve and clear Y coord in player agent user vector for given person.
+ */
+MapCoord player_agent_person_clear_user_vect_y(struct Thing *p_person);
+
+/** Get player agent user vector for given person.
+ */
+void player_agent_person_get_user_vect(struct Thing *p_person, struct MapCoords *p_usrv);
+
 /** Returns sex of a person, either PERSON_MALE or PERSON_FEMALE.
  */
 ubyte person_sex(struct Thing *p_person);

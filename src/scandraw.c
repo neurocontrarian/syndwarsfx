@@ -1633,14 +1633,16 @@ void SCANNER_draw_thing(struct Thing *p_thing, struct NearestPos *p_nearest, int
     y = ingame.Scanner.Y1 + base_y;
     if ((p_thing->Flag & TngF_Destroyed) == 0)
     {
-        if (((p_thing->Flag & TngF_PlayerAgent) == 0) || (p_thing->U.UPerson.CurrentWeapon == WEP_CLONESHLD))
+        short plyr;
+        plyr = person_get_dcontrol_player(p_thing->ThingOffset);
+        if ((plyr < 0) || (p_thing->U.UPerson.CurrentWeapon == WEP_CLONESHLD))
         {
             SCANNER_draw_mark_point3_blink2_filled(x, y, col);
         }
         else
         {
-            if (in_network_game)
-                SCANNER_draw_mark_point5_blink4(x, y, net_player_colours[p_thing->U.UPerson.ComCur >> 2]);
+            if (in_network_game && (plyr >= 0))
+                SCANNER_draw_mark_point5_blink4(x, y, net_player_colours[plyr]);
             else
                 SCANNER_draw_mark_point5_blink4(x, y, col);
         }

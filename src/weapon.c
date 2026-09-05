@@ -1423,27 +1423,15 @@ void thing_fire_shot_finish_position_at_marked_spot(struct M31 *prc_fin_pt,
 
     if (wtype == WEP_STASISFLD)
     {
-        short plyr; // stores PlayerIdx or -1
-        short user_vy;
+        MapCoord user_vy;
 
         user_vy = 0;
-        plyr = person_get_dcontrol_player(p_owner->ThingOffset);
-        if (plyr >= 0)
-        {
-            PlayerInfo *p_player;
-            ushort plagent;
-
-            p_player = &players[plyr];
-            plagent = p_owner->U.UPerson.ComCur & 3;
-            user_vy = p_player->UserVY[plagent];
-            player_clear_user_vect_y(plyr, plagent);
+        if (person_has_slot_in_any_player_dcontrol(p_owner->ThingOffset)) {
+            user_vy = player_agent_person_clear_user_vect_y(p_owner);
         }
-        if (user_vy != 0)
-        {
+        if (user_vy != 0) {
             prc_fin_pt->R[1] = MAPCOORD_TO_PRCCOORD(user_vy,0);
-        }
-        else
-        {
+        } else {
             prc_fin_pt->R[1] = alt_at_point(prc_fin_pt->R[0], prc_fin_pt->R[2]) + MAPCOORD_TO_PRCCOORD(20,0);
         }
     }
@@ -4084,43 +4072,30 @@ void process_vehicle_weapon(struct Thing *p_vehicle, struct Thing *p_person)
 
     if ((p_person->Flag & TngF_ShootAtPos) != 0)
     {
-        short tdx, tdy, tdz;
+        struct MapCoords trgtd;
 
-        if ((p_person->Flag & TngF_PlayerAgent) != 0)
+        if (person_has_slot_in_any_player_dcontrol(p_person->ThingOffset))
         {
-            PlayerInfo *p_player;
-            PlayerIdx plyr;
-            ushort plagent;
-
-            plyr = p_person->U.UPerson.ComCur >> 2;
-            plagent = p_person->U.UPerson.ComCur & 3;
-            p_player = &players[plyr];
-
-            tdx = p_player->UserVX[plagent];
-            tdz = p_player->UserVZ[plagent];
-            if (p_player->UserVY[plagent] != 0)
-            {
-                tdy = p_player->UserVY[plagent];
-                player_clear_user_vect_y(plyr, plagent);
-            }
-            else
-            {
-                tdy = (alt_at_point(tdx, tdz) >> 8) + 20;
+            player_agent_person_get_user_vect(p_person, &trgtd);
+            if (trgtd.Y != 0) {
+                player_agent_person_clear_user_vect_y(p_person);
+            } else {
+                trgtd.Y = (alt_at_point(trgtd.X, trgtd.Z) >> 8) + 20;
             }
         }
         else
         {
-            tdx = p_vehicle->U.UVehicle.TargetDX;
-            tdy = p_vehicle->U.UVehicle.TargetDY;
-            tdz = p_vehicle->U.UVehicle.TargetDZ;
+            trgtd.X = p_vehicle->U.UVehicle.TargetDX;
+            trgtd.Y = p_vehicle->U.UVehicle.TargetDY;
+            trgtd.Z = p_vehicle->U.UVehicle.TargetDZ;
         }
 
-        if (p_vehicle->U.UVehicle.TargetDX != tdx || p_vehicle->U.UVehicle.TargetDZ != tdz)
+        if (p_vehicle->U.UVehicle.TargetDX != trgtd.X || p_vehicle->U.UVehicle.TargetDZ != trgtd.Z)
             p_vehicle->OldTarget = 20000;
         p_vehicle->PTarget = NULL;
-        p_vehicle->U.UVehicle.TargetDX = tdx;
-        p_vehicle->U.UVehicle.TargetDZ = tdz;
-        p_vehicle->U.UVehicle.TargetDY = tdy;
+        p_vehicle->U.UVehicle.TargetDX = trgtd.X;
+        p_vehicle->U.UVehicle.TargetDZ = trgtd.Z;
+        p_vehicle->U.UVehicle.TargetDY = trgtd.Y;
         p_vehicle->Flag |= TngF_ShootAtPos;
     }
     else if (p_person->PTarget != NULL)
@@ -4160,44 +4135,32 @@ void process_mech_weapon(struct Thing *p_vehicle, struct Thing *p_person)
 #else
     if ((p_person->Flag & TngF_ShootAtPos) != 0)
     {
-        short tdx, tdy, tdz;
+        struct MapCoords trgtd;
 
         p_vehicle->PTarget = NULL;
         p_vehicle->Flag |= TngF_ShootAtPos;
-        if ((p_person->Flag & TngF_PlayerAgent) != 0)
+
+        if (person_has_slot_in_any_player_dcontrol(p_person->ThingOffset))
         {
-            PlayerInfo *p_player;
-            PlayerIdx plyr;
-            ushort plagent;
-
-            plyr = p_person->U.UPerson.ComCur >> 2;
-            plagent = p_person->U.UPerson.ComCur & 3;
-            p_player = &players[plyr];
-
-            tdx = p_player->UserVX[plagent];
-            tdz = p_player->UserVZ[plagent];
-            if (p_player->UserVY[plagent] != 0)
-            {
-                tdy = p_player->UserVY[plagent];
-                player_clear_user_vect_y(plyr, plagent);
-            }
-            else
-            {
-                tdy = (alt_at_point(tdx, tdz) >> 8) + 20;
+            player_agent_person_get_user_vect(p_person, &trgtd);
+            if (trgtd.Y != 0) {
+                player_agent_person_clear_user_vect_y(p_person);
+            } else {
+                trgtd.Y = (alt_at_point(trgtd.X, trgtd.Z) >> 8) + 20;
             }
         }
         else
         {
-            tdy = p_person->VY;
-            tdz = p_person->VZ;
-            tdx = p_person->VX;
+            trgtd.Y = p_person->VY;
+            trgtd.Z = p_person->VZ;
+            trgtd.X = p_person->VX;
         }
-        if ((p_vehicle->U.UVehicle.TargetDX != tdx) || (p_vehicle->U.UVehicle.TargetDZ != tdz))
+        if ((p_vehicle->U.UVehicle.TargetDX != trgtd.X) || (p_vehicle->U.UVehicle.TargetDZ != trgtd.Z))
         {
             p_vehicle->OldTarget = 20000;
-            p_vehicle->U.UVehicle.TargetDY = tdy;
-            p_vehicle->U.UVehicle.TargetDZ = tdz;
-            p_vehicle->U.UVehicle.TargetDX = tdx;
+            p_vehicle->U.UVehicle.TargetDY = trgtd.Y;
+            p_vehicle->U.UVehicle.TargetDZ = trgtd.Z;
+            p_vehicle->U.UVehicle.TargetDX = trgtd.X;
         }
         p_vehicle->PTarget = NULL;
     }
