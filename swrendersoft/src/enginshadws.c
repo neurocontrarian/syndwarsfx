@@ -356,7 +356,7 @@ void draw_shadows_for_multicolor_sprites(const ushort *anims, ushort anims_len)
                 get_frame_bounds_05(frm, &fr_beg_x, &fr_end_x, &fr_beg_y, &fr_end_y);
 
                 // if cannot fit the sprite in this line, move to next line
-                if (stand_x + fr_end_x - fr_beg_x + 1 >= MUCOL_SHADOW_BITMAP_DIM)
+                if (cur_scr_x + fr_end_x - fr_beg_x + 1 >= MUCOL_SHADOW_BITMAP_DIM)
                 {
                     cur_scr_x = 0;
                     cur_scr_y += fr_max_height;
