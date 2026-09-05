@@ -501,7 +501,7 @@ TbResult init_memory(MemSystem *mem_table)
     for (i = mem_table_len - 1; i >= 0; i--)
     {
         ment = &mem_table[i];
-        if (i == 17)
+        if (i == 17) // col_columns
             p = engine_mem_alloc_ptr + totlen;
 
         if (ment->PrivBuffer == NULL)
@@ -540,9 +540,10 @@ TbResult init_memory(MemSystem *mem_table)
         ret = Lb_FAIL;
     }
 
+    //TODO clear first two entries only? looks like some workaround; maybe swrender should have mem init function?
     memset(game_sort_sprites, 0, 0x20u);
 
-    scratch_buf1 = *ment[23].BufferPtr; // prim_objects
+    scratch_buf1 = *mem_table[23].BufferPtr; // prim_objects
     if (scratch_buf1 == NULL) {
         LOGWARN("Memory for scratch_buf1 not prepared");
         ret = Lb_FAIL;
