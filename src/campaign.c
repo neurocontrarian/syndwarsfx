@@ -531,7 +531,7 @@ void read_missions_bin_file(int num)
           mission_list[i].ReLevelNo = 0;
     }
     for (i = 1; i < next_mission; i++)
-        mission_list[i].Complete = 0;
+        mission_list[i].Complete = MResol_UNDECIDED;
 }
 
 void read_mission_netscan_objectives_bin(void)

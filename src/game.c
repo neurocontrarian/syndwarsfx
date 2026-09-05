@@ -3121,7 +3121,7 @@ void restart_back_into_mission(ushort missi)
     mission_result = 0;
     ingame.MissionEndFade = 0;
     ingame.CurrentMission = missi;
-    mission_list[missi].Complete = 0;
+    mission_list[missi].Complete = MResol_UNDECIDED;
     change_current_map(mapno);
     map_lights_update();
     if (ingame.GameMode == GamM_Unkn2)
@@ -3832,7 +3832,7 @@ void my_preprocess_text(char *text)
         :  : "a" (text));
 }
 
-void research_unkn_func_006(ushort missi)
+void mission_over_give_extra_reward(ushort missi)
 {
     struct Mission *p_missi;
     int i;
@@ -4072,7 +4072,7 @@ TbBool check_mission_conds(ushort missi)
     for (i = 0; i < 5; i++)
     {
         cmissi = mission_list[missi].MissionCond[i];
-        if ((cmissi > 0) && (mission_list[cmissi].Complete != 1))
+        if ((cmissi > 0) && (mission_list[cmissi].Complete != MResol_COMPLETED))
           return false;
     }
     return true;
@@ -4131,7 +4131,7 @@ void mission_special_triggers_0_1_set_fail(ushort missi)
     {
         ushort tmp_missi;
 
-        mission_list[next_missi].Complete = -1;
+        mission_list[next_missi].Complete = MResol_FAILED;
 
         // TODO Why only one these? If failing, shouldn't we fail both?
         tmp_missi = mission_list[next_missi].SpecialTrigger[0];
@@ -4202,13 +4202,20 @@ void update_mission_list_to_mission_state(ushort missi, sbyte state)
     if (state == MResol_COMPLETED) {
         mission_list[missi].Complete = state;
     } else if (mission_remain_until_success(missi)) {
-          mission_list[missi].Complete = 0;
+          mission_list[missi].Complete = MResol_UNDECIDED;
           set_mission_state_using_state_slot(missi, MResol_UNDECIDED);
     } else {
           mission_list[missi].Complete = state;
     }
 }
 
+/** Return the way forward in regard to opening more missions for the player.
+ *
+ * If the mission was either completed or failed, the function returns
+ * whether more missions, and from which group, should become available to
+ * the player. It also updates special triggers to acknowledge given
+ * state of given mission.
+ */
 ubyte check_open_next_mission(ushort missi, sbyte state)
 {
     if (mission_has_no_special_triggers(missi))
@@ -4381,7 +4388,8 @@ ubyte check_delete_open_mission(ushort missi, sbyte state)
 
     conds_met = check_mission_conds(missi);
 
-    research_unkn_func_006(missi);
+    if ((state == MResol_COMPLETED) || (state == MResol_FAILED))
+        mission_over_give_extra_reward(missi);
 
     misend = check_open_next_mission(missi, state);
 
@@ -4411,6 +4419,8 @@ ubyte check_delete_open_mission(ushort missi, sbyte state)
     case OMiSta_ContSuccess:
         break;
     case OMiSta_ContFailed:
+        break;
+    default:
         break;
     }
     return misend;
@@ -4462,19 +4472,19 @@ void mission_over(void)
         ingame.Credits += cr_award;
         if (email != 0)
             queue_up_new_mail(0, -email);
-        misend = check_delete_open_mission(missi, mstate);
         break;
     case MResol_FAILED:
         email = mission_list[missi].FailID;
         ingame.fld_unkC57++;
         if (email != 0)
             queue_up_new_mail(0, -email);
-        misend = check_delete_open_mission(missi, mstate);
         break;
     default:
         mstate = MResol_UNDECIDED;
         break;
     }
+
+    misend = check_delete_open_mission(missi, mstate);
 
     if (misend == OMiSta_EndSuccess) {
         if (mission_is_final_at_game_end(missi))
