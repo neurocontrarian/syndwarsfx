@@ -1944,7 +1944,7 @@ struct SimpleThing *create_sound_effect(int x, int y, int z, ushort sample, int 
       "push 0(%5)\n"
       "call ASM_create_sound_effect\n"
         : "=r" (ret)
-        : "a" (x), "d" (y), "b" (z), "c" (sample), "r" (stkargs)
+        : "a" (x), "d" (y), "b" (z), "c" (sample), "S" (stkargs)
         : "cc", "memory");
     return ret;
 }
@@ -2017,7 +2017,7 @@ struct SimpleThing *create_electric_strand(MapCoord x, MapCoord y, MapCoord z,
       "push 0(%5)\n"
       "call ASM_create_electric_strand\n"
         : "=r" (ret)
-        : "a" (x), "d" (y), "b" (z), "c" (x2), "r" (stkargs)
+        : "a" (x), "d" (y), "b" (z), "c" (x2), "S" (stkargs)
         : "cc", "memory");
     return ret;
 #endif

@@ -1511,7 +1511,7 @@ void draw_triangle_purple_list(int x1, int y1, int x2, int y2, int x3, int y3, T
       "push 4(%4)\n"
       "push 0(%4)\n"
       "call ASM_draw_triangle_purple_list\n"
-        : : "a" (x1), "d" (y1), "b" (x2), "c" (y2), "r" (stkargs)
+        : : "a" (x1), "d" (y1), "b" (x2), "c" (y2), "S" (stkargs)
         : "cc", "memory");
 }
 

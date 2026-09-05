@@ -101,7 +101,7 @@ void path_init8_unkn3(struct Path *path, int ax8, int ay8, int bx8, int by8, int
       "push 4(%4)\n"
       "push 0(%4)\n"
       "call ASM_path_init8_unkn3\n"
-        : : "a" (path), "d" (ax8), "b" (ay8), "c" (bx8), "r" (stkargs)
+        : : "a" (path), "d" (ax8), "b" (ay8), "c" (bx8), "S" (stkargs)
         : "cc", "memory");
 }
 
@@ -322,7 +322,7 @@ int edge_find(int x1, int y1, int x2, int y2, int *ntri1, int *ncor1)
       "push 0(%5)\n"
       "call ASM_edge_find\n"
         : "=r" (ret)
-        : "a" (x1), "d" (y1), "b" (x2), "c" (y2), "r" (stkargs)
+        : "a" (x1), "d" (y1), "b" (x2), "c" (y2), "S" (stkargs)
         : "cc", "memory");
     return ret;
 }
@@ -346,7 +346,7 @@ TbBool two4_line_intersection(int x1, int y1, int x2, int y2, int x3, int y3, in
       "push 0(%5)\n"
       "call ASM_two4_line_intersection\n"
         : "=r" (ret)
-        : "a" (x1), "d" (y1), "b" (x2), "c" (y2), "r" (stkargs)
+        : "a" (x1), "d" (y1), "b" (x2), "c" (y2), "S" (stkargs)
         : "cc", "memory");
     return ret;
 }

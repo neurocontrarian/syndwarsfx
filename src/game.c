@@ -1457,7 +1457,7 @@ void func_6fd1c(int a1, int a2, int a3, int a4, int a5, int a6, ubyte a7)
       "push 4(%4)\n"
       "push 0(%4)\n"
       "call ASM_func_6fd1c\n"
-        : : "a" (a1), "d" (a2), "b" (a3), "c" (a4), "r" (stkargs)
+        : : "a" (a1), "d" (a2), "b" (a3), "c" (a4), "S" (stkargs)
         : "cc", "memory");
 }
 
